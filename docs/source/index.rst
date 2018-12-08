@@ -10,9 +10,8 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-	      user_manual
 
-
+   user_manual
 
 Indices and tables
 ==================
