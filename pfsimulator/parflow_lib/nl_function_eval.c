@@ -41,6 +41,8 @@ typedef struct {
   double SpinupDampP1;      // NBE
   double SpinupDampP2;      // NBE
   int tfgupwind;           //@RMM added for TFG formulation switch
+  int seepage_patch_one;  //RMM added two optional seepage face BCs
+  int seepage_patch_two; 
 } PublicXtra;
 
 typedef struct {
@@ -182,6 +184,10 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
   Subvector   *FBx_sub, *FBy_sub, *FBz_sub;  //@RMM
   double      *FBx_dat=NULL, *FBy_dat=NULL, *FBz_dat=NULL;   //@RMM
 
+/* RMM Top patch indicator for multiple / combined overland BC */
+  Vector      *patch = ProblemDataPatchIndexOfDomainTop(problem_data);
+  Subvector   *patch_sub;
+  double      *patch_dat=NULL;
 
   double gravity = ProblemGravity(problem);
   double viscosity = ProblemPhaseViscosity(problem, 0);
@@ -281,6 +287,10 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
     FBx_sub = VectorSubvector(FBx, is);
     FBy_sub = VectorSubvector(FBy, is);
     FBz_sub = VectorSubvector(FBz, is);
+
+    /* RMM added to provide patch access */
+    patch_sub = VectorSubvector(patch, is);
+    patch_dat = SubvectorData(patch_sub);
 
     /* @RMM added to provide FB values */
     FBx_dat = SubvectorData(FBx_sub);
@@ -566,6 +576,10 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
     /* @RMM added to provide access to zmult */
     z_mult_sub = VectorSubvector(z_mult, is);
 
+    /* RMM added to provide patch access */
+    patch_sub = VectorSubvector(patch, is);
+    patch_dat = SubvectorData(patch_sub);
+
     /* RDF: assumes resolutions are the same in all 3 directions */
     r = SubgridRX(subgrid);
 
@@ -794,6 +808,10 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
     /* @RMM added to provide access to x/y slopes */
     x_ssl_sub = VectorSubvector(x_ssl, is);
     y_ssl_sub = VectorSubvector(y_ssl, is);
+
+    /* RMM added to provide patch access */
+    patch_sub = VectorSubvector(patch, is);
+    patch_dat = SubvectorData(patch_sub);
 
     // sk Overland flow
     kw_sub = VectorSubvector(KW, is);
@@ -1535,7 +1553,7 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
                                                  qx_, qy_, CALCFCN));
                            }),
                            LoopVars(i, j, k, ival, bc_struct, ipatch, is),
-                           Locals(int ip, io, dir;
+                           Locals(int ip, io, ipatch, dir;
                                   double q_overlnd, u_old, u_new, diff;
                                   double x_dir_g, y_dir_g, z_dir_g;
                                   double sep, lower_cond, upper_cond;
@@ -1544,6 +1562,7 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
                            {
                              ip = SubvectorEltIndex(p_sub, i, j, k);
                              io = SubvectorEltIndex(x_sl_sub, i, j, 0);
+                             ipatch = SubvectorEltIndex(patch_sub, i, j, 0);
 
                              dir = 0;
                              diff = 0.0e0;
@@ -1690,10 +1709,17 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
                              u_new = ffz * del_x_slope * del_y_slope;
 
                              q_overlnd = 0.0;
+                             // RMM, switch seepage face on optionally for two surface patches
+                             if ((int)patch_dat[ipatch] == public_xtra->seepage_patch_one || (int)patch_dat[ipatch] == public_xtra->seepage_patch_two) {
+                               q_overlnd = vol
+                                         * dt* (pfmax(pp[ip], 0.0) -0.0) / dz;
+                                //printf("Current Patch %d, seepage one %d, %d (%d,%d,%d)\n",(int)patch_dat[ipatch], public_xtra->seepage_patch_one, io, i,j,k);
+                             } else {
                              q_overlnd = vol
                                          * (pfmax(pp[ip], 0.0) - pfmax(opp[ip], 0.0)) / dz +
                                          dt * vol * ((ke_[io] - kw_[io]) / dx + (kn_[io] - ks_[io]) / dy)
                                          / dz;
+                             }
                              fp[ip] += q_overlnd;
                            }),
                            CellFinalize(
@@ -2093,6 +2119,11 @@ PFModule   *NlFunctionEvalNewPublicXtra(char *name)
   sprintf(key, "OverlandSpinupDampP2");
   public_xtra->SpinupDampP2 = GetDoubleDefault(key, 0.0);    //NBE
 
+  sprintf(key, "Solver.OverlandKinematic.SeepageOne");
+  public_xtra->seepage_patch_one = GetDoubleDefault(key, -999);
+  sprintf(key, "Solver.OverlandKinematic.SeepageTwo");
+  public_xtra->seepage_patch_two = GetDoubleDefault(key, -999);
+  
   ///* parameters for upwinding formulation for TFG */
   upwind_switch_na = NA_NewNameArray("Original UpwindSine Upwind");
   sprintf(key, "Solver.TerrainFollowingGrid.SlopeUpwindFormulation");
