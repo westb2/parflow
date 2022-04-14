@@ -164,6 +164,8 @@ USER ubuntu
 # -----------------------------------------------------------------------------
 # Install Parflow
 # -----------------------------------------------------------------------------
+
+# Do the pip installs on the earliest layer for faster iterative builds
 COPY --chown=ubuntu:ubuntu ./docker/dev/rebuild.sh ~/rebuild.sh
 COPY --chown=ubuntu:ubuntu ./pftools/python/requirements*.txt $BASE_PATH/parflow/src/pftools/python/
 RUN pip3 install -r $BASE_PATH/parflow/src/pftools/python/requirements_all.txt
