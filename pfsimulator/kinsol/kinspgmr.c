@@ -412,6 +412,7 @@ static int KINSpgmrSolve(KINMem kin_mem, N_Vector xx, N_Vector bb,
   if (ret == SPGMR_PSOLVE_FAIL_UNREC)
     return(KINSOL_PRECONDSOLVE_FAILURE);
   else
+      printf("kinspgmr");
     return(KINSOL_KRYLOV_FAILURE);
 }
 
