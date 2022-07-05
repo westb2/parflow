@@ -1905,8 +1905,8 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
 
                              q_overlnd = 0.0;
                              // RMM, switch seepage face on optionally for two surface patches
-                             printf("Seepage patch 1: %d\n", public_xtra->seepage_patch_one);
-                             printf("Patch dat: %d\n", (int)patch_dat[ipatch]);
+//                             printf("Seepage patch 1: %d\n", public_xtra->seepage_patch_one);
+//                             printf("Patch dat: %d\n", (int)patch_dat[ipatch]);
                              if ((int)patch_dat[ipatch] == public_xtra->seepage_patch_one || (int)patch_dat[ipatch] == public_xtra->seepage_patch_two) {
                                  //maybe cubic meters ??? Check equation sheet
                                  // Make porosity quite low
@@ -1916,7 +1916,6 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
                                q_overlnd = vol
                                          * dt* (pfmax(pp[ip], 0.0) -0.0) / dz;
 
-                               printf("IN TOP PATCH %f +\n", q_overlnd);
                                 //printf("Current Patch %d, seepage one %d, %d (%d,%d,%d)\n",(int)patch_dat[ipatch], public_xtra->seepage_patch_one, io, i,j,k);
                              } else {
                              q_overlnd = vol
@@ -1926,7 +1925,6 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
 
 
                              }
-                                   printf("ELSE CONDITION %f +\n", q_overlnd);
                              fp[ip] += q_overlnd;
                            }),
                            CellFinalize(
