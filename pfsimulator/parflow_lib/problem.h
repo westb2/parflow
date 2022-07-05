@@ -282,6 +282,7 @@ typedef struct {
 #define ProblemDataSSlopeY(problem_data)        ((problem_data)->y_sslope)   //RMM
 #define ProblemDataZmult(problem_data)          ((problem_data)->dz_mult)    //RMM
 #define ProblemDataRealSpaceZ(problem_data)     ((problem_data)->rsz)
+#define ProblemDataTotalSeepage(problem_data)     ((problem_data)->total_seepage)
 /*--------------------------------------------------------------------------
  * Misc macros
  *   RDF not quite right, maybe?

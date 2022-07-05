@@ -451,7 +451,7 @@ ProblemData   *NewProblemData(
   ProblemDataBCPressureData(problem_data) = NewBCPressureData();
 
   ProblemDataWellData(problem_data) = NewWellData();
-
+  ProblemDataTotalSeepage(problem_data) = 0;
   return problem_data;
 }
 
