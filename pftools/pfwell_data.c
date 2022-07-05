@@ -66,7 +66,6 @@ int main(
 
     background = NewBackground();
     problem_data = NewProblemData();
-
     if ((fd = fopen(argv[1], "r")) == NULL)
     {
       printf("Unable to open file %s\n", argv[1]);

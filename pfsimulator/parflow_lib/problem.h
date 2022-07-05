@@ -98,6 +98,7 @@ typedef struct {
 
   /*****  packages  *****/
   PFModule  *well_package;
+  PFModule  *reservoir_package;
 
   /*sk**  overland flow*/
   PFModule  *x_slope;
@@ -165,6 +166,8 @@ typedef struct {
   /* @RMM variable dz  */
   Vector *dz_mult;
   Vector *rsz;
+
+  double total_seepage;
 } ProblemData;
 
 /* Values of solver argument to NewProblem function */
@@ -246,6 +249,8 @@ typedef struct {
 /* packages */
 #define ProblemWellPackage(problem)               ((problem)->well_package)
 
+#define ProblemReservoirPackage(problem)               ((problem)->reservoir_package)
+
 /* error calculations */
 #define ProblemL2ErrorNorm(problem)               ((problem)->l2_error_norm)
 
@@ -282,6 +287,7 @@ typedef struct {
 #define ProblemDataSSlopeY(problem_data)        ((problem_data)->y_sslope)   //RMM
 #define ProblemDataZmult(problem_data)          ((problem_data)->dz_mult)    //RMM
 #define ProblemDataRealSpaceZ(problem_data)     ((problem_data)->rsz)
+#define ProblemDataTotalSeepage(problem_data)     ((problem_data)->total_seepage)
 /*--------------------------------------------------------------------------
  * Misc macros
  *   RDF not quite right, maybe?

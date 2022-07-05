@@ -1325,6 +1325,17 @@ PFModule *WellPackageNewPublicXtra(int num_phases, int num_contaminants);
 void WellPackageFreePublicXtra(void);
 int WellPackageSizeOfTempData(void);
 
+/* reservoir_package.c */
+typedef void (*ReservoirPackageInvoke) (ProblemData *problem_data);
+typedef PFModule *(*ReservoirPackageNewPublicXtraInvoke) (int num_phases, int num_contaminants);
+
+void ReservoirPackage(ProblemData *problem_data);
+PFModule *ReservoirPackageInitInstanceXtra(void);
+void ReservoirPackageFreeInstanceXtra(void);
+PFModule *ReservoirPackageNewPublicXtra(int num_phases, int num_contaminants);
+void ReservoirPackageFreePublicXtra(void);
+int ReservoirPackageSizeOfTempData(void);
+
 /* wells_lb.c */
 void LBWells(Lattice *lattice, Problem *problem, ProblemData *problem_data);
 

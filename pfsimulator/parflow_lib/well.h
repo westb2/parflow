@@ -99,6 +99,12 @@ typedef struct {
   WellDataValue    ***flux_well_values;
   WellDataStat      **flux_well_stats;
 
+  int num_reservoir_wells;
+
+  WellDataPhysical  **reservoir_well_physicals;
+  WellDataValue    ***reservoir_well_values;
+  WellDataStat      **reservoir_well_stats;
+
   /* time info */
   TimeCycleData      *time_cycle_data;
 } WellData;
@@ -275,6 +281,26 @@ typedef struct {
   ((well_data)->flux_well_stats)
 #define WellDataFluxWellStat(well_data, i) \
   ((well_data)->flux_well_stats[i])
+
+/*---------------------------- Reservoir well data ------------------------------*/
+#define WellDataNumReservoirWells(well_data)      ((well_data)->num_reservoir_wells)
+
+#define WellDataReservoirWellPhysicals(well_data) \
+  ((well_data)->reservoir_well_physicals)
+#define WellDataReservoirWellPhysical(well_data, i) \
+  ((well_data)->reservoir_well_physicals[i])
+
+#define WellDataReservoirWellValues(well_data) \
+  ((well_data)->reservoir_well_values)
+#define WellDataReservoirWellIntervalValues(well_data, i) \
+  ((well_data)->reservoir_well_values[i])
+#define WellDataReservoirWellIntervalValue(well_data, i, interval_number) \
+  (((well_data)->reservoir_well_values[i])[interval_number])
+
+#define WellDataReservoirWellStats(well_data) \
+  ((well_data)->reservoir_well_stats)
+#define WellDataReservoirWellStat(well_data, i) \
+  ((well_data)->reservoir_well_stats[i])
 
 /*--------------------------------------------------------------------------
  * Well Data constants used in the program.

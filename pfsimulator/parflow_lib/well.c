@@ -74,6 +74,11 @@ WellData *NewWellData()
   WellDataFluxWellValues(well_data) = NULL;
   WellDataFluxWellStats(well_data) = NULL;
 
+  WellDataNumReservoirWells(well_data) = -1;
+  WellDataReservoirWellPhysicals(well_data) = NULL;
+  WellDataReservoirWellValues(well_data) = NULL;
+  WellDataReservoirWellStats(well_data) = NULL;
+
   return well_data;
 }
 
@@ -283,6 +288,99 @@ void FreeWellData(
           tfree(WellDataPressWellPhysicals(well_data));
         }
       }
+
+      if (WellDataNumReservoirWells(well_data) > 0)
+        {
+            for (i = 0; i < WellDataNumReservoirWells(well_data); i++)
+            {
+                well_data_stat = WellDataReservoirWellStat(well_data, i);
+                if (WellDataStatDeltaPhases(well_data_stat))
+                {
+                    tfree(WellDataStatDeltaPhases(well_data_stat));
+                }
+                if (WellDataStatPhaseStats(well_data_stat))
+                {
+                    tfree(WellDataStatPhaseStats(well_data_stat));
+                }
+                if (WellDataStatDeltaSaturations(well_data_stat))
+                {
+                    tfree(WellDataStatDeltaSaturations(well_data_stat));
+                }
+                if (WellDataStatSaturationStats(well_data_stat))
+                {
+                    tfree(WellDataStatSaturationStats(well_data_stat));
+                }
+                if (WellDataStatDeltaContaminants(well_data_stat))
+                {
+                    tfree(WellDataStatDeltaContaminants(well_data_stat));
+                }
+                if (WellDataStatContaminantStats(well_data_stat))
+                {
+                    tfree(WellDataStatContaminantStats(well_data_stat));
+                }
+                tfree(well_data_stat);
+            }
+            if (WellDataReservoirWellStats(well_data))
+            {
+                tfree(WellDataReservoirWellStats(well_data));
+            }
+            for (i = 0; i < WellDataNumReservoirWells(well_data); i++)
+            {
+                well_data_physical = WellDataReservoirWellPhysical(well_data, i);
+                cycle_number = WellDataPhysicalCycleNumber(well_data_physical);
+                interval_division = TimeCycleDataIntervalDivision(time_cycle_data, cycle_number);
+
+                for (interval_number = 0; interval_number < interval_division; interval_number++)
+                {
+                    well_data_value = WellDataReservoirWellIntervalValue(well_data, i, interval_number);
+                    if (WellDataValuePhaseValues(well_data_value))
+                    {
+                        tfree(WellDataValuePhaseValues(well_data_value));
+                    }
+                    if (WellDataPhysicalAction(well_data_physical) == INJECTION_WELL)
+                    {
+                        if (WellDataValueSaturationValues(well_data_value))
+                        {
+                            tfree(WellDataValueSaturationValues(well_data_value));
+                        }
+                        if (WellDataValueContaminantValues(well_data_value))
+                        {
+                            tfree(WellDataValueContaminantValues(well_data_value));
+                        }
+                    }
+                    if (WellDataValueContaminantFractions(well_data_value))
+                    {
+                        tfree(WellDataValueContaminantFractions(well_data_value));
+                    }
+                    tfree(well_data_value);
+                }
+                if (WellDataReservoirWellIntervalValues(well_data, i))
+                {
+                    tfree(WellDataReservoirWellIntervalValues(well_data, i));
+                }
+            }
+            if (WellDataReservoirWellValues(well_data))
+            {
+                tfree(WellDataReservoirWellValues(well_data));
+            }
+            for (i = 0; i < WellDataNumReservoirWells(well_data); i++)
+            {
+                well_data_physical = WellDataReservoirWellPhysical(well_data, i);
+                if (WellDataPhysicalName(well_data_physical))
+                {
+                    tfree(WellDataPhysicalName(well_data_physical));
+                }
+                if (WellDataPhysicalSubgrid(well_data_physical))
+                {
+                    FreeSubgrid(WellDataPhysicalSubgrid(well_data_physical));
+                }
+                tfree(well_data_physical);
+            }
+            if (WellDataReservoirWellPhysicals(well_data))
+            {
+                tfree(WellDataReservoirWellPhysicals(well_data));
+            }
+        }
       FreeTimeCycleData(time_cycle_data);
     }
     tfree(well_data);

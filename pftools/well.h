@@ -68,6 +68,7 @@ extern "C" {
 /*       Actions        */
 #define INJECTION_WELL  0
 #define EXTRACTION_WELL 1
+#define RESERVOIR_WELL  2
 
 
 /*----------------------------------------------------------------

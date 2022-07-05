@@ -270,7 +270,6 @@ void         PhaseSource(
   /*-----------------------------------------------------------------------
    * Put in any flux wells from the well package
    *-----------------------------------------------------------------------*/
-//  fprintf(stdout, "Number of flux wells: %d\n", WellDataNumFluxWells(well_data));
   if (WellDataNumFluxWells(well_data) > 0)
   {
     time_cycle_data = WellDataTimeCycleData(well_data);

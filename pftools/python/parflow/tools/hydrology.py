@@ -90,7 +90,9 @@ def calculate_subsurface_storage(porosity, pressure, saturation, specific_storag
         mask = np.ones_like(porosity)
 
     mask = np.where(mask > 0, 1, 0)
-    dz = dz[:, np.newaxis, np.newaxis]  # make 3d so we can broadcast the multiplication below
+    mask = np.where(mask > 0, 1, 0)
+    if not isinstance(dz, float):
+        dz = dz[:, np.newaxis, np.newaxis]
     incompressible = porosity * saturation * dz * dx * dy
     compressible = pressure * saturation * specific_storage * dz * dx * dy
     total = incompressible + compressible
@@ -400,7 +402,8 @@ def calculate_overland_flow(pressure, slopex, slopey, mannings, dx, dy, flow_met
     edge_west = np.maximum(0, np.diff(surface_mask, axis=1, prepend=0))
     # find forward difference of -1 on axis 1
     edge_east = np.maximum(0, -np.diff(surface_mask, axis=1, append=0))
-
+    if qnorth.ndim == 2 or qeast.ndim == 2:
+        print("You may have forgotten to apply your mask. If you don't get an error, ignore this\n")
     # North flux is the sum of +ve qnorth values (shifted up by one) on north edges
     flux_north = np.sum(np.maximum(0, np.roll(qnorth, -1, axis=0)[np.where(edge_north == 1)]))
     # South flux is the negated sum of -ve qnorth values for south edges

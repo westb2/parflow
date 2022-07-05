@@ -335,6 +335,10 @@ Problem   *NewProblem(
     PFModuleNewModuleType(WellPackageNewPublicXtraInvoke,
                           WellPackage, (num_phases, num_contaminants));
 
+  ProblemReservoirPackage(problem) =
+      PFModuleNewModuleType(ReservoirPackageNewPublicXtraInvoke,
+                            ReservoirPackage, (num_phases, num_contaminants));
+
 
   return problem;
 }
@@ -451,6 +455,8 @@ ProblemData   *NewProblemData(
   ProblemDataBCPressureData(problem_data) = NewBCPressureData();
 
   ProblemDataWellData(problem_data) = NewWellData();
+  ProblemDataTotalSeepage(problem_data) = 0;
+
 
   return problem_data;
 }
@@ -465,7 +471,7 @@ void          FreeProblemData(
 {
   int i;
 
-
+  printf("total seepage has been %f\n", ProblemDataTotalSeepage(problem_data));
   if (problem_data)
   {
 #if 1

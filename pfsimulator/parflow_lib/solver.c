@@ -59,7 +59,6 @@ void Solve()
   BeginTiming(SolverCleanupTimingIndex);
   PFModuleFreeInstance(solver);
   EndTiming(SolverCleanupTimingIndex);
-
   FreeSolver();
 }
 
