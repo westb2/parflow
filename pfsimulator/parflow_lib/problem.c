@@ -465,7 +465,7 @@ void          FreeProblemData(
 {
   int i;
 
-
+  printf("total seepage has been %f\n", ProblemDataTotalSeepage(problem_data));
   if (problem_data)
   {
 #if 1
