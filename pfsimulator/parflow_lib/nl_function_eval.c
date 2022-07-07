@@ -1909,19 +1909,19 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
 //                             printf("Seepage patch 1: %d\n", public_xtra->seepage_patch_one);
 //                             printf("Patch dat: %d\n", (int)patch_dat[ipatch]);
                                    if ((int)patch_dat[ipatch] == public_xtra->seepage_patch_one || (int)patch_dat[ipatch] == public_xtra->seepage_patch_two) {
-                                 //maybe cubic meters ??? Check equation sheet
-                                 // Make porosity quite low
-                                 // Calculate water leaving domain, change in storage, and this and we should get water in
-                                 // Try turning tilted v multiple directions
+                                     //maybe cubic meters ??? Check equation sheet
+                                     // Make porosity quite low
+                                     // Calculate water leaving domain, change in storage, and this and we should get water in
+                                     // Try turning tilted v multiple directions
 
-                                 q_overlnd = vol
-                                             * dt* (pfmax(pp[ip], 0.0) -0.0) / dz;
+                                     q_overlnd = vol
+                                                 * dt* (pfmax(pp[ip], 0.0) -0.0) / dz;
 
-//                            //   printf("IN TOP PATCH %f +\n", q_overlnd);
-//                               printf("%f +\n", q_overlnd);
-                                 ProblemDataTotalSeepage(problem_data) += q_overlnd;
-//                               printf("total seepage has been %f\n", ProblemDataTotalSeepage(problem_data));
-                                 //printf("Current Patch %d, seepage one %d, %d (%d,%d,%d)\n",(int)patch_dat[ipatch], public_xtra->seepage_patch_one, io, i,j,k);
+    //                               //printf("IN TOP PATCH %f +\n", q_overlnd);
+    //                               printf("%f +\n", q_overlnd);
+                                     ProblemDataTotalSeepage(problem_data) += q_overlnd;
+    //                               printf("total seepage has been %f\n", ProblemDataTotalSeepage(problem_data));
+                                     //printf("Current Patch %d, seepage one %d, %d (%d,%d,%d)\n",(int)patch_dat[ipatch], public_xtra->seepage_patch_one, io, i,j,k);
                                } else {
                                  q_overlnd = vol
                                              * (pfmax(pp[ip], 0.0) - pfmax(opp[ip], 0.0)) / dz +

@@ -165,6 +165,7 @@ typedef struct {
   /* @RMM variable dz  */
   Vector *dz_mult;
   Vector *rsz;
+  double total_seepage;
 } ProblemData;
 
 /* Values of solver argument to NewProblem function */
