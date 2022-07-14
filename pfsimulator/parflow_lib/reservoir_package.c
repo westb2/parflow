@@ -37,7 +37,7 @@ typedef struct {
     int num_phases;
     int num_contaminants;
 
-    /* well info */
+    /* reservoir info */
     int num_units;
     int num_reservoirs;
     void     **data;
@@ -61,7 +61,7 @@ typedef struct {
     double **phase_values;
     double **saturation_values;
     double **contaminant_values;
-} Type0;                      /* basic vertical well */
+} Type0;                      /* basic vertical reservoir */
 
 
 
@@ -79,10 +79,10 @@ void         ReservoirPackage(
 
   Subgrid          *new_subgrid;
 
-  WellData         *well_data = ProblemDataWellData(problem_data);
-  WellDataPhysical *well_data_physical;
-  WellDataValue    *well_data_value;
-  WellDataStat     *well_data_stat = NULL;
+  ReservoirData         *reservoir_data = ProblemDataReservoirData(problem_data);
+  ReservoirDataPhysical *reservoir_data_physical;
+  ReservoirDataValue    *reservoir_data_value;
+  ReservoirDataStat     *reservoir_data_stat = NULL;
 
   int i, sequence_number, reservoir;
 
@@ -98,19 +98,19 @@ void         ReservoirPackage(
   double x_lower, x_upper, y_lower, y_upper,
       z_lower, z_upper;
 
-  /* Allocate the well data */
-  WellDataNumPhases(well_data) = (public_xtra->num_phases);
-  WellDataNumContaminants(well_data) = (public_xtra->num_contaminants);
+  /* Allocate the reservoir data */
+  ReservoirDataNumPhases(reservoir_data) = (public_xtra->num_phases);
+  ReservoirDataNumContaminants(reservoir_data) = (public_xtra->num_contaminants);
 
-  WellDataNumWells(well_data) += (public_xtra->num_reservoirs);
+  ReservoirDataNumReservoirs(reservoir_data) += (public_xtra->num_reservoirs);
 
   if ((public_xtra->num_reservoirs) > 0)
   {
-    WellDataNumReservoirWells(well_data) = (public_xtra->num_reservoirs);
+    ReservoirDataNumReservoirReservoirs(reservoir_data) = (public_xtra->num_reservoirs);
     if ((public_xtra->num_reservoirs) > 0)
-      WellDataReservoirWellPhysicals(well_data) = ctalloc(WellDataPhysical *, (public_xtra->num_reservoirs));
-    WellDataReservoirWellValues(well_data) = ctalloc(WellDataValue * *, (public_xtra->num_reservoirs));
-    WellDataReservoirWellStats(well_data) = ctalloc(WellDataStat *, (public_xtra->num_reservoirs));
+      ReservoirDataReservoirReservoirPhysicals(reservoir_data) = ctalloc(ReservoirDataPhysical *, (public_xtra->num_reservoirs));
+    ReservoirDataReservoirReservoirValues(reservoir_data) = ctalloc(ReservoirDataValue * *, (public_xtra->num_reservoirs));
+    ReservoirDataReservoirReservoirStats(reservoir_data) = ctalloc(ReservoirDataStat *, (public_xtra->num_reservoirs));
   }
 
   reservoir = 0;
@@ -149,30 +149,30 @@ void         ReservoirPackage(
 
       subgrid_volume = (nx * dx) * (ny * dy) * (nz * dz);
 
-      /* Put in physical data for this well */
-      well_data_physical = ctalloc(WellDataPhysical, 1);
-      WellDataPhysicalNumber(well_data_physical) = sequence_number;
-      WellDataPhysicalName(well_data_physical) = ctalloc(char, strlen((dummy0->name)) + 1);
-      strcpy(WellDataPhysicalName(well_data_physical), (dummy0->name));
-      WellDataPhysicalXLower(well_data_physical) = (dummy0->xlocation);
-      WellDataPhysicalYLower(well_data_physical) = (dummy0->ylocation);
-      WellDataPhysicalZLower(well_data_physical) = (dummy0->z_lower);
-      WellDataPhysicalXUpper(well_data_physical) = (dummy0->xlocation);
-      WellDataPhysicalYUpper(well_data_physical) = (dummy0->ylocation);
-      WellDataPhysicalZUpper(well_data_physical) = (dummy0->z_upper);
-      WellDataPhysicalDiameter(well_data_physical) = pfmin(dx, dy);
-      WellDataPhysicalSubgrid(well_data_physical) = new_subgrid;
-      WellDataPhysicalSize(well_data_physical) = subgrid_volume;
-      WellDataPhysicalAction(well_data_physical) = (dummy0->action);
-      WellDataPhysicalMethod(well_data_physical) = (dummy0->method);
-      WellDataPhysicalAveragePermeabilityX(well_data_physical) = 0.0;
-      WellDataPhysicalAveragePermeabilityY(well_data_physical) = 0.0;
-      WellDataPhysicalAveragePermeabilityZ(well_data_physical) = 0.0;
-      WellDataPressWellPhysical(well_data, reservoir) = well_data_physical;
+      /* Put in physical data for this reservoir */
+      reservoir_data_physical = ctalloc(ReservoirDataPhysical, 1);
+      ReservoirDataPhysicalNumber(reservoir_data_physical) = sequence_number;
+      ReservoirDataPhysicalName(reservoir_data_physical) = ctalloc(char, strlen((dummy0->name)) + 1);
+      strcpy(ReservoirDataPhysicalName(reservoir_data_physical), (dummy0->name));
+      ReservoirDataPhysicalXLower(reservoir_data_physical) = (dummy0->xlocation);
+      ReservoirDataPhysicalYLower(reservoir_data_physical) = (dummy0->ylocation);
+      ReservoirDataPhysicalZLower(reservoir_data_physical) = (dummy0->z_lower);
+      ReservoirDataPhysicalXUpper(reservoir_data_physical) = (dummy0->xlocation);
+      ReservoirDataPhysicalYUpper(reservoir_data_physical) = (dummy0->ylocation);
+      ReservoirDataPhysicalZUpper(reservoir_data_physical) = (dummy0->z_upper);
+      ReservoirDataPhysicalDiameter(reservoir_data_physical) = pfmin(dx, dy);
+      ReservoirDataPhysicalSubgrid(reservoir_data_physical) = new_subgrid;
+      ReservoirDataPhysicalSize(reservoir_data_physical) = subgrid_volume;
+      ReservoirDataPhysicalAction(reservoir_data_physical) = (dummy0->action);
+      ReservoirDataPhysicalMethod(reservoir_data_physical) = (dummy0->method);
+      ReservoirDataPhysicalAveragePermeabilityX(reservoir_data_physical) = 0.0;
+      ReservoirDataPhysicalAveragePermeabilityY(reservoir_data_physical) = 0.0;
+      ReservoirDataPhysicalAveragePermeabilityZ(reservoir_data_physical) = 0.0;
+      ReservoirDataPressReservoirPhysical(reservoir_data, reservoir) = reservoir_data_physical;
 
-      /* Put in informational statistics for this well */
-      well_data_stat = ctalloc(WellDataStat, 1);
-      WellDataPressWellStat(well_data, reservoir) = well_data_stat;
+      /* Put in informational statistics for this reservoir */
+      reservoir_data_stat = ctalloc(ReservoirDataStat, 1);
+      ReservoirDataPressReservoirStat(reservoir_data, reservoir) = reservoir_data_stat;
       reservoir++;
       sequence_number++;
       break;
@@ -281,7 +281,7 @@ PFModule  *ReservoirPackageNewPublicXtra(
 
       dummy0 = ctalloc(Type0, 1);
 
-      /*** Read in the physical data for the well ***/
+      /*** Read in the physical data for the reservoir ***/
       dummy0->name = strdup(reservoir_name);
 
       sprintf(key, "Reservoirs.X", reservoir_name);
@@ -334,7 +334,7 @@ void  ReservoirPackageFreePublicXtra()
   {
     NA_FreeNameArray(public_xtra->reservoir_names);
 
-    /* Free the well information */
+    /* Free the reservoir information */
     num_units = (public_xtra->num_units);
     if (num_units > 0)
     {

@@ -117,7 +117,7 @@ void PrintTimeCycleData(
   amps_Printf(" Interval Divisions :\n");
   for (cycle_number = 0; cycle_number < TimeCycleDataNumberOfCycles(time_cycle_data); cycle_number++)
   {
-    amps_Printf("  id[%02d] = %d\n", cycle_number, TimeCycleDataIntervalDivision(time_cycle_data, cycle_number));
+//    amps_Printf("  id[%02d] = %d\n", cycle_number, TimeCycleDataIntervalDivision(time_cycle_data, cycle_number));
   }
 
   amps_Printf(" Interval Data\n");

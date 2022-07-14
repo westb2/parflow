@@ -314,7 +314,7 @@ void NewMetadata(PFModule* solver)
   cJSON_AddItemToObject(metadata, "outputs", js_outputs);
 
   MetadataAddParflowBuildInfo(js_parflow);
-  // MetadataAddParflowDomainInfo(js_domains, solver);
+//   MetadataAddParflowDomainInfo(js_domains, solver);
   MetadataInitParflowInputInfo(js_inputs, solver);
   MetadataInitParflowOutputInfo(js_outputs, solver);
 }

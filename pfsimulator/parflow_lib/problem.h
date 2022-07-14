@@ -152,6 +152,7 @@ typedef struct {
 
 
   WellData       *well_data;
+  ReservoirData  *reservoir_data;
   BCPressureData *bc_pressure_data;
 
   /*sk  overland flow*/
@@ -278,6 +279,7 @@ typedef struct {
 #define ProblemDataFBy(problem_data)            ((problem_data)->FBy)    //RMM
 #define ProblemDataFBz(problem_data)            ((problem_data)->FBz)    //RMM
 #define ProblemDataWellData(problem_data)       ((problem_data)->well_data)
+#define ProblemDataReservoirData(problem_data)       ((problem_data)->reservoir_data)
 #define ProblemDataBCPressureData(problem_data) ((problem_data)->bc_pressure_data)
 #define ProblemDataSpecificStorage(problem_data)((problem_data)->specific_storage)   //sk
 #define ProblemDataTSlopeX(problem_data)        ((problem_data)->x_slope)   //sk

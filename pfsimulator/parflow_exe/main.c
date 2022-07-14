@@ -381,7 +381,6 @@ int main(int argc, char *argv [])
     if (!amps_Rank(amps_CommWorld))
     {
       amps_Printf("Problem solved \n");
-        amps_Printf("AHHHH \n");
       fflush(NULL);
     }
 

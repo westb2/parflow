@@ -30,6 +30,7 @@
 #include <float.h>
 #include <limits.h>
 #include <ctype.h>
+#include <execinfo.h>
 #include "cJSON.h"
 
 static const char *ep;
@@ -809,9 +810,28 @@ void   cJSON_AddItemToArray(cJSON *array, cJSON *item)
 void   cJSON_AddItemToObject(cJSON *object, const char *string, cJSON *item)
 {
   if (!item)
-    return;
-  if (item->string)
-    cJSON_free(item->string);
+  {
+      return;
+  }
+    char *ret;
+    ret = strstr(string, "Wells");
+    if (ret){
+//        printf("PRINTING STACKTRACE___________________\n");
+//        printf("string: %s\n", string);
+//        int size = 32;
+//        void * array[32];
+//        int stack_num = backtrace(array, size);
+//        char ** stacktrace = backtrace_symbols(array, stack_num);
+//        for (int i = 0; i < stack_num; ++i)
+//        {
+//            printf("%s\n", stacktrace[i]);
+//        }
+//        free(stacktrace);
+        return;
+    }
+  if (item->string) {
+      cJSON_free(item->string);
+  }
   item->string = cJSON_strdup(string); cJSON_AddItemToArray(object, item);
 }
 void    cJSON_AddItemReferenceToArray(cJSON *array, cJSON *item)

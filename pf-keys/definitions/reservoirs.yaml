@@ -1,0 +1,49 @@
+# reservoirs.yaml
+# Definitions of all reservoir items
+
+# -----------------------------------------------------------------------------
+# Reservoirs
+# -----------------------------------------------------------------------------
+
+Reservoirs:
+  __doc__: >
+    Here we define the reservoirs for the model.
+
+  # Reservoirs.Names not in grep
+  Names:
+    help: >
+      [Type: string] This key specifies the names fo the reservoirs for which input data will be given.
+    domains:
+      AnyString:
+    handlers:
+      ReservoirUpdater:
+        type: ChildrenHandler
+        class_name: ReservoirItem
+
+  .{reservoir_name}:
+    __class__: ReservoirItem
+    __rst__:
+      name: Reservoirs.{reservoir_name}
+    __doc__: >
+      Specifying properties for reservoirs
+    __simput__:
+      type: VariableTable
+      table_label: Reservoir
+
+    Capacity:
+      help: >
+        [Type: double] This key specifies the capacity of the reservoir in [TBD] units
+      domains:
+        DoubleValue:
+
+    X:
+      help: >
+        [Type: double] This key specifies the capacity of the reservoir in [TBD] units
+      domains:
+        DoubleValue:
+
+    Y:
+      help: >
+        [Type: double] This key specifies the capacity of the reservoir in [TBD] units
+      domains:
+        DoubleValue:

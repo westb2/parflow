@@ -893,7 +893,6 @@ void WriteWells(
   char filename[255];
 
   int p;
-
   if (WellDataNumWells(well_data) > 0)
   {
     p = amps_Rank(amps_CommWorld);

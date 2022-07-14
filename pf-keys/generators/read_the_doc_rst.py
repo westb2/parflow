@@ -13,6 +13,7 @@ YAML_MODULES_TO_PROCESS = [
     'geom',
     'solver',
     'wells',
+    'reservoirs',
     'phase',
     'timing',
     'netcdf',

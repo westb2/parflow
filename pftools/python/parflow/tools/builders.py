@@ -263,6 +263,7 @@ class SolidFileBuilder:
         geom_item.FileName = self.name
         return self
 
+
 # -----------------------------------------------------------------------------
 # Abstract table to property helper class
 # -----------------------------------------------------------------------------
@@ -839,6 +840,32 @@ class WellPropertiesBuilder(TableToProperties):
         return 'wells_'
 
 
+class ReservoirPropertiesBuilder(TableToProperties):
+
+    def __init__(self, run=None):
+        super().__init__(run)
+
+    @property
+    def reference_file(self):
+        return 'ref/reservoir_keys.yaml'
+
+    @property
+    def key_root(self):
+        return self.run.Reservoirs
+
+    @property
+    def unit_string(self):
+        return 'Reservoirs'
+
+    @property
+    def default_db(self):
+        return 'conus_1'
+
+    @property
+    def db_prefix(self):
+        return 'reservoirs_'
+
+
 # -----------------------------------------------------------------------------
 # Vegetation parameter property input helper
 # -----------------------------------------------------------------------------
@@ -867,6 +894,7 @@ class VegParamBuilder(TableToProperties):
     @property
     def db_prefix(self):
         return 'vegp_'
+
 
 # -----------------------------------------------------------------------------
 # Domain input builder - setting keys for various common problem definitions
@@ -1393,12 +1421,12 @@ class CLMImporter:
 
         land_names = self._land_names
         all_tokens = [
-            'Latitude',
-            'Longitude',
-            'Sand',
-            'Clay',
-            'Color'
-        ] + land_names
+                         'Latitude',
+                         'Longitude',
+                         'Sand',
+                         'Clay',
+                         'Color'
+                     ] + land_names
 
         # Slice the tokens so they match the shape of the data
         num_tokens = vegm_data.shape[2]
