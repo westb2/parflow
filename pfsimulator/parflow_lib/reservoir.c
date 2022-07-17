@@ -74,10 +74,10 @@ ReservoirData *NewReservoirData()
   ReservoirDataFluxReservoirValues(well_data) = NULL;
   ReservoirDataFluxReservoirStats(well_data) = NULL;
 
-  ReservoirDataNumReservoirReservoirs(well_data) = -1;
+  ReservoirDataNumReservoirs(well_data) = -1;
   ReservoirDataReservoirReservoirPhysicals(well_data) = NULL;
   ReservoirDataReservoirReservoirValues(well_data) = NULL;
-  ReservoirDataReservoirReservoirStats(well_data) = NULL;
+  ReservoirDataReservoirstats(well_data) = NULL;
 
   return well_data;
 }
@@ -289,11 +289,11 @@ void FreeReservoirData(
         }
       }
 
-      if (ReservoirDataNumReservoirReservoirs(well_data) > 0)
+      if (ReservoirDataNumReservoirs(well_data) > 0)
       {
-        for (i = 0; i < ReservoirDataNumReservoirReservoirs(well_data); i++)
+        for (i = 0; i < ReservoirDataNumReservoirs(well_data); i++)
         {
-          well_data_stat = ReservoirDataReservoirReservoirStat(well_data, i);
+          well_data_stat = ReservoirDataReservoirstat(well_data, i);
           if (ReservoirDataStatDeltaPhases(well_data_stat))
           {
             tfree(ReservoirDataStatDeltaPhases(well_data_stat));
@@ -320,11 +320,11 @@ void FreeReservoirData(
           }
           tfree(well_data_stat);
         }
-        if (ReservoirDataReservoirReservoirStats(well_data))
+        if (ReservoirDataReservoirstats(well_data))
         {
-          tfree(ReservoirDataReservoirReservoirStats(well_data));
+          tfree(ReservoirDataReservoirstats(well_data));
         }
-        for (i = 0; i < ReservoirDataNumReservoirReservoirs(well_data); i++)
+        for (i = 0; i < ReservoirDataNumReservoirs(well_data); i++)
         {
           well_data_physical = ReservoirDataReservoirReservoirPhysical(well_data, i);
           cycle_number = ReservoirDataPhysicalCycleNumber(well_data_physical);
@@ -363,7 +363,7 @@ void FreeReservoirData(
         {
           tfree(ReservoirDataReservoirReservoirValues(well_data));
         }
-        for (i = 0; i < ReservoirDataNumReservoirReservoirs(well_data); i++)
+        for (i = 0; i < ReservoirDataNumReservoirs(well_data); i++)
         {
           well_data_physical = ReservoirDataReservoirReservoirPhysical(well_data, i);
           if (ReservoirDataPhysicalName(well_data_physical))

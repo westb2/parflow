@@ -56,6 +56,7 @@ typedef struct {
     double xlocation;
     double ylocation;
     double z_lower, z_upper;
+    double capacity;
     int method;
     int cycle_number;
     double **phase_values;
@@ -106,11 +107,11 @@ void         ReservoirPackage(
 
   if ((public_xtra->num_reservoirs) > 0)
   {
-    ReservoirDataNumReservoirReservoirs(reservoir_data) = (public_xtra->num_reservoirs);
+    ReservoirDataNumReservoirs(reservoir_data) = (public_xtra->num_reservoirs);
     if ((public_xtra->num_reservoirs) > 0)
       ReservoirDataReservoirReservoirPhysicals(reservoir_data) = ctalloc(ReservoirDataPhysical *, (public_xtra->num_reservoirs));
     ReservoirDataReservoirReservoirValues(reservoir_data) = ctalloc(ReservoirDataValue * *, (public_xtra->num_reservoirs));
-    ReservoirDataReservoirReservoirStats(reservoir_data) = ctalloc(ReservoirDataStat *, (public_xtra->num_reservoirs));
+    ReservoirDataReservoirstats(reservoir_data) = ctalloc(ReservoirDataStat *, (public_xtra->num_reservoirs));
   }
 
   reservoir = 0;
@@ -160,6 +161,7 @@ void         ReservoirPackage(
       ReservoirDataPhysicalXUpper(reservoir_data_physical) = (dummy0->xlocation);
       ReservoirDataPhysicalYUpper(reservoir_data_physical) = (dummy0->ylocation);
       ReservoirDataPhysicalZUpper(reservoir_data_physical) = (dummy0->z_upper);
+      ReservoirDataPhysicalCapacity(reservoir_data_physical) = (dummy0->capacity);
       ReservoirDataPhysicalDiameter(reservoir_data_physical) = pfmin(dx, dy);
       ReservoirDataPhysicalSubgrid(reservoir_data_physical) = new_subgrid;
       ReservoirDataPhysicalSize(reservoir_data_physical) = subgrid_volume;
@@ -284,25 +286,26 @@ PFModule  *ReservoirPackageNewPublicXtra(
       /*** Read in the physical data for the reservoir ***/
       dummy0->name = strdup(reservoir_name);
 
-      sprintf(key, "Reservoirs.X", reservoir_name);
+      sprintf(key, "Reservoirs.%s.X", reservoir_name);
       dummy0->xlocation = GetDouble(key);
 
-      sprintf(key, "Reservoirs.Y", reservoir_name);
+      sprintf(key, "Reservoirs.%s.Y", reservoir_name);
       dummy0->ylocation = GetDouble(key);
 
-      sprintf(key, "Reservoirs.ZUpper", reservoir_name);
+      sprintf(key, "Reservoirs.%s.ZUpper", reservoir_name);
       dummy0->z_upper = GetDouble(key);
 
-      sprintf(key, "Reservoirs.ZLower", reservoir_name);
+      sprintf(key, "Reservoirs.%s.ZLower", reservoir_name);
       dummy0->z_lower = GetDouble(key);
+
+      sprintf(key, "Reservoirs.%s.Capacity", reservoir_name);
+      dummy0->capacity = GetDouble(key);
 
       /*** Bump the counter for the number of reservoirs ***/
 
       (public_xtra->num_reservoirs)++;
-
+      printf("Num reservoirs going up to %i\n", public_xtra->num_reservoirs);
       (public_xtra->data[i]) = (void*)dummy0;
-
-      break;
     }
   }
   NA_FreeNameArray(methodflux_na);

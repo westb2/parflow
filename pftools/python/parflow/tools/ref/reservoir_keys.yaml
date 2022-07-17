@@ -45,3 +45,17 @@ Y:
   alias:
     - Y
   register: Reservoirs.Names
+
+ZUpper:
+  type: float
+  alias:
+    - ZUpper
+    - Zupper
+  register: Reservoirs.Names
+
+ZLower:
+  type: float
+  alias:
+    - ZLower
+    - Zlower
+  register: Reservoirs.Names

@@ -41,6 +41,7 @@ typedef struct {
   double diameter;
   Subgrid       *subgrid;
   double size;
+  double capacity;
   int action;
   int method;
   int cycle_number;
@@ -99,11 +100,9 @@ typedef struct {
   ReservoirDataValue    ***flux_reservoir_values;
   ReservoirDataStat      **flux_reservoir_stats;
 
-  int num_reservoir_reservoirs;
-
-  ReservoirDataPhysical  **reservoir_reservoir_physicals;
-  ReservoirDataValue    ***reservoir_reservoir_values;
-  ReservoirDataStat      **reservoir_reservoir_stats;
+  ReservoirDataPhysical  **reservoir_physicals;
+  ReservoirDataValue    ***reservoir_values;
+  ReservoirDataStat      **reservoir_stats;
 
   /* time info */
   TimeCycleData      *time_cycle_data;
@@ -135,6 +134,9 @@ typedef struct {
 
 #define ReservoirDataPhysicalZUpper(reservoir_data_physical) \
   ((reservoir_data_physical)->z_upper)
+
+#define ReservoirDataPhysicalCapacity(reservoir_data_physical) \
+  ((reservoir_data_physical)->capacity)
 
 #define ReservoirDataPhysicalSubgrid(reservoir_data_physical) \
   ((reservoir_data_physical)->subgrid)
@@ -283,24 +285,22 @@ typedef struct {
   ((reservoir_data)->flux_reservoir_stats[i])
 
 /*---------------------------- Reservoir reservoir data ------------------------------*/
-#define ReservoirDataNumReservoirReservoirs(reservoir_data)      ((reservoir_data)->num_reservoir_reservoirs)
-
 #define ReservoirDataReservoirReservoirPhysicals(reservoir_data) \
-  ((reservoir_data)->reservoir_reservoir_physicals)
+  ((reservoir_data)->reservoir_physicals)
 #define ReservoirDataReservoirReservoirPhysical(reservoir_data, i) \
-  ((reservoir_data)->reservoir_reservoir_physicals[i])
+  ((reservoir_data)->reservoir_physicals[i])
 
 #define ReservoirDataReservoirReservoirValues(reservoir_data) \
-  ((reservoir_data)->reservoir_reservoir_values)
+  ((reservoir_data)->reservoir_values)
 #define ReservoirDataReservoirReservoirIntervalValues(reservoir_data, i) \
-  ((reservoir_data)->reservoir_reservoir_values[i])
+  ((reservoir_data)->reservoir_values[i])
 #define ReservoirDataReservoirReservoirIntervalValue(reservoir_data, i, interval_number) \
-  (((reservoir_data)->reservoir_reservoir_values[i])[interval_number])
+  (((reservoir_data)->reservoir_values[i])[interval_number])
 
-#define ReservoirDataReservoirReservoirStats(reservoir_data) \
-  ((reservoir_data)->reservoir_reservoir_stats)
-#define ReservoirDataReservoirReservoirStat(reservoir_data, i) \
-  ((reservoir_data)->reservoir_reservoir_stats[i])
+#define ReservoirDataReservoirstats(reservoir_data) \
+  ((reservoir_data)->reservoir_stats)
+#define ReservoirDataReservoirstat(reservoir_data, i) \
+  ((reservoir_data)->reservoir_stats[i])
 
 /*--------------------------------------------------------------------------
  * Reservoir Data constants used in the program.

@@ -38,12 +38,24 @@ Reservoirs:
 
     X:
       help: >
-        [Type: double] This key specifies the capacity of the reservoir in [TBD] units
+        [Type: double] This key specifies the x location of the reservoir in [TBD] units
       domains:
         DoubleValue:
 
     Y:
       help: >
-        [Type: double] This key specifies the capacity of the reservoir in [TBD] units
+        [Type: double] This key specifies the y location of the reservoir in [TBD] units
+      domains:
+        DoubleValue:
+
+    ZUpper:
+      help: >
+        [Type: double] This key specifies the upper location of the reservoir in [TBD] units
+      domains:
+        DoubleValue:
+
+    ZLower:
+      help: >
+        [Type: double] This key specifies the lower location of the reservoir in [TBD] units
       domains:
         DoubleValue:
