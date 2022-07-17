@@ -49,6 +49,7 @@ typedef struct {
   PFModule  *permeability;
   PFModule  *porosity;
   PFModule  *wells;
+  PFModule  *reservoirs;
   PFModule  *bc_pressure;
   PFModule  *specific_storage;  //sk
   PFModule  *x_slope;  //sk
@@ -85,6 +86,7 @@ void          SetProblemData(
   PFModule      *permeability = (instance_xtra->permeability);
   PFModule      *porosity = (instance_xtra->porosity);
   PFModule      *wells = (instance_xtra->wells);
+  PFModule      *reservoirs = (instance_xtra->reservoirs);
   PFModule      *bc_pressure = (instance_xtra->bc_pressure);
   PFModule      *specific_storage = (instance_xtra->specific_storage);    //sk
   PFModule      *x_slope = (instance_xtra->x_slope);         //sk
@@ -99,6 +101,7 @@ void          SetProblemData(
 
   /* Note: the order in which these modules are called is important */
   PFModuleInvokeType(WellPackageInvoke, wells, (problem_data));
+  PFModuleInvokeType(ReservoirPackageInvoke, reservoirs, (problem_data));
   if ((instance_xtra->site_data_not_formed))
   {
     PFModuleInvokeType(GeometriesInvoke, geometries, (problem_data));
@@ -247,7 +250,7 @@ PFModule  *SetProblemDataInitInstanceXtra(
 
     (instance_xtra->site_data_not_formed) = 1;
 
-    (instance_xtra->wells) =
+    (instance_xtra->reservoirs) =
       PFModuleNewInstance(ProblemWellPackage(problem), ());
 
     (instance_xtra->bc_pressure) =
@@ -280,6 +283,7 @@ PFModule  *SetProblemDataInitInstanceXtra(
 
     PFModuleReNewInstance((instance_xtra->real_space_z), ());
     PFModuleReNewInstance((instance_xtra->wells), ());
+    PFModuleReNewInstance((instance_xtra->reservoirs), ());
     PFModuleReNewInstanceType(BCPressurePackageInitInstanceXtraInvoke,
                               (instance_xtra->bc_pressure), (problem));
   }
@@ -304,6 +308,7 @@ void  SetProblemDataFreeInstanceXtra()
   {
     PFModuleFreeInstance(instance_xtra->bc_pressure);
     PFModuleFreeInstance(instance_xtra->wells);
+    PFModuleFreeInstance(instance_xtra->reservoirs);
 
     PFModuleFreeInstance(instance_xtra->geometries);
     PFModuleFreeInstance(instance_xtra->domain);

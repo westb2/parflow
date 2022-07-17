@@ -26,6 +26,7 @@ add_custom_command(
   DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/generators/pf-python.py"
     "${CMAKE_CURRENT_SOURCE_DIR}/definitions/wells.yaml"
+        "${CMAKE_CURRENT_SOURCE_DIR}/definitions/reservoirs.yaml"
     "${CMAKE_CURRENT_SOURCE_DIR}/definitions/timing.yaml"
     "${CMAKE_CURRENT_SOURCE_DIR}/definitions/bconditions.yaml"
     "${CMAKE_CURRENT_SOURCE_DIR}/definitions/core.yaml"

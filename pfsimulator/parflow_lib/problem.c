@@ -334,7 +334,9 @@ Problem   *NewProblem(
   ProblemWellPackage(problem) =
     PFModuleNewModuleType(WellPackageNewPublicXtraInvoke,
                           WellPackage, (num_phases, num_contaminants));
-
+  ProblemReservoirPackage(problem) =
+      PFModuleNewModuleType(ReservoirPackageNewPublicXtraInvoke,
+                            ReservoirPackage, (num_phases, num_contaminants));
 
   return problem;
 }
@@ -349,6 +351,7 @@ void      FreeProblem(
                       int      solver)
 {
   PFModuleFreeModule(ProblemWellPackage(problem));
+  PFModuleFreeModule(ProblemReservoirPackage(problem));
 
 
   NA_FreeNameArray(GlobalsPhaseNames);
@@ -451,6 +454,7 @@ ProblemData   *NewProblemData(
   ProblemDataBCPressureData(problem_data) = NewBCPressureData();
 
   ProblemDataWellData(problem_data) = NewWellData();
+  ProblemDataReservoirData(problem_data) = NewReservoirData();
   ProblemDataTotalSeepage(problem_data) = 0;
   return problem_data;
 }
@@ -477,6 +481,7 @@ void          FreeProblemData(
 #endif
 
     FreeWellData(ProblemDataWellData(problem_data));
+    FreeReservoirData(ProblemDataReservoirData(problem_data));
     FreeBCPressureData(ProblemDataBCPressureData(problem_data));
     FreeVector(ProblemDataPorosity(problem_data));
     FreeVector(ProblemDataPermeabilityX(problem_data));
