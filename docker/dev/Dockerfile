@@ -159,6 +159,7 @@ RUN ./configure --prefix=$HYPRE_DIR --with-MPI
 
 USER root
 RUN make install
+RUN apt-get install -y gdb
 USER ubuntu
 
 # -----------------------------------------------------------------------------

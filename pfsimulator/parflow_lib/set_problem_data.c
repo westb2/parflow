@@ -250,8 +250,11 @@ PFModule  *SetProblemDataInitInstanceXtra(
 
     (instance_xtra->site_data_not_formed) = 1;
 
+    (instance_xtra->wells) =
+        PFModuleNewInstance(ProblemWellPackage(problem), ());
+
     (instance_xtra->reservoirs) =
-      PFModuleNewInstance(ProblemWellPackage(problem), ());
+      PFModuleNewInstance(ProblemReservoirPackage(problem), ());
 
     (instance_xtra->bc_pressure) =
       PFModuleNewInstanceType(BCPressurePackageInitInstanceXtraInvoke,
