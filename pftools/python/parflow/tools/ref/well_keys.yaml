@@ -157,3 +157,15 @@ Cycle:
     - Cycle
   register: Wells.Names
 
+alltime.Flux.water.Value:
+  type: float
+  alias:
+    - alltime.Flux.water.Value
+  register: Reservoirs.Names
+
+alltime.Saturation.water.Value:
+  type: float
+  alias:
+    - alltime.Saturation.water.Value
+  register: Reservoirs.Names
+

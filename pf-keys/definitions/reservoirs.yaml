@@ -31,98 +31,98 @@ Reservoirs:
       table_label: Reservoir
 
     # Setting key Reservoirs.{reservoir_name}.{interval_name}...
-#    .{interval_name}:
-#      __class__: ReservoirIntervalItem
-#      __from__: /Cycle/{CycleItem}/Names
-#      __rst__:
-#        skip:
-#      __doc__: >
-#        This is to set properties for named reservoirs within specified cycles.
-#      __simput__:
-#        type: VariableTable
-#        table_label: Interval
-#        match_condition:
-#          siblingParamKey: Reservoirs/reservoir_name_/Cycle
-#          foreignNameKey: Cycle/cycle_name_
-#
-#
-#      Pressure:
-#        __class__: ReservoirIntervalItemPressure
-#        __rst__:
-#          skip:
-#        __doc__: >
-#          Setting pressure for a named reservoir within a specified cycle.
-#        Value:
-#          __rst__:
-#            name: Reservoirs.{reservoir_name}.{interval_name}.Pressure.Value
-#          help: >
-#            [Type: double] This key specifies the hydrostatic pressure value for a vertical reservoir if the type key is set to Pressure.
-#            Note This value gives the pressure of the primary phase (water) at z = 0. The other phase pressures (if any) are
-#            computed from the physical relationships that exist between the phases.
-#          domains:
-#            DoubleValue:
-#
-#      # Setting key Reservoirs.{reservoir_name}.{interval_name}.Saturation.{phase_name}.Value
-#      Saturation:
-#        __class__: ReservoirIntervalItemSaturation
-#        __rst__:
-#          skip:
-#        __doc__: ''
-#
-#        .{phase_name}:
-#          __class__: ReservoirIntervalSaturationPhaseItem
-#          __from__: /Phase/Names
-#          __rst__:
-#            skip:
-#          __doc__: ''
-#          __simput__:
-#            type: VariableTable
-#            table_label: Phase
-#
-#          Value:
-#            __rst__:
-#              name: Reservoirs.{reservoir_name}.{interval_name}.Saturation.{phase_name}.Value
-#            help: >
-#              [Type: double] This key specifies the saturation value of a vertical reservoir.
-#            domains:
-#              DoubleValue:
-#                min_value: 0.0
-#                max_value: 1.0
-#
-#      # Setting key Reservoirs.{reservoir_name}.{interval_name}.Flux.{phase_name}.Value
-#      Flux:
-#        __class__: ReservoirIntervalItemFlux
-#        __rst__:
-#          skip:
-#        __doc__: ''
-#
-#        .{phase_name}:
-#          __class__: ReservoirIntervalFluxPhaseItem
-#          __from__: /Phase/Names
-#          __rst__:
-#            skip:
-#          __doc__: ''
-#          __simput__:
-#            type: VariableTable
-#            table_label: Phase
-#
-#          # typos in the description - vertical, assign
-#          Value:
-#            __rst__:
-#              name: Reservoirs.{reservoir_name}.{interval_name}.Flux.{phase_name}.Value
-#            help: >
-#              [Type: double] This key specifies the volumetric flux for a vertical reservoir if the type key is set to Flux.
-#              Note only a positive number should be entered, ParFlow assigns the correct sign based on the chosen action
-#              for the reservoir.
-#            domains:
-#              DoubleValue:
-#
-#      Concentration:
-#        __class__: ReservoirIntervalItemConcentration
-#        __doc__: >
-#          Setting contaminant value of vertical reservoir.
-#
-#        # Setting key Reservoirs.{reservoir_name}.{interval_name}.Concentration.{phase_name}.{contaminant_name}.Value
+    .{interval_name}:
+      __class__: ReservoirIntervalItem
+      __from__: /Cycle/{CycleItem}/Names
+      __rst__:
+        skip:
+      __doc__: >
+        This is to set properties for named reservoirs within specified cycles.
+      __simput__:
+        type: VariableTable
+        table_label: Interval
+        match_condition:
+          siblingParamKey: Reservoirs/reservoir_name_/Cycle
+          foreignNameKey: Cycle/cycle_name_
+
+
+      Pressure:
+        __class__: ReservoirIntervalItemPressure
+        __rst__:
+          skip:
+        __doc__: >
+          Setting pressure for a named reservoir within a specified cycle.
+        Value:
+          __rst__:
+            name: Reservoirs.{reservoir_name}.{interval_name}.Pressure.Value
+          help: >
+            [Type: double] This key specifies the hydrostatic pressure value for a vertical reservoir if the type key is set to Pressure.
+            Note This value gives the pressure of the primary phase (water) at z = 0. The other phase pressures (if any) are
+            computed from the physical relationships that exist between the phases.
+          domains:
+            DoubleValue:
+
+      # Setting key Reservoirs.{reservoir_name}.{interval_name}.Saturation.{phase_name}.Value
+      Saturation:
+        __class__: ReservoirIntervalItemSaturation
+        __rst__:
+          skip:
+        __doc__: ''
+
+        .{phase_name}:
+          __class__: ReservoirIntervalSaturationPhaseItem
+          __from__: /Phase/Names
+          __rst__:
+            skip:
+          __doc__: ''
+          __simput__:
+            type: VariableTable
+            table_label: Phase
+
+          Value:
+            __rst__:
+              name: Reservoirs.{reservoir_name}.{interval_name}.Saturation.{phase_name}.Value
+            help: >
+              [Type: double] This key specifies the saturation value of a vertical reservoir.
+            domains:
+              DoubleValue:
+                min_value: 0.0
+                max_value: 1.0
+
+      # Setting key Reservoirs.{reservoir_name}.{interval_name}.Flux.{phase_name}.Value
+      Flux:
+        __class__: ReservoirIntervalItemFlux
+        __rst__:
+          skip:
+        __doc__: ''
+
+        .{phase_name}:
+          __class__: ReservoirIntervalFluxPhaseItem
+          __from__: /Phase/Names
+          __rst__:
+            skip:
+          __doc__: ''
+          __simput__:
+            type: VariableTable
+            table_label: Phase
+
+          # typos in the description - vertical, assign
+          Value:
+            __rst__:
+              name: Reservoirs.{reservoir_name}.{interval_name}.Flux.{phase_name}.Value
+            help: >
+              [Type: double] This key specifies the volumetric flux for a vertical reservoir if the type key is set to Flux.
+              Note only a positive number should be entered, ParFlow assigns the correct sign based on the chosen action
+              for the reservoir.
+            domains:
+              DoubleValue:
+
+      Concentration:
+        __class__: ReservoirIntervalItemConcentration
+        __doc__: >
+          Setting contaminant value of vertical reservoir.
+
+        # Setting key Reservoirs.{reservoir_name}.{interval_name}.Concentration.{phase_name}.{contaminant_name}.Value
 #        .{phase_name}:
 #          __class__: ConcentrationPhaseItem
 #          __from__: /Phase/Names
@@ -149,7 +149,7 @@ Reservoirs:
 #                [Type: double] This key specifies the contaminant value of a vertical reservoir.
 #              domains:
 #                DoubleValue:
-#
+
 #      Extraction:
 #        __rst__:
 #          skip:
