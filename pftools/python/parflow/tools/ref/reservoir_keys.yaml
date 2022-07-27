@@ -83,6 +83,12 @@ ZUpper:
     - Zupper
   register: Reservoirs.Names
 
+Status:
+  type: int
+  alias:
+    - Status
+    - status
+
 ExtractionZUpper:
   type: float
   alias:

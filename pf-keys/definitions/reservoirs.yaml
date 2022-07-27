@@ -365,6 +365,12 @@ Reservoirs:
       domains:
         DoubleValue:
 
+    Status:
+      help: >
+        [Type: boolean]
+      domains:
+        IntValue:
+
     ZUpper:
       # typos - vertical
       help: >

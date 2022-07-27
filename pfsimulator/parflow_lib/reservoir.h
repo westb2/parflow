@@ -43,6 +43,7 @@ typedef struct {
   double size;
   int action;
   int method;
+  int status;
   int cycle_number;
   double average_permeability_x;
   double average_permeability_y;
@@ -141,6 +142,9 @@ typedef struct {
 
 #define ReservoirDataPhysicalAction(reservoir_data_physical) \
   ((reservoir_data_physical)->action)
+
+#define ReservoirDataPhysicalStatus(reservoir_data_physical) \
+  ((reservoir_data_physical)->status)
 
 #define ReservoirDataPhysicalMethod(reservoir_data_physical) \
   ((reservoir_data_physical)->method)
@@ -283,6 +287,9 @@ typedef struct {
 /*       Actions        */
 #define INJECTION_RESERVOIR  0
 #define EXTRACTION_RESERVOIR 1
+
+#define RESERVOIR_ON_STATUS 1
+#define RESERVOIR_OFF_STATUS 1
 
 /*       Methods        */
 /* These should match  with */

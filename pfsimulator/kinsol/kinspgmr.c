@@ -159,6 +159,7 @@ int KINSpgmr(void *kinsol_mem, int maxl, int maxlrst, int msbpre,
              KINSpgmruserAtimesFn userAtimes,
              void *P_data)
 {
+  printf("In KINSPGMR\n");
   KINMem kin_mem;
   KINSpgmrMem kinspgmr_mem;
 

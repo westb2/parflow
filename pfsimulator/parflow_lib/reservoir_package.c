@@ -69,6 +69,7 @@ typedef struct {
   double xlocation;
   double ylocation;
   double z_lower, z_upper;
+  int status;
   int method;
   int cycle_number;
   double **phase_values;
@@ -232,6 +233,7 @@ void         ReservoirPackage(
             ReservoirDataPhysicalSize(reservoir_data_physical) = subgrid_volume;
             ReservoirDataPhysicalAction(reservoir_data_physical) = (dummy0->action);
             ReservoirDataPhysicalMethod(reservoir_data_physical) = (dummy0->method);
+            ReservoirDataPhysicalStatus(reservoir_data_physical) = (dummy0->status);
             ReservoirDataPhysicalCycleNumber(reservoir_data_physical) = (dummy0->cycle_number);
             ReservoirDataPhysicalAveragePermeabilityX(reservoir_data_physical) = 0.0;
             ReservoirDataPhysicalAveragePermeabilityY(reservoir_data_physical) = 0.0;
@@ -352,6 +354,7 @@ void         ReservoirPackage(
             ReservoirDataPhysicalSize(reservoir_data_physical) = subgrid_volume;
             ReservoirDataPhysicalAction(reservoir_data_physical) = (dummy0->action);
             ReservoirDataPhysicalMethod(reservoir_data_physical) = (dummy0->method);
+            ReservoirDataPhysicalStatus(reservoir_data_physical) = (dummy0->status);
             ReservoirDataPhysicalCycleNumber(reservoir_data_physical) = (dummy0->cycle_number);
             ReservoirDataPhysicalAveragePermeabilityX(reservoir_data_physical) = 0.0;
             ReservoirDataPhysicalAveragePermeabilityY(reservoir_data_physical) = 0.0;
@@ -936,6 +939,9 @@ PFModule  *ReservoirPackageNewPublicXtra(
 
           sprintf(key, "Reservoirs.%s.ZLower", reservoir_name);
           dummy0->z_lower = GetDouble(key);
+
+          sprintf(key, "Reservoirs.%s.Status", reservoir_name);
+          dummy0->status = GetInt(key);
 
           if ((dummy0->mechanism) == PRESSURE_RESERVOIR)
           {

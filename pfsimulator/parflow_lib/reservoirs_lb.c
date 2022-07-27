@@ -47,7 +47,7 @@ void LBReservoirs(
   /*--------------------------
    * Local variables
    *--------------------------*/
-
+  printf("We are in LB reservoirs\n");
   /* Reservoir data */
   ReservoirData         *reservoir_data = ProblemDataReservoirData(problem_data);
   ReservoirDataPhysical *reservoir_data_physical;
