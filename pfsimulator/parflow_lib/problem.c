@@ -91,6 +91,10 @@ Problem   *NewProblem(
   ProblemStartTime(problem) = GetDouble("TimingInfo.StartTime");
   CheckTime(problem, "TimingInfo.StartTime", ProblemStartTime(problem));
 
+  ProblemStartUnixEpochTime(problem) = GetDouble("TimingInfo.StartUnixEpochTime");
+
+  ProblemCurrentUnixEpochTime(problem) = GetDouble("TimingInfo.StartUnixEpochTime");
+
   ProblemStopTime(problem) = GetDouble("TimingInfo.StopTime");
   CheckTime(problem, "TimingInfo.StopTime", ProblemStopTime(problem));
 

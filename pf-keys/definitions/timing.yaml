@@ -51,6 +51,12 @@ TimingInfo:
       MandatoryValue:
       DoubleValue:
 
+  StartUnixEpochTime:
+    help: >
+      [Type: int] This key is used to indicate the real starting time in the world for the simulation
+    domains:
+      DoubleValue:
+
   DumpInterval:
     help: >
       [Type: double] This key is the real time interval at which time-dependent output should be written. A value of 0 will produce

@@ -2764,8 +2764,9 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
       }
 
       t += dt;
-
-
+      //We want to track the unix epoch time, which is in seconds, so we convert from hours
+      ProblemCurrentUnixEpochTime(problem) += 60.0*60.0*dt;
+      printf("Current unix epoch time is %f\n", ProblemCurrentUnixEpochTime(problem));
       /*******************************************************************/
       /*          Solve the nonlinear system for this time step          */
       /*******************************************************************/

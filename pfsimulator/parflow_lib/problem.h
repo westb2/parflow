@@ -45,6 +45,8 @@ typedef struct {
   int start_count;
   double start_time;
   double stop_time;
+  double start_unix_epoch_time;
+  double current_unix_epoch_time;
   double dump_interval;
 
   /* Stop execution if remaining time is less than user specified
@@ -194,6 +196,8 @@ typedef struct {
 #define ProblemBaseTimeUnit(problem)              ((problem)->base_time_unit)
 #define ProblemStartCount(problem)                ((problem)->start_count)
 #define ProblemStartTime(problem)                 ((problem)->start_time)
+#define ProblemStartUnixEpochTime(problem)        ((problem)->start_unix_epoch_time)
+#define ProblemCurrentUnixEpochTime(problem)        ((problem)->current_unix_epoch_time)
 #define ProblemStopTime(problem)                  ((problem)->stop_time)
 #define ProblemDumpInterval(problem)              ((problem)->dump_interval)
 #define ProblemDumpIntervalExecutionTimeLimit(problem)              ((problem)->dump_interval_execution_time_limit)
