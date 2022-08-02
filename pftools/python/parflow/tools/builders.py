@@ -311,6 +311,10 @@ class TableToProperties(ABC):
         self.column_index = {}
         self.props_in_row_header = True
         self.table_comments = []
+        self.empty_value_tokens = {
+            "-",
+            ""
+        }
         yaml_key_def = Path(__file__).parent / self.reference_file
         with open(yaml_key_def, 'r') as file:
             self.definition = yaml.safe_load(file)
@@ -348,7 +352,7 @@ class TableToProperties(ABC):
             registrations = []
             for alias, col_idx in self.column_index.items():
                 str_value = tokens[col_idx]
-                if str_value == '-':
+                if str_value in self.empty_value_tokens:
                     continue
 
                 key = self.alias_to_pfkey[alias]
@@ -416,7 +420,7 @@ class TableToProperties(ABC):
 
                 container = self.output[unit_name]
                 value_str = tokens[self.column_index[unit_name]]
-                if value_str == '-':
+                if value_str in self.empty_value_tokens:
                     continue
 
                 value = value_convert(value_str)
@@ -583,7 +587,7 @@ class TableToProperties(ABC):
 
         return self
 
-    def apply(self, run=None, name_registration=True):
+    def apply(self, run=None, name_registration=True, infer_key_names=False):
         """Method to apply the loaded properties to a given
            run object.
 
@@ -603,6 +607,14 @@ class TableToProperties(ABC):
         else:
             self.run = run
 
+        # new names are user specified names such as s1 s2 s3 for soil permeability
+        if infer_key_names and name_registration:
+            new_names = ""
+            for name in self.output:
+                if isinstance(self.output[name], dict):
+                    new_names = new_names + name + " "
+            self.key_root.Names = new_names
+
         valid_unit_names = []
         addon_keys = {}
         for name in self.output:
@@ -619,9 +631,9 @@ class TableToProperties(ABC):
         if name_registration:
             names_to_set = addon_keys
             for unit_name in valid_unit_names:
-                if unit_name in self.name_registration:
+                if unit_name.casefold() in (registered_name.casefold() for registered_name in self.name_registration):
                     for prop_name in self.name_registration[unit_name]:
-                        if prop_name not in names_to_set:
+                        if prop_name.casefold() not in (name_to_set.casefold() for name_to_set in names_to_set):
                             names_to_set[prop_name] = []
                         names_to_set[prop_name].append(unit_name)
             self.run.pfset(flat_map=names_to_set)
@@ -799,6 +811,32 @@ class SubsurfacePropertiesBuilder(TableToProperties):
     @property
     def db_prefix(self):
         return 'subsurface_'
+
+
+class WellPropertiesBuilder(TableToProperties):
+
+    def __init__(self, run=None):
+        super().__init__(run)
+
+    @property
+    def reference_file(self):
+        return 'ref/well_keys.yaml'
+
+    @property
+    def key_root(self):
+        return self.run.Wells
+
+    @property
+    def unit_string(self):
+        return 'Wells'
+
+    @property
+    def default_db(self):
+        return 'conus_1'
+
+    @property
+    def db_prefix(self):
+        return 'wells_'
 
 
 # -----------------------------------------------------------------------------

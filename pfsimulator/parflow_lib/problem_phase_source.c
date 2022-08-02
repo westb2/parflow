@@ -8,8 +8,8 @@
 *********************************************************************EHEADER*/
 
 #include "parflow.h"
-
 #include <float.h>
+#include <sys/time.h>
 
 /*--------------------------------------------------------------------------
  * Structures
@@ -270,7 +270,7 @@ void         PhaseSource(
   /*-----------------------------------------------------------------------
    * Put in any flux wells from the well package
    *-----------------------------------------------------------------------*/
-
+//  fprintf(stdout, "Number of flux wells: %d\n", WellDataNumFluxWells(well_data));
   if (WellDataNumFluxWells(well_data) > 0)
   {
     time_cycle_data = WellDataTimeCycleData(well_data);
@@ -351,7 +351,7 @@ void         PhaseSource(
           data = SubvectorElt(ps_sub, ix, iy, iz);
 
           int ip = 0;
-          int ips = 0;          
+          int ips = 0;
 
           if (WellDataPhysicalMethod(well_data_physical)
               == FLUX_WEIGHTED)
@@ -366,7 +366,7 @@ void         PhaseSource(
               data[ips] += weight * flux;
             });
           }else{
-            double weight = -FLT_MAX;            
+            double weight = -FLT_MAX;
             if (WellDataPhysicalMethod(well_data_physical)
                 == FLUX_STANDARD)weight = 1.0;
             else if (WellDataPhysicalMethod(well_data_physical)
@@ -378,8 +378,10 @@ void         PhaseSource(
               data[ips] += weight * flux;
             });
           }
-          /* done with this temporay subgrid */
+          /* done with this temporary subgrid */
+
           FreeSubgrid(tmp_subgrid);
+
         }
       }
     }
