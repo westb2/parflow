@@ -132,7 +132,10 @@ void ComputePatchTop(Problem *    problem,      /* General problem information *
 
 			       if (current_patch_index > -1)
 			       {
-				 //printf("Setting patch index %d, (%d,%d,%d)\n", ipatch, i, j, k);
+//               Subvector tmp_patch_top_subvector;
+//               tmp_patch_top_subvector.allocated = TRUE;
+//               *(tmp_patch_top_subvector.data)=current_patch_index;
+//               patch_top->subvectorsz[index2d] = &tmp_patch_top_subvector;
 				 patch_top_data[index2d] = current_patch_index;
 			       }
 			     }),

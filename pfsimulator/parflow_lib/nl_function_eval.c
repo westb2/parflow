@@ -1908,6 +1908,11 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
                                    // RMM, switch seepage face on optionally for two surface patches
 //                             printf("Seepage patch 1: %d\n", public_xtra->seepage_patch_one);
 //                             printf("Patch dat: %d\n", (int)patch_dat[ipatch]);
+                                    double check = -1.0;
+                                    if ((int)*(patch->subvectors[0]->data)!=(int)check){
+                                      double a = check - *(patch->subvectors[0]->data);
+                                      printf("hello\n");
+                                    }
                                    if ((int)patch_dat[ipatch] == public_xtra->seepage_patch_one || (int)patch_dat[ipatch] == public_xtra->seepage_patch_two) {
                                      //maybe cubic meters ??? Check equation sheet
                                      // Make porosity quite low
