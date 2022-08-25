@@ -175,3 +175,8 @@ alltime.Saturation.water.Value:
     - alltime.Saturation.water.Value
   register: Reservoirs.Names
 
+ReleaseCurveFile:
+  type: str
+  alias:
+    - ReleaseCurveFile
+  register: Reservoirs.Names

@@ -27,7 +27,9 @@
  **********************************************************************EHEADER*/
 
 #include "parflow.h"
-
+#include "time_series.h"
+#include "time_series.c"
+#include <stdio.h>
 #include <string.h>
 
 #define PRESSURE_RESERVOIR   0
@@ -64,6 +66,8 @@ typedef void InstanceXtra;
 
 typedef struct {
   char    *name;
+  char *release_curve_file;
+  TimeSeries release_curve;
   int action;
   int mechanism;
   double xlocation;
@@ -222,6 +226,11 @@ void         ReservoirPackage(
             ReservoirDataPhysicalNumber(reservoir_data_physical) = sequence_number;
             ReservoirDataPhysicalName(reservoir_data_physical) = ctalloc(char, strlen((dummy0->name)) + 1);
             strcpy(ReservoirDataPhysicalName(reservoir_data_physical), (dummy0->name));
+            ReservoirDataPhysicalName(reservoir_data_physical) = ctalloc(char, strlen((dummy0->release_curve_file)) + 1);
+            strcpy(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), (dummy0->release_curve_file));
+            // TODO dont hardcode column names below
+            TimeSeries tmp_time_series = NewTimeSeries(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), "times", "values");
+            reservoir_data_physical->release_curve = &tmp_time_series;
             ReservoirDataPhysicalXLower(reservoir_data_physical) = (dummy0->xlocation);
             ReservoirDataPhysicalYLower(reservoir_data_physical) = (dummy0->ylocation);
             ReservoirDataPhysicalZLower(reservoir_data_physical) = (dummy0->z_lower);
@@ -343,6 +352,13 @@ void         ReservoirPackage(
             ReservoirDataPhysicalNumber(reservoir_data_physical) = sequence_number;
             ReservoirDataPhysicalName(reservoir_data_physical) = ctalloc(char, strlen((dummy0->name)) + 1);
             strcpy(ReservoirDataPhysicalName(reservoir_data_physical), (dummy0->name));
+            ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical) = ctalloc(char, strlen((dummy0->release_curve_file)) + 1);
+            strcpy(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), (dummy0->release_curve_file));
+            // TODO dont hardcode column names below
+            TimeSeries tmp_time_series = NewTimeSeries(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), "times", "values");
+            reservoir_data_physical->release_curve = &tmp_time_series;
+            printf("Time series first value: %f\n", GetValue(reservoir_data_physical->release_curve, 0));
+            printf("Time series second value: %f\n", GetValue(reservoir_data_physical->release_curve, 1));
             ReservoirDataPhysicalXLower(reservoir_data_physical) = (dummy0->xlocation);
             ReservoirDataPhysicalYLower(reservoir_data_physical) = (dummy0->ylocation);
             ReservoirDataPhysicalZLower(reservoir_data_physical) = (dummy0->z_lower);
@@ -840,6 +856,7 @@ PFModule  *ReservoirPackageNewPublicXtra(
 
   char *reservoir_names;
   char *reservoir_name;
+  char *release_curve_file;
 
   char *cycle_name;
 
@@ -907,7 +924,6 @@ PFModule  *ReservoirPackageNewPublicXtra(
 
           /*** Read in the physical data for the reservoir ***/
           dummy0->name = strdup(reservoir_name);
-
           sprintf(key, "Reservoirs.%s.Action", reservoir_name);
           switch_name = GetString(key);
           dummy0->action = NA_NameToIndex(action_na, switch_name);
@@ -925,7 +941,8 @@ PFModule  *ReservoirPackageNewPublicXtra(
             InputError("Error: invalid type <%s> for key <%s>\n",
                        switch_name, key);
           }
-
+          sprintf(key, "Reservoirs.%s.ReleaseCurveFile", reservoir_name);
+          dummy0->release_curve_file = GetString(key);
 
           sprintf(key, "Reservoirs.%s.X", reservoir_name);
           dummy0->xlocation = GetDouble(key);
@@ -1445,7 +1462,11 @@ void  ReservoirPackageFreePublicXtra()
             {
               tfree((dummy0->name));
             }
-
+            //TODO figure out why this seg faults
+//            if ((dummy0->release_curve_file))
+//            {
+//              tfree((dummy0->release_curve_file));
+//            }
             tfree(dummy0);
 
             break;

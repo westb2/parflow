@@ -306,6 +306,12 @@ Reservoirs:
             - Injection
             - Extraction
 
+    ReleaseCurveFile:
+      help: >
+        [Type: string] This key specifies the release curve of the reservoir as a timeseries (TBD FORMATTING DOC)
+      domains:
+        AnyString:
+
     Type:
       # type is wrong in manual (should be string). Also, multiple typos
       help: >

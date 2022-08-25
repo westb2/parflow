@@ -251,7 +251,7 @@ else( (${PARFLOW_HAVE_CUDA}) OR (${PARFLOW_HAVE_KOKKOS}) OR (${PARFLOW_HAVE_OMP}
     richards_jacobian_eval.c
     vector.c
     vector_utilities.c
-  )
+          time_series.c time_series.h)
   add_library(pfsimulator ${SRC_FILES_ARCH} ${SRC_FILES_CONST})
 
 endif( (${PARFLOW_HAVE_CUDA}) OR (${PARFLOW_HAVE_KOKKOS}) OR (${PARFLOW_HAVE_OMP}) )

@@ -202,7 +202,7 @@ RUN $CMAKE --build $BASE_PATH/parflow/build
 
 USER root
 RUN $CMAKE --install $BASE_PATH/parflow/build --prefix /opt/parflow
-
+RUN apt-get install valgrind
 # Install the locally built version of pftools
 USER ubuntu
 RUN python3 -m pip install /home/ubuntu/parflow/build/pftools/python
@@ -215,5 +215,5 @@ ENV PARFLOW_DIR /opt/parflow/
 WORKDIR /opt/parflow/
 
 #alias parflow=/opt/parflow/bin/parflow
-
 RUN echo 'alias rebuild="~/parflow/src/docker/dev/rebuild.sh"' >> ~/.bashrc
+

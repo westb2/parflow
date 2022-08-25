@@ -394,13 +394,13 @@ void         PhaseSource(
 
   if (ReservoirDataNumFluxReservoirs(reservoir_data) > 0)
   {
+    double epoch_time = problem->current_unix_epoch_time;
     time_cycle_data = ReservoirDataTimeCycleData(reservoir_data);
 
     for (reservoir = 0; reservoir < ReservoirDataNumFluxReservoirs(reservoir_data); reservoir++)
     {
       reservoir_data_physical = ReservoirDataFluxReservoirPhysical(reservoir_data, reservoir);
       cycle_number = ReservoirDataPhysicalCycleNumber(reservoir_data_physical);
-
       interval_number = TimeCycleDataComputeIntervalNumber(problem, time, time_cycle_data, cycle_number);
 
       reservoir_data_value = ReservoirDataFluxReservoirIntervalValue(reservoir_data, reservoir, interval_number);
@@ -445,7 +445,7 @@ void         PhaseSource(
         nz_ps = SubvectorNZ(ps_sub);
 
         // Check if the reservoir is on
-        if (ReservoirDataPhysicalStatus(reservoir_data_physical) == RESERVOIR_ON_STATUS) {
+        if (TRUE) {
           /*  Get the intersection of the reservoir with the subgrid  */
           if ((tmp_subgrid = IntersectSubgrids(subgrid, reservoir_subgrid))) {
             /*  If an intersection;  loop over it, and insert value  */
@@ -474,8 +474,11 @@ void         PhaseSource(
 
             int ip = 0;
             int ips = 0;
+            reservoir_data_physical = ReservoirDataFluxReservoirPhysical(reservoir_data, reservoir);
+            double release_amount = GetValue(reservoir_data_physical->release_curve, problem->current_unix_epoch_time);
+            printf("Release amount is %f\n", release_amount);
             printf("Reservoir status is %d\n", ReservoirDataPhysicalStatus(reservoir_data_physical));
-
+//            reservoir_data_physical->release_curve(problem_data);
             if (ReservoirDataPhysicalMethod(reservoir_data_physical)
                 == FLUX_WEIGHTED) {
               BoxLoopI2(i, j, k, ix, iy, iz, nx, ny, nz,
