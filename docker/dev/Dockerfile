@@ -136,7 +136,7 @@ ENV SILO_DIR /opt/silo
 
 WORKDIR $BASE_PATH/parflow/dependencies/silo-src
 RUN curl -L $SILO_URL | tar --strip-components=1 -xzv && \
-    ./configure  --prefix=$SILO_DIR --disable-silex --disable-hzip --disable-fpzip && \
+    ./configure  --build=x86_64-unknown-linux-gnu --prefix=$SILO_DIR --disable-silex --disable-hzip --disable-fpzip && \
     make
 
 USER root
@@ -164,6 +164,7 @@ USER ubuntu
 # -----------------------------------------------------------------------------
 # Install Parflow
 # -----------------------------------------------------------------------------
+RUN pip3 install parflowio
 COPY --chown=ubuntu:ubuntu ./docker/dev/rebuild.sh ~/rebuild.sh
 COPY --chown=ubuntu:ubuntu ./pftools/python/requirements*.txt $BASE_PATH/parflow/src/pftools/python/
 RUN pip3 install -r $BASE_PATH/parflow/src/pftools/python/requirements_all.txt
