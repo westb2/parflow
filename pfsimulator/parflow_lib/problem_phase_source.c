@@ -446,6 +446,11 @@ void         PhaseSource(
 
         // Check if the reservoir is on
         if (TRUE) {
+          reservoir_data_physical = ReservoirDataFluxReservoirPhysical(reservoir_data, reservoir);
+          double release_amount = GetValue(reservoir_data_physical->release_curve, problem->current_unix_epoch_time);
+          printf("When in phase source time series second value is %f\n",  GetValue(reservoir_data_physical->release_curve, 4.0));
+          printf("Release amount is %f\n", release_amount);
+          printf("Reservoir status is %d\n", ReservoirDataPhysicalStatus(reservoir_data_physical));
           /*  Get the intersection of the reservoir with the subgrid  */
           if ((tmp_subgrid = IntersectSubgrids(subgrid, reservoir_subgrid))) {
             /*  If an intersection;  loop over it, and insert value  */
@@ -474,10 +479,7 @@ void         PhaseSource(
 
             int ip = 0;
             int ips = 0;
-            reservoir_data_physical = ReservoirDataFluxReservoirPhysical(reservoir_data, reservoir);
-            double release_amount = GetValue(reservoir_data_physical->release_curve, problem->current_unix_epoch_time);
-            printf("Release amount is %f\n", release_amount);
-            printf("Reservoir status is %d\n", ReservoirDataPhysicalStatus(reservoir_data_physical));
+
 //            reservoir_data_physical->release_curve(problem_data);
             if (ReservoirDataPhysicalMethod(reservoir_data_physical)
                 == FLUX_WEIGHTED) {

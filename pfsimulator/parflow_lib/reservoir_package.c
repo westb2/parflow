@@ -358,7 +358,7 @@ void         ReservoirPackage(
             TimeSeries tmp_time_series = NewTimeSeries(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), "times", "values");
             reservoir_data_physical->release_curve = &tmp_time_series;
             printf("Time series first value: %f\n", GetValue(reservoir_data_physical->release_curve, 0));
-            printf("Time series second value: %f\n", GetValue(reservoir_data_physical->release_curve, 1));
+            printf("Time series second value: %f\n", GetValue(reservoir_data_physical->release_curve, 4.0));
             ReservoirDataPhysicalXLower(reservoir_data_physical) = (dummy0->xlocation);
             ReservoirDataPhysicalYLower(reservoir_data_physical) = (dummy0->ylocation);
             ReservoirDataPhysicalZLower(reservoir_data_physical) = (dummy0->z_lower);

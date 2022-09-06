@@ -13,6 +13,7 @@ int CountLinesInFile(char* file_name){
   FILE *fp;
   int count = 1;  // Line counter (result)
   char c;
+  char previous_char;
   fp = fopen(file_name, "r");
 
   // Check if file exists
@@ -25,7 +26,6 @@ int CountLinesInFile(char* file_name){
   for (c = getc(fp); c != EOF; c = getc(fp))
     if (c == '\n') // Increment count if this character is newline
       count = count + 1;
-
   // Close the file
   fclose(fp);
   return count;
