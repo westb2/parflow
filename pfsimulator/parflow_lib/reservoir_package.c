@@ -67,7 +67,7 @@ typedef void InstanceXtra;
 typedef struct {
   char    *name;
   char *release_curve_file;
-  TimeSeries release_curve;
+//  TimeSeries release_curve;
   int action;
   int mechanism;
   double xlocation;
@@ -226,11 +226,12 @@ void         ReservoirPackage(
             ReservoirDataPhysicalNumber(reservoir_data_physical) = sequence_number;
             ReservoirDataPhysicalName(reservoir_data_physical) = ctalloc(char, strlen((dummy0->name)) + 1);
             strcpy(ReservoirDataPhysicalName(reservoir_data_physical), (dummy0->name));
-            ReservoirDataPhysicalName(reservoir_data_physical) = ctalloc(char, strlen((dummy0->release_curve_file)) + 1);
-            strcpy(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), (dummy0->release_curve_file));
+//            ReservoirDataPhysicalName(reservoir_data_physical) = ctalloc(char, strlen((dummy0->release_curve_file)) + 1);
+//            strcpy(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), (dummy0->release_curve_file));
             // TODO dont hardcode column names below
-            TimeSeries tmp_time_series = NewTimeSeries(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), "times", "values");
-            reservoir_data_physical->release_curve = &tmp_time_series;
+//            TimeSeries* tmp_time_series = NewTimeSeries(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), "times", "values");
+//            reservoir_data_physical->release_curve = ctalloc(TimeSeries,1);
+//            reservoir_data_physical->release_curve = tmp_time_series;
             ReservoirDataPhysicalXLower(reservoir_data_physical) = (dummy0->xlocation);
             ReservoirDataPhysicalYLower(reservoir_data_physical) = (dummy0->ylocation);
             ReservoirDataPhysicalZLower(reservoir_data_physical) = (dummy0->z_lower);
@@ -352,13 +353,14 @@ void         ReservoirPackage(
             ReservoirDataPhysicalNumber(reservoir_data_physical) = sequence_number;
             ReservoirDataPhysicalName(reservoir_data_physical) = ctalloc(char, strlen((dummy0->name)) + 1);
             strcpy(ReservoirDataPhysicalName(reservoir_data_physical), (dummy0->name));
-            ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical) = ctalloc(char, strlen((dummy0->release_curve_file)) + 1);
-            strcpy(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), (dummy0->release_curve_file));
+//            ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical) = ctalloc(char, strlen((dummy0->release_curve_file)) + 1);
+//            strcpy(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), (dummy0->release_curve_file));
             // TODO dont hardcode column names below
-            TimeSeries tmp_time_series = NewTimeSeries(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), "times", "values");
-            reservoir_data_physical->release_curve = &tmp_time_series;
-            printf("Time series first value: %f\n", GetValue(reservoir_data_physical->release_curve, 0));
-            printf("Time series second value: %f\n", GetValue(reservoir_data_physical->release_curve, 4.0));
+//            TimeSeries* tmp_time_series = NewTimeSeries(ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical), "times", "values");
+//            reservoir_data_physical->release_curve = ctalloc(TimeSeries,1);
+//            reservoir_data_physical->release_curve = tmp_time_series;
+//            printf("Time series first value: %f\n", GetValue(reservoir_data_physical->release_curve, 0));
+//            printf("Time series second value: %f\n", GetValue(reservoir_data_physical->release_curve, 4.0));
             ReservoirDataPhysicalXLower(reservoir_data_physical) = (dummy0->xlocation);
             ReservoirDataPhysicalYLower(reservoir_data_physical) = (dummy0->ylocation);
             ReservoirDataPhysicalZLower(reservoir_data_physical) = (dummy0->z_lower);

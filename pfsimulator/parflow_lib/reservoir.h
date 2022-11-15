@@ -38,8 +38,8 @@
 typedef struct {
   int number;
   char          *name;
-  char* release_curve_file;
-  TimeSeries * release_curve;
+//  char* release_curve_file;
+//  TimeSeries * release_curve;
   double x_lower, y_lower, z_lower;
   double x_upper, y_upper, z_upper;
   double diameter;
@@ -114,8 +114,8 @@ typedef struct {
 #define ReservoirDataPhysicalNumber(reservoir_data_physical) \
   ((reservoir_data_physical)->number)
 
-#define ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical) \
-  ((reservoir_data_physical)->release_curve_file)
+//#define ReservoirDataPhysicalReleaseCurveFile(reservoir_data_physical) \
+//  ((reservoir_data_physical)->release_curve_file)
 
 #define ReservoirDataPhysicalName(reservoir_data_physical) \
   ((reservoir_data_physical)->name)
