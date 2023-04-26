@@ -2809,7 +2809,8 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
 
         Subgrid *subgrid;
         Grid *grid = VectorGrid(evap_trans_sum);
-
+        FILE * predictor_training_file;
+        predictor_training_file = fopen("predictor_training_file.csv","a");
         ForSubgridI(is, GridSubgrids(grid))
         {
           subgrid = GridSubgrid(grid, is);
@@ -2849,6 +2850,8 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
               flux_in = dx*dy*dz*dz_dat[ip]*et[ip]*dt;
               vol_max = dx*dy*dz*dz_dat[ip]*po_dat[ip];
               press_pred = (flux_in-(vol_max - vol))/(dx*dy*po_dat[ip]);
+              // print cell vol, vol max, flux in, pressure, i, j, t
+              fprintf(predictor_training_file, "%3.6e,%3.6e,%3.6e,%3.6e,%d,%d,%3.6e\n", vol, vol_max,flux_in,pp[ip],i,j,t);
               if (flux_in > (vol_max - vol))
               {
                 if (pp[ip] < 0.0){
@@ -2865,6 +2868,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
           }
         );
         }
+        fclose(predictor_training_file);
       }
 
       /*******************************************************************/
