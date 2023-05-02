@@ -1214,6 +1214,16 @@ SetupRichards(PFModule * this_module)
     /*-------------------------------------------------------------------
      * Print out the initial well data?
      *-------------------------------------------------------------------*/
+    //write the first line of the predictor training file if appropriate
+    if (public_xtra->surface_predictor_print){
+      FILE * predictor_training_file;
+      predictor_training_file = fopen("predictor_training_output.csv", "w");
+      // print cell vol, vol max, flux in, pressure, i, j, t
+      fprintf(predictor_training_file, "volume,max_volume,flux_in,pressure,i,j,time,we_predicted,predicted_pressure\n");
+      fclose(predictor_training_file);
+      any_file_dumped = 1;
+    }
+
     WriteReservoirs("ReservoirsOutput",
                     problem,
                     ProblemDataReservoirData(problem_data),
@@ -1224,7 +1234,7 @@ SetupRichards(PFModule * this_module)
                  problem,
                  ProblemDataWellData(problem_data),
                  t, WELLDATA_WRITEHEADER);
-
+      any_file_dumped = 1;
     }
     sprintf(nc_postfix, "%05d", instance_xtra->file_number);
     if (public_xtra->write_netcdf_press || public_xtra->write_netcdf_satur
@@ -2810,7 +2820,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
         Subgrid *subgrid;
         Grid *grid = VectorGrid(evap_trans_sum);
         FILE * predictor_training_file;
-        predictor_training_file = fopen("predictor_training_file.csv","a");
+        predictor_training_file = fopen("predictor_training_output.csv","a");
         ForSubgridI(is, GridSubgrids(grid))
         {
           subgrid = GridSubgrid(grid, is);
@@ -2851,19 +2861,23 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
               vol_max = dx*dy*dz*dz_dat[ip]*po_dat[ip];
               press_pred = (flux_in-(vol_max - vol))/(dx*dy*po_dat[ip]);
               // print cell vol, vol max, flux in, pressure, i, j, t
-              fprintf(predictor_training_file, "%3.6e,%3.6e,%3.6e,%3.6e,%d,%d,%3.6e\n", vol, vol_max,flux_in,pp[ip],i,j,t);
+              fprintf(predictor_training_file, "%f,%f,%f,%f,%d,%d,%f,%f,", vol, vol_max,flux_in,pp[ip],i,j,t,press_pred);
+              //For now turn off the adjustment but note when we would make it
+              int we_predicted = 0;
               if (flux_in > (vol_max - vol))
               {
                 if (pp[ip] < 0.0){
-
+                  we_predicted = 1;
                   press_pred = public_xtra->surface_predictor_pressure;
                   if (public_xtra->surface_predictor_print == 1) {
                     amps_Printf(" Cell vol: %3.6e vol_max: %3.6e flux_in: %3.6e  Pressure: %3.6e I: %d J: %d  \n",vol, vol_max,flux_in,pp[ip],i,j);
                   }
-                  pp[ip] = press_pred;
+
+                  //pp[ip] = press_pred;
 
                 }
               }
+              fprintf(predictor_training_file, "%d,\n", we_predicted);
             }
           }
         );
@@ -3884,6 +3898,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
                   instance_xtra->iteration_number, err_norm);
       fflush(NULL);
     }
+
 
     /*******************************************************************/
     /*                   Print the Well Data                           */
@@ -5740,17 +5755,19 @@ SolverRichardsNewPublicXtra(char *name)
 
 //RMM surface predictor keys
   sprintf(key, "%s.SurfacePredictor", name);
+  //TODO swtich abck to false
   switch_name = GetStringDefault(key, "False");
   switch_value = NA_NameToIndexExitOnError(switch_na, switch_name, key);
-  public_xtra->surface_predictor = switch_value;
+  public_xtra->surface_predictor = 1;
 
   sprintf(key, "%s.SurfacePredictor.PressureValue", name);
   public_xtra->surface_predictor_pressure = GetDoubleDefault(key, 0.00001);
 
   sprintf(key, "%s.SurfacePredictor.PrintValues", name);
+  //TODO swtich abck to false
   switch_name = GetStringDefault(key, "False");
   switch_value = NA_NameToIndexExitOnError(switch_na, switch_name, key);
-  public_xtra->surface_predictor_print = switch_value;
+  public_xtra->surface_predictor_print = 1;
 
 
 
