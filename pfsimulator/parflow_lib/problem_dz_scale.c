@@ -221,6 +221,7 @@ void dzScale(ProblemData *problem_data, Vector *dz_mult)
           GrGeomInLoop(i, j, k, gr_domain, r, ix, iy, iz, nx, ny, nz,
           {
             ips = SubvectorEltIndex(dz_sub, i, j, k);
+            printf("%f, %d\n",dz_dat[ips],ips);
             dz_dat[ips] = values[k];
           });
         }           /* End subgrid loop */

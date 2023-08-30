@@ -193,6 +193,17 @@ void         WellPackage(
           iz_lower = IndexSpaceZ((dummy0->z_lower), 0);
           iz_upper = IndexSpaceZ((dummy0->z_upper), 0);
 
+
+            Subvector      *dz_sub;
+            Subvector      *val_sub;
+            double         *dz_dat;
+            Vector *dz_mult;
+            dz_mult = ProblemDataZmult(problem_data);
+
+//            double a = dz_mult->subvectors[0];
+            dz_sub = VectorSubvector(dz_mult, iz_lower);
+            dz_dat = SubvectorData(dz_sub);
+//            double a = dz_dat[0];
           nx = 1;
           ny = 1;
           nz = iz_upper - iz_lower + 1;
@@ -211,6 +222,7 @@ void         WellPackage(
           dx = SubgridDX(new_subgrid);
           dy = SubgridDY(new_subgrid);
           dz = SubgridDZ(new_subgrid);
+          double a = dz;
 
           subgrid_volume = (nx * dx) * (ny * dy) * (nz * dz);
 
