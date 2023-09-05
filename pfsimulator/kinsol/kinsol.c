@@ -1452,7 +1452,6 @@ static int KINLinSolDrv(KINMem kin_mem, N_Vector bb, N_Vector xx)
 
     if (ret != 1)
       return(ret);
-    printf("HERE");
     if (!precondflag)
       return(KINSOL_KRYLOV_FAILURE);
 

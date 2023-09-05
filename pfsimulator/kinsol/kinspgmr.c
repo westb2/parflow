@@ -159,7 +159,6 @@ int KINSpgmr(void *kinsol_mem, int maxl, int maxlrst, int msbpre,
              KINSpgmruserAtimesFn userAtimes,
              void *P_data)
 {
-  printf("In KINSPGMR\n");
   KINMem kin_mem;
   KINSpgmrMem kinspgmr_mem;
 
@@ -413,7 +412,6 @@ static int KINSpgmrSolve(KINMem kin_mem, N_Vector xx, N_Vector bb,
   if (ret == SPGMR_PSOLVE_FAIL_UNREC)
     return(KINSOL_PRECONDSOLVE_FAILURE);
   else
-      printf("kinspgmr");
     return(KINSOL_KRYLOV_FAILURE);
 }
 
