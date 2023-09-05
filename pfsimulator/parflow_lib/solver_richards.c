@@ -448,6 +448,7 @@ SetupRichards(PFModule * this_module)
   /* Do turning bands (and other stuff maybe) */
   PFModuleInvokeType(SetProblemDataInvoke, set_problem_data, (problem_data));
   ComputeTop(problem, problem_data);
+  ComputePatchTop(problem, problem_data);
 
   /* @RMM set subsurface slopes to topographic slopes if we have terrain following grid
    * turned on.  We might later make this an geometry or input file option but for now
@@ -716,18 +717,21 @@ SetupRichards(PFModule * this_module)
 
   if (public_xtra->print_top)
   {
-    printf("PrintTop -- not yet implemented\n");
-    // strcpy(file_postfix, "top");
-    // WritePFBinary(file_prefix, file_postfix, XXXXXXXXXXXXXXXX(problem_data));
+    strcpy(file_postfix, "top_zindex");
+    WritePFBinary(file_prefix, file_postfix, ProblemDataIndexOfDomainTop(problem_data));
+    strcpy(file_postfix, "top_patch");
+    WritePFBinary(file_prefix, file_postfix, ProblemDataPatchIndexOfDomainTop(problem_data));
   }
 
   if (public_xtra->write_silo_top)
   {
-    printf("WriteSiloTop -- not yet implemented\n");
-    // strcpy(file_postfix, "");
-    // strcpy(file_type, "top");
-    // WriteSilo(file_prefix, file_type, file_postfix, XXXXXXXXXXXXXXXXXXXXX(problem_data),
-    //          t, 0, "Top");
+    strcpy(file_postfix, "");
+    strcpy(file_type, "top_zindex");
+    WriteSilo(file_prefix, file_type, file_postfix, ProblemDataIndexOfDomainTop(problem_data),
+              t, 0, "TopZIndex");
+    strcpy(file_type, "top_patch");
+    WriteSilo(file_prefix, file_type, file_postfix, ProblemDataPatchIndexOfDomainTop(problem_data),
+              t, 0, "TopPatch");
   }
 
   if (!amps_Rank(amps_CommWorld))
@@ -2760,8 +2764,9 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
       }
 
       t += dt;
-
-
+      //We want to track the unix epoch time, which is in seconds, so we convert from hours
+      ProblemCurrentUnixEpochTime(problem) += 60.0*60.0*dt;
+      printf("Current unix epoch time is %f\n", ProblemCurrentUnixEpochTime(problem));
       /*******************************************************************/
       /*          Solve the nonlinear system for this time step          */
       /*******************************************************************/

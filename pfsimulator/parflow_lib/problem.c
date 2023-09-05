@@ -91,6 +91,10 @@ Problem   *NewProblem(
   ProblemStartTime(problem) = GetDouble("TimingInfo.StartTime");
   CheckTime(problem, "TimingInfo.StartTime", ProblemStartTime(problem));
 
+  ProblemStartUnixEpochTime(problem) = GetDouble("TimingInfo.StartUnixEpochTime");
+
+  ProblemCurrentUnixEpochTime(problem) = GetDouble("TimingInfo.StartUnixEpochTime");
+
   ProblemStopTime(problem) = GetDouble("TimingInfo.StopTime");
   CheckTime(problem, "TimingInfo.StopTime", ProblemStopTime(problem));
 
@@ -334,7 +338,9 @@ Problem   *NewProblem(
   ProblemWellPackage(problem) =
     PFModuleNewModuleType(WellPackageNewPublicXtraInvoke,
                           WellPackage, (num_phases, num_contaminants));
-
+  ProblemReservoirPackage(problem) =
+      PFModuleNewModuleType(ReservoirPackageNewPublicXtraInvoke,
+                            ReservoirPackage, (num_phases, num_contaminants));
 
   return problem;
 }
@@ -349,6 +355,7 @@ void      FreeProblem(
                       int      solver)
 {
   PFModuleFreeModule(ProblemWellPackage(problem));
+  PFModuleFreeModule(ProblemReservoirPackage(problem));
 
 
   NA_FreeNameArray(GlobalsPhaseNames);
@@ -444,13 +451,15 @@ ProblemData   *NewProblemData(
   ProblemDataRealSpaceZ(problem_data) = NewVectorType(grid, 1, 1, vector_cell_centered);
 
   ProblemDataIndexOfDomainTop(problem_data) = NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+  ProblemDataPatchIndexOfDomainTop(problem_data) = NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
 
   ProblemDataPorosity(problem_data) = NewVectorType(grid, 1, 1, vector_cell_centered);
 
   ProblemDataBCPressureData(problem_data) = NewBCPressureData();
 
   ProblemDataWellData(problem_data) = NewWellData();
-
+  ProblemDataReservoirData(problem_data) = NewReservoirData();
+  ProblemDataTotalSeepage(problem_data) = 0;
   return problem_data;
 }
 
@@ -464,7 +473,7 @@ void          FreeProblemData(
 {
   int i;
 
-
+  printf("total seepage has been %f\n", ProblemDataTotalSeepage(problem_data));
   if (problem_data)
   {
 #if 1
@@ -476,6 +485,7 @@ void          FreeProblemData(
 #endif
 
     FreeWellData(ProblemDataWellData(problem_data));
+    FreeReservoirData(ProblemDataReservoirData(problem_data));
     FreeBCPressureData(ProblemDataBCPressureData(problem_data));
     FreeVector(ProblemDataPorosity(problem_data));
     FreeVector(ProblemDataPermeabilityX(problem_data));

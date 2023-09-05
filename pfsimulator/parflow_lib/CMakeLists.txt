@@ -11,6 +11,7 @@ set (SRC_FILES_CONST advect.F
   computation.c
   compute_maximums.c
   compute_top.c
+  compute_patch_top.c
   compute_total_concentration.c
   constantRF.c
   constant_porosity.c
@@ -114,6 +115,9 @@ set (SRC_FILES_CONST advect.F
   well.c
   well_package.c
   wells_lb.c
+  reservoir.c
+  reservoir_package.c
+  reservoirs_lb.c
   wrf_parflow.c
   write_clm_netcdf.c
   write_parflow_binary.c
@@ -247,7 +251,7 @@ else( (${PARFLOW_HAVE_CUDA}) OR (${PARFLOW_HAVE_KOKKOS}) OR (${PARFLOW_HAVE_OMP}
     richards_jacobian_eval.c
     vector.c
     vector_utilities.c
-  )
+          time_series.c time_series.h)
   add_library(pfsimulator ${SRC_FILES_ARCH} ${SRC_FILES_CONST})
 
 endif( (${PARFLOW_HAVE_CUDA}) OR (${PARFLOW_HAVE_KOKKOS}) OR (${PARFLOW_HAVE_OMP}) )

@@ -45,6 +45,8 @@ typedef struct {
   int start_count;
   double start_time;
   double stop_time;
+  double start_unix_epoch_time;
+  double current_unix_epoch_time;
   double dump_interval;
 
   /* Stop execution if remaining time is less than user specified
@@ -98,6 +100,7 @@ typedef struct {
 
   /*****  packages  *****/
   PFModule  *well_package;
+  PFModule  *reservoir_package;
 
   /*sk**  overland flow*/
   PFModule  *x_slope;
@@ -129,6 +132,14 @@ typedef struct {
    */
   Vector         *index_of_domain_top;
 
+  /* 
+   * This is a NX * NY vector of patch id/index of the top
+   * of the domain.
+   *
+   * -1 means domain is not present at the i,j index.
+   */
+  Vector         *patch_index_of_domain_top;
+
   Vector         *permeability_x;
   Vector         *permeability_y;
   Vector         *permeability_z;
@@ -143,6 +154,7 @@ typedef struct {
 
 
   WellData       *well_data;
+  ReservoirData       *reservoir_data;
   BCPressureData *bc_pressure_data;
 
   /*sk  overland flow*/
@@ -157,6 +169,7 @@ typedef struct {
   /* @RMM variable dz  */
   Vector *dz_mult;
   Vector *rsz;
+  double total_seepage;
 } ProblemData;
 
 /* Values of solver argument to NewProblem function */
@@ -183,6 +196,8 @@ typedef struct {
 #define ProblemBaseTimeUnit(problem)              ((problem)->base_time_unit)
 #define ProblemStartCount(problem)                ((problem)->start_count)
 #define ProblemStartTime(problem)                 ((problem)->start_time)
+#define ProblemStartUnixEpochTime(problem)        ((problem)->start_unix_epoch_time)
+#define ProblemCurrentUnixEpochTime(problem)        ((problem)->current_unix_epoch_time)
 #define ProblemStopTime(problem)                  ((problem)->stop_time)
 #define ProblemDumpInterval(problem)              ((problem)->dump_interval)
 #define ProblemDumpIntervalExecutionTimeLimit(problem)              ((problem)->dump_interval_execution_time_limit)
@@ -237,6 +252,7 @@ typedef struct {
 
 /* packages */
 #define ProblemWellPackage(problem)               ((problem)->well_package)
+#define ProblemReservoirPackage(problem)               ((problem)->reservoir_package)
 
 /* error calculations */
 #define ProblemL2ErrorNorm(problem)               ((problem)->l2_error_norm)
@@ -255,6 +271,7 @@ typedef struct {
 #define ProblemDataGrDomain(problem_data)       ((problem_data)->gr_domain)
 
 #define ProblemDataIndexOfDomainTop(problem_data)  ((problem_data)->index_of_domain_top)
+#define ProblemDataPatchIndexOfDomainTop(problem_data)  ((problem_data)->patch_index_of_domain_top)
 
 #define ProblemDataPermeabilityX(problem_data)  ((problem_data)->permeability_x)
 #define ProblemDataPermeabilityY(problem_data)  ((problem_data)->permeability_y)
@@ -264,6 +281,7 @@ typedef struct {
 #define ProblemDataFBy(problem_data)            ((problem_data)->FBy)    //RMM
 #define ProblemDataFBz(problem_data)            ((problem_data)->FBz)    //RMM
 #define ProblemDataWellData(problem_data)       ((problem_data)->well_data)
+#define ProblemDataReservoirData(problem_data)       ((problem_data)->reservoir_data)
 #define ProblemDataBCPressureData(problem_data) ((problem_data)->bc_pressure_data)
 #define ProblemDataSpecificStorage(problem_data)((problem_data)->specific_storage)   //sk
 #define ProblemDataTSlopeX(problem_data)        ((problem_data)->x_slope)   //sk
@@ -273,6 +291,7 @@ typedef struct {
 #define ProblemDataSSlopeY(problem_data)        ((problem_data)->y_sslope)   //RMM
 #define ProblemDataZmult(problem_data)          ((problem_data)->dz_mult)    //RMM
 #define ProblemDataRealSpaceZ(problem_data)     ((problem_data)->rsz)
+#define ProblemDataTotalSeepage(problem_data)     ((problem_data)->total_seepage)
 /*--------------------------------------------------------------------------
  * Misc macros
  *   RDF not quite right, maybe?
