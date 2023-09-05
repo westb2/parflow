@@ -1,0 +1,8 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -DCMAKE_INSTALL_PREFIX=${PARFLOW_DIR} -DPARFLOW_HAVE_CLM=ON -G Ninja -S /Users/ben/Documents/GitHub/parflow -B /Users/ben/Documents/GitHub/parflow/cmake-build-debug
+-- Configuring version : v3.12.0-78-gb63b515e
+-- Using single file AMPS I/O for PFB output
+-- Checking Fortran implicit none flag : -implicitnone
+-- Checking Fortran implicit none flag : -fimplicit-none
+-- Configuring done (0.7s)
+-- Generating done (0.6s)
+-- Build files have been written to: /Users/ben/Documents/GitHub/parflow/cmake-build-debug

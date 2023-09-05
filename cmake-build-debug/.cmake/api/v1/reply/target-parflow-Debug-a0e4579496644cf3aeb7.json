@@ -1,0 +1,279 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "pfsimulator/parflow_exe/parflow"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"install",
+			"target_link_libraries",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"pfsimulator/parflow_exe/CMakeLists.txt",
+			"pfsimulator/parflow_lib/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 69,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 3,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 17,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 259,
+				"parent" : 5
+			},
+			{
+				"file" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 527,
+				"parent" : 7
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 529,
+				"parent" : 7
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 530,
+				"parent" : 7
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 532,
+				"parent" : 7
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-ggdb -std=gnu11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.1 -fcolor-diagnostics"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 8,
+					"path" : "/Users/ben/Documents/GitHub/parflow/pfsimulator/parflow_lib"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "/Users/ben/Documents/GitHub/parflow/pfsimulator/amps/seq"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "/Users/ben/Documents/GitHub/parflow/pfsimulator/amps/common"
+				},
+				{
+					"backtrace" : 11,
+					"path" : "/Users/ben/Documents/GitHub/parflow/cmake-build-debug/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/Users/ben/Documents/GitHub/parflow/pfsimulator/parflow_lib/../third_party/cjson"
+				}
+			],
+			"language" : "C",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "11"
+			},
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "pfclm::@255a0488dcb5b8a3244f"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "amps::@296488f2d4ea3c276ed8"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "pfkinsol::@7a17a32b276127cd4ffe"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "pfsimulator::@fb1461188e4894bc45ef"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "cjson::@6b4940761e9823e3c574"
+		}
+	],
+	"id" : "parflow::@faaac4d09a2426f077f2",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 2,
+				"path" : "bin"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "/Users/ben/Documents/GitHub/parflow/cmake-build-debug/${PARFLOW_DIR}"
+		}
+	},
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-ggdb",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-L/usr/local/Cellar/gcc/13.2.0/lib/gcc/current/gcc/x86_64-apple-darwin22/13",
+				"role" : "libraryPath"
+			},
+			{
+				"fragment" : "-L/usr/local/Cellar/gcc/13.2.0/lib/gcc/current/gcc",
+				"role" : "libraryPath"
+			},
+			{
+				"fragment" : "-L/usr/local/Cellar/gcc/13.2.0/lib/gcc/current",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "pfsimulator/parflow_lib/libpfsimulator.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "pfsimulator/clm/libpfclm.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "pfsimulator/kinsol/libpfkinsol.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "pfsimulator/amps/libamps.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "pfsimulator/third_party/cjson/libcjson.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lgfortran",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lgcc_s.1.1",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lgcc",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lquadmath",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lgcc_s.1.1",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lgcc",
+				"role" : "libraries"
+			}
+		],
+		"language" : "C"
+	},
+	"name" : "parflow",
+	"nameOnDisk" : "parflow",
+	"paths" : 
+	{
+		"build" : "pfsimulator/parflow_exe",
+		"source" : "pfsimulator/parflow_exe"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "pfsimulator/parflow_exe/main.c",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}

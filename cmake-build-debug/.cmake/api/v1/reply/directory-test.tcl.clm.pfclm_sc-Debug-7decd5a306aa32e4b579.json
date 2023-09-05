@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "test/tcl/clm/pfclm_sc",
+		"source" : "test/tcl/clm/pfclm_sc"
+	}
+}

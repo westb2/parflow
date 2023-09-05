@@ -1,0 +1,26 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Debug",
+	"cxx-modules" : {},
+	"dir-cur-bld" : "/Users/ben/Documents/GitHub/parflow/cmake-build-debug/pfsimulator/parflow_lib",
+	"dir-cur-src" : "/Users/ben/Documents/GitHub/parflow/pfsimulator/parflow_lib",
+	"dir-top-bld" : "/Users/ben/Documents/GitHub/parflow/cmake-build-debug",
+	"dir-top-src" : "/Users/ben/Documents/GitHub/parflow",
+	"exports" : [],
+	"include-dirs" : 
+	[
+		"/Users/ben/Documents/GitHub/parflow/pfsimulator/parflow_lib",
+		"/Users/ben/Documents/GitHub/parflow/pfsimulator/amps/seq",
+		"/Users/ben/Documents/GitHub/parflow/pfsimulator/amps/common",
+		"include",
+		"/Users/ben/Documents/GitHub/parflow/pfsimulator/parflow_lib/../third_party/cjson"
+	],
+	"language" : "Fortran",
+	"linked-target-dirs" : [],
+	"module-dir" : "/Users/ben/Documents/GitHub/parflow/cmake-build-debug/pfsimulator/parflow_lib",
+	"submodule-ext" : ".smod",
+	"submodule-sep" : "@"
+}

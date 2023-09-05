@@ -1,0 +1,293 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"pftools/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 37,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 38,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 41,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 44,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 50,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 53,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 56,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 59,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 63,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 71,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 74,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 78,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/libpftools.dylib"
+			],
+			"targetId" : "pftools::@59a74a1ed31cefb0d1e9",
+			"targetIndex" : 40,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"pftools/libpftools.dylib"
+			],
+			"targetId" : "pftools::@59a74a1ed31cefb0d1e9",
+			"targetIndex" : 40,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/dirt.tcl",
+				"pftools/evap.tcl",
+				"pftools/fsb.tcl",
+				"pftools/fsbox.tcl",
+				"pftools/metaEListBox.tcl",
+				"pftools/metaEntry.tcl",
+				"pftools/parflow.tcl",
+				"pftools/pflocked.tcl",
+				"pftools/pftformat.tcl",
+				"pftools/pfvtk.tcl",
+				"pftools/pfwrite.tcl",
+				"pftools/pkgIndex.tcl",
+				"pftools/tkdiff.tcl",
+				"pftools/winsync.tcl",
+				"pftools/xparflow.tcl",
+				"pftools/xpfci.tcl",
+				"pftools/xpfmpeg.tcl",
+				"pftools/xpftdatadsp.tcl",
+				"pftools/xpftdiffdsp.tcl",
+				"pftools/xpftfunctions.tcl",
+				"pftools/xpftfuncwin.tcl",
+				"pftools/xpftgeneral.tcl",
+				"pftools/xpftgriddsp.tcl",
+				"pftools/xpfthelp.tcl",
+				"pftools/xpfthreeslices.tcl",
+				"pftools/xpftinfowin.tcl",
+				"pftools/xpftnewgrid.tcl",
+				"pftools/xpftools.tcl",
+				"pftools/xpftpf.tcl",
+				"pftools/xpftsds.tcl",
+				"pftools/xpftstatdsp.tcl"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/pfhelp",
+				"pftools/pfmvio",
+				"pftools/pfbtosa",
+				"pftools/pfbtovis",
+				"pftools/pfbtosilo",
+				"pftools/pfsbtosa",
+				"pftools/pfstrip"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/pfwell_cat"
+			],
+			"targetId" : "pfwell_cat::@59a74a1ed31cefb0d1e9",
+			"targetIndex" : 41,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/pfwell_data"
+			],
+			"targetId" : "pfwell_data::@59a74a1ed31cefb0d1e9",
+			"targetIndex" : 42,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/gmssol2pfsol"
+			],
+			"targetId" : "gmssol2pfsol::@59a74a1ed31cefb0d1e9",
+			"targetIndex" : 30,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 8,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/gmstinvertices"
+			],
+			"targetId" : "gmstinvertices::@59a74a1ed31cefb0d1e9",
+			"targetIndex" : 31,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/gmstriangulate"
+			],
+			"targetId" : "gmstriangulate::@59a74a1ed31cefb0d1e9",
+			"targetIndex" : 32,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/projecttin"
+			],
+			"targetId" : "projecttin::@59a74a1ed31cefb0d1e9",
+			"targetIndex" : 43,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 11,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/pfmask-to-pfsol"
+			],
+			"targetId" : "pfmask-to-pfsol::@59a74a1ed31cefb0d1e9",
+			"targetIndex" : 36,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 12,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/pfsol-to-vtk"
+			],
+			"targetId" : "pfsol-to-vtk::@59a74a1ed31cefb0d1e9",
+			"targetIndex" : 39,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 13,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"pftools/pfmaskdownsize"
+			],
+			"targetId" : "pfmaskdownsize::@59a74a1ed31cefb0d1e9",
+			"targetIndex" : 37,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "pftools",
+		"source" : "pftools"
+	}
+}

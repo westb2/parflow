@@ -1,0 +1,48 @@
+# ParFlow C Configuration Summary
+=================================
+
+# General
+---------
+ParFlow Version:	v3.12.0-78-gb63b515e
+Hostname:		dhcp-10-134-130-161.uawifi.arizona.edu
+OS:			Darwin-22.2.0
+Build Directory: 	/Users/ben/Documents/GitHub/parflow/cmake-build-debug
+Install Prefix:         /Users/ben/Documents/GitHub/parflow/cmake-build-debug/${PARFLOW_DIR}
+
+# Compiling Options
+-------------------
+
+Build Type:		Debug
+
+C Compiler:		/Library/Developer/CommandLineTools/usr/bin/cc
+CXX Compiler:		/Library/Developer/CommandLineTools/usr/bin/c++
+Fortran Compiler:	/usr/local/bin/gfortran
+
+C Flags:		
+CXX Flags:		
+Fortran Flags: 		 -fimplicit-none
+
+# Features Enabled
+------------------
+AMPS Comm Layer:	seq
+AMPS Sequential IO:	ON
+SLURM Support:		
+
+CLM Support:		yes
+Hypre Support:		
+Sundials Support:	
+
+Tcl Support:		yes
+Python Support:		
+
+Silo Support:		
+NetCDF Suppport:	
+HDF5 Support:		
+Zlib Support:		
+SZlib Support:		
+
+Backend: 		none
+OMP Support:		
+Kokkos Support:		
+CUDA Support:		
+RMM Support:		

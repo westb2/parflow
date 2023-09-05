@@ -1,0 +1,19 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Debug",
+	"cxx-modules" : {},
+	"dir-cur-bld" : "/Users/ben/Documents/GitHub/parflow/cmake-build-debug/pfsimulator/clm",
+	"dir-cur-src" : "/Users/ben/Documents/GitHub/parflow/pfsimulator/clm",
+	"dir-top-bld" : "/Users/ben/Documents/GitHub/parflow/cmake-build-debug",
+	"dir-top-src" : "/Users/ben/Documents/GitHub/parflow",
+	"exports" : [],
+	"include-dirs" : [],
+	"language" : "Fortran",
+	"linked-target-dirs" : [],
+	"module-dir" : "/Users/ben/Documents/GitHub/parflow/cmake-build-debug/pfsimulator/clm",
+	"submodule-ext" : ".smod",
+	"submodule-sep" : "@"
+}

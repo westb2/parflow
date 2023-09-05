@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "test/tcl/washita/tcl_scripts",
+		"source" : "test/tcl/washita/tcl_scripts"
+	}
+}
