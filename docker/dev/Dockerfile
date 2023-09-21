@@ -58,6 +58,13 @@ RUN apt-get update && \
 RUN groupadd -g 1000 ubuntu && \
     useradd -u 1000 -g ubuntu -m -N -s /bin/bash ubuntu
 
+# We are adding sudo capabilities to the ubuntu user so that devs can run the cmake build inside the container.
+# If we instead have devs use the root user when they execute parflow you get MPI errors
+RUN apt-get update \
+    && apt-get install -y sudo
+RUN adduser ubuntu sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
 USER ubuntu
 WORKDIR /home/ubuntu/
 ENV BASE_PATH /home/ubuntu/
@@ -158,8 +165,11 @@ USER ubuntu
 # Install Parflow
 # -----------------------------------------------------------------------------
 
-COPY --chown=ubuntu:ubuntu . $BASE_PATH/parflow/src
+# Do the pip installs on the earliest layer for faster iterative builds
+COPY --chown=ubuntu:ubuntu ./docker/dev/rebuild.sh ~/rebuild.sh
+COPY --chown=ubuntu:ubuntu ./pftools/python/requirements*.txt $BASE_PATH/parflow/src/pftools/python/
 RUN pip3 install -r $BASE_PATH/parflow/src/pftools/python/requirements_all.txt
+COPY --chown=ubuntu:ubuntu . $BASE_PATH/parflow/src
 
 # ARG PARFLOW_VERSION=master
 # ARG PARFLOW_GIT_URL=
@@ -180,7 +190,7 @@ RUN $CMAKE                     \
     -D PARFLOW_ENABLE_SILO=TRUE        \
     -D SILO_ROOT=$SILO_DIR              \
     -D PARFLOW_HAVE_CLM=TRUE             \
-    -D PARFLOW_ENABLE_PYTHON=TRUE         \
+    -D PARFLOW_ENABLE_PYTHON=ON         \
     -D PARFLOW_ENABLE_TIMING=TRUE          \
     -D PARFLOW_AMPS_LAYER=mpi1              \
     -D PARFLOW_AMPS_SEQUENTIAL_IO=TRUE       \
@@ -192,7 +202,16 @@ RUN $CMAKE --build $BASE_PATH/parflow/build
 
 USER root
 RUN $CMAKE --install $BASE_PATH/parflow/build --prefix /opt/parflow
+
+# Install the locally built version of pftools
 USER ubuntu
+RUN python3 -m pip install /home/ubuntu/parflow/build/pftools/python
+RUN cp -R /home/ubuntu/parflow/build/pftools/python/parflow/tools/ref ~/.local/lib/python3.8/site-packages/parflow/tools/ref
+
+RUN rm -R /home/ubuntu/parflow/src
+RUN mkdir /home/ubuntu/parflow/src
 
 ENV PARFLOW_DIR /opt/parflow/
 WORKDIR /opt/parflow/
+
+RUN echo 'alias rebuild="~/parflow/src/docker/dev/rebuild.sh"' >> ~/.bashrc
