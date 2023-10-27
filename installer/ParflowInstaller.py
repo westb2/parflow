@@ -46,14 +46,14 @@ class ParflowInstaller:
             file.write(f'export PATH="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/bin:$PATH"\n')
             file.write(f'export PARFLOW_DIR="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}"\n')
             file.write(f'export PF_SRC="{self.parflow_source_dir}"\n')
-            file.write(f'alias rebuild_parflow="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/rebuild_parflow.sh"')
+            file.write(f'alias rebuild_parflow="{config.INSTALLATION_ROOT}/rebuild_parflow.sh"')
         ALL_PERMISSIONS = 0o777
         os.chmod(self.PARFLOW_ENVIRONMENT_FILE, ALL_PERMISSIONS)
 
     def write_rebuild_parflow_script(self):
         with open(self.REBUILD_PARFLOW_SCRIPT_FILE, "w") as file:
             file.write("cwd=$(pwd)\n")
-            file.write(f'cd {config.INSTALLATION_ROOT}\n')
+            file.write(f'cd {config.INSTALLATION_ROOT}/..\n')
             file.write('python3 install_parflow.py\n')
             file.write("cd $(cwd)")
         ALL_PERMISSIONS = 0o777

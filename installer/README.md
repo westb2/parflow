@@ -15,9 +15,9 @@ After that run
 
 `python3 install_parflow.py`
 
-And that's it! The version you have built corresponds to the code in this repo, so if you want to build a different branch or update your version all you have to do is run rebuild_parflow (a command we automatically added for you)
+Before you run for the first time either source your user profile or close and open terminal.
 
-Before you run for the first time either source your user profile or close and open terminal
+And that's it! The version you have built corresponds to the code in this repo, so if you want to build a different branch or update your version all you have to do is run rebuild_parflow (a command we automatically added for you)
 
 ONCE YOU HAVE PARFLOW INSTALLED
 Firstly, you should no be able to run parflow via command line e.g.
@@ -29,6 +29,8 @@ You can also run models via python e.g.
 `python3 YOUR_FAVORITE_MODEL.py`
 
 provided you haven't done anything weird with your python environments (see IMPORTANT NOTE ON PFTOOLS AND CONDA/VIRTUALENV for more details). I would recommend you run the line
+
+If you would like to test this you can navigate into installation/cmake_build/test/python and run `ctest`. You should see 16 test failing, all of which are because the tests themselves run into permission problems trying to read input files (not sure how this happened). Right now the tcl tests all fail because TCL cant find the environment variables that were set. Might be a new macs switching to ~/.zprofile thing or something. Also not sure why this is happening. But they run correctly minus this if you want to hand pass those variables to tcl. All of the other test types pass.
 
 Lastly, we have added the script
 
