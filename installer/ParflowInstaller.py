@@ -11,21 +11,18 @@ class ParflowInstaller:
         self.package_locations = {}
         self.PARFLOW_ENVIRONMENT_FILE = "set_parflow_env.sh"
         self.REBUILD_PARFLOW_SCRIPT_FILE = "rebuild_parflow.sh"
+        self.parflow_source_dir=f"{config.INSTALLATION_ROOT}/../.."
 
-    def install_parflow(self, use_local_source_code=False):
+    def install_parflow(self):
         create_directory(config.INSTALLATION_ROOT)
         os.chdir(config.INSTALLATION_ROOT)
         self.set_environment_variables()
         self.write_env_file()
         self.write_rebuild_parflow_script()
         self.add_env_file_to_user_profile()
-        if use_local_source_code:
-            self.cmake(parflow_source=config.LOCAL_PARFLOW_SRC)
-        else:
-            self.download_parflow_source()
-            self.cmake(parflow_source=f"{config.INSTALLATION_ROOT}/{config.PARFLOW_SRC_DIR}")
-        self.install_pftools()
         self.set_environment()
+        self.cmake()
+        self.install_pftools()
         print("Installation complete :)\n")
 
     
@@ -48,6 +45,7 @@ class ParflowInstaller:
             file.write(f'export PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"\n')
             file.write(f'export PATH="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/bin:$PATH"\n')
             file.write(f'export PARFLOW_DIR="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}"\n')
+            file.write(f'export PF_SRC="{self.parflow_source_dir}"\n')
             file.write(f'alias rebuild_parflow="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/rebuild_parflow.sh"')
         ALL_PERMISSIONS = 0o777
         os.chmod(self.PARFLOW_ENVIRONMENT_FILE, ALL_PERMISSIONS)
@@ -74,11 +72,11 @@ class ParflowInstaller:
             {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}/pftools/python"
         )
 
-    def cmake(self, parflow_source):
+    def cmake(self):
         # os.system("python3 -m pip install yaml") # this is a required package
         create_directory(config.PARFLOW_SRC_DIR)
         os.system(
-            f"cmake -S {parflow_source}\
+            f"cmake -S {self.parflow_source_dir}\
             -B {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}\
             {config.CMAKE_ARGUMENTS}"
         )
