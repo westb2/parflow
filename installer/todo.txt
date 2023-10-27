@@ -1,0 +1,37 @@
+Set -D
+PARFLOW_PYTHON_VIRTUAL_ENV=TRUE
+
+Get archived version of netcdf and hdf5, see main dockerfile
+
+Switch to parflow_env file for setting variables
+
+add support for versioning and pulling different branches
+
+export script to build parflow from local version
+
+export TMPDIR=/tmp in export script to fix ompi issue
+
+Add build_local_pftools script to env
+
+If we readd the json module put this back in readme
+
+"""The first time you install parflow you need to open a terminal and navigate to this directory (/SOME/PATH/parflow/installer). Then you have two options, either do it step by step to get more control of the install, or do it all in one shot by running the below script and pointing it to your user profile (likely either ~/.zprofile (newer macs), ~/.bash_profile, or ~/.profile). This is the recommended path unless something about how you manage your environments leads you to not want to, or the installer doesn't work right away in which case it might be easier to spot things running step by step.
+
+    `./install_everything.sh`
+
+    If you choose this option and it works, you can move straight to reading the ONCE YOU HAVE PARFLOW INSTALLED section if you want. No need to go setting any environment files or anything, unless you already had a bunch of environment variables set from a previous install you did, in which case you should remove those (or comment them out until you know this install works).
+
+    If you want to go step by step follow the below instructions.
+
+    The first thing we will do here is install the python packages required to run this installer. This can be done via either installing them at a user level via
+
+    `python3 -m pip install -r requirements.txt`
+
+    Or you can create and activate conda environment for your parflow install with
+
+    `conda env create -f environment.yml && conda activate parflow`
+
+    Then you run 
+
+    `python3 install_requirements.py`
+"""

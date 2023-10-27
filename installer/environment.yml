@@ -1,0 +1,5 @@
+name: parflow
+
+dependencies:
+  - pip:
+    - -r requirements.txt
