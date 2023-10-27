@@ -52,10 +52,8 @@ class ParflowInstaller:
 
     def write_rebuild_parflow_script(self):
         with open(self.REBUILD_PARFLOW_SCRIPT_FILE, "w") as file:
-            file.write("cwd=$(pwd)\n")
             file.write(f'cd {config.INSTALLATION_ROOT}/..\n')
             file.write('python3 install_parflow.py\n')
-            file.write("cd $(cwd)")
         ALL_PERMISSIONS = 0o777
         os.chmod(self.REBUILD_PARFLOW_SCRIPT_FILE, ALL_PERMISSIONS)
 
