@@ -39,6 +39,7 @@ REQUIRED_PACKAGES = [
     # "libopenmpi-dev",
     "open-mpi",
     "python3",
+    "tcl-tk"
     # "tcl-dev",
     # "tk-dev",
 ]
@@ -80,14 +81,17 @@ CMAKE_ARGUMENTS = f"-D CMAKE_BUILD_TYPE=Release\
                     -D PARFLOW_ENABLE_TIMING=TRUE\
                     -D PARFLOW_ENABLE_PROFILING=TRUE\
                     -D PARFLOW_AMPS_LAYER=mpi1\
-                    -D PARFLOW_AMPS_SEQUENTIAL_IO=TRUE\
-                    -D CMAKE_BUILD_TYPE=Debug\
-                    -D PARFLOW_ENABLE_SILO=/Users/ben/parflow_build/silo\
-                    -D SILO_ROOT={INSTALLATION_ROOT}/{SILO_DIR}\
-                    -D PARFLOW_ENABLE_NETCDF=TRUE\
+                    -D PARFLOW_AMPS_SEQUENTIAL_IO=FALSE\
+                    -D PARFLOW_ENABLE_NETCDF=FALSE\
                     -D NETCDF_DIR={INSTALLATION_ROOT}/{NETCDF_DIR} \
+                    -D PARFLOW_ENABLE_SILO=FALSE\
+                     -D SILO_ROOT={INSTALLATION_ROOT}/{SILO_DIR}\
                     -DCMAKE_POLICY_DEFAULT_CMP0144=NEW \
                     && cmake --build {INSTALLATION_ROOT}/{PARFLOW_BUILD_DIR}\
                     && cmake --install {INSTALLATION_ROOT}/{PARFLOW_BUILD_DIR} --prefix {INSTALLATION_ROOT}/{PARFLOW_INSTALLATION_DIR}\
                     "
 
+#Add the following lines back once we fix the install scripts
+
+
+                                    # -D PARFLOW_PYTHON_VIRTUAL_ENV=TRUE\

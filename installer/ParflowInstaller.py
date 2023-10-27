@@ -24,16 +24,18 @@ class ParflowInstaller:
         else:
             self.download_parflow_source()
             self.cmake(parflow_source=f"{config.INSTALLATION_ROOT}/{config.PARFLOW_SRC_DIR}")
-        print("INSTALLATION COMPLETE!\n")
-        print("Please add the following lines to your bashrc (or other profile) file\n\n")
-        print(f'export PATH="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/bin:$PATH"\n')
-        print(f'export PARFLOW_DIR="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}"\n\n')
-        print("You can also find this information where you installed parflow if you need to find it later")
+        self.install_pftools()
+        self.set_environment()
+        print("Installation complete :)\n")
+
+    
+    def set_environment(self):
+        os.system(f"{config.INSTALLATION_ROOT}/{self.PARFLOW_ENVIRONMENT_FILE}")
 
 
     def add_env_file_to_user_profile(self):
         with open(config.USER_PROFILE_FILE, "r+") as user_profile:
-            text_to_be_added = f"{config.INSTALLATION_ROOT}/{self.PARFLOW_ENVIRONMENT_FILE}"
+            text_to_be_added = f". {config.INSTALLATION_ROOT}/{self.PARFLOW_ENVIRONMENT_FILE}"
             for line in user_profile:
                 if text_to_be_added in line:
                     break
@@ -43,11 +45,12 @@ class ParflowInstaller:
 
     def write_env_file(self):
         with open(self.PARFLOW_ENVIRONMENT_FILE, "w") as file:
-            file.write(f'export PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"')
+            file.write(f'export PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"\n')
             file.write(f'export PATH="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/bin:$PATH"\n')
-            file.write(f'export PARFLOW_DIR="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}"')
+            file.write(f'export PARFLOW_DIR="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}"\n')
             file.write(f'alias rebuild_parflow="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/rebuild_parflow.sh"')
-
+        ALL_PERMISSIONS = 0o777
+        os.chmod(self.PARFLOW_ENVIRONMENT_FILE, ALL_PERMISSIONS)
 
     def write_rebuild_parflow_script(self):
         with open(self.REBUILD_PARFLOW_SCRIPT_FILE, "w") as file:
@@ -55,6 +58,8 @@ class ParflowInstaller:
             file.write(f'cd {config.INSTALLATION_ROOT}\n')
             file.write('python3 install_parflow.py\n')
             file.write("cd $(cwd)")
+        ALL_PERMISSIONS = 0o777
+        os.chmod(self.REBUILD_PARFLOW_SCRIPT_FILE, ALL_PERMISSIONS)
 
 
     def download_parflow_source(self):
@@ -70,6 +75,7 @@ class ParflowInstaller:
         )
 
     def cmake(self, parflow_source):
+        # os.system("python3 -m pip install yaml") # this is a required package
         create_directory(config.PARFLOW_SRC_DIR)
         os.system(
             f"cmake -S {parflow_source}\
@@ -94,8 +100,8 @@ class ParflowInstaller:
         # The order of these matters!
         self.install_hdf5()
         self.install_netcdf()
-        self.install_silo()
-        self.install_hypre()
+        # self.install_silo()
+        # self.install_hypre()
         os.chdir(config.INSTALLATION_ROOT)
         self.save_package_locations()
 
