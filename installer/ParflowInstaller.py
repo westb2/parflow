@@ -63,11 +63,9 @@ class ParflowInstaller:
     
 
     def install_pftools(self):
-        create_directory(config.INSTALLATION_ROOT)
-        os.chdir(config.INSTALLATION_ROOT)
-        run_and_capture_terminal_output(
-            f"python3 -m pip install \
-            {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}/pftools/python"
+        print(f"python3 -m pip install {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python")
+        os.system(
+            f"python3 -m pip install {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python"
         )
 
     def cmake(self):
