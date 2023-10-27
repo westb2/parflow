@@ -49,7 +49,7 @@ def check_parflow_execution(out_file):
                 emoji = f'{TermSymbol.splash} '
                 print(
                     f'# ParFlow ran successfully {emoji * 3}')
-                print(f'# If you are seeing this the installer worked how it should')
+                print(f'# If you are seeing this the installer worked')
                 execute_success = True
             else:
                 emoji = f'{TermSymbol.x} '

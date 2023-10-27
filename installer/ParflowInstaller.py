@@ -16,6 +16,7 @@ class ParflowInstaller:
     def install_parflow(self):
         create_directory(config.INSTALLATION_ROOT)
         os.chdir(config.INSTALLATION_ROOT)
+        self.install_pip_for_conda()
         self.set_environment_variables()
         self.write_env_file()
         self.write_rebuild_parflow_script()
@@ -26,6 +27,11 @@ class ParflowInstaller:
         print("Installation complete :)\n")
 
     
+    def install_pip_for_conda(self):
+        if os.environ["CONDA_DEFAULT_ENV"] != "":
+            os.system(f"conda install -y pip")
+
+
     def set_environment(self):
         os.system(f"{config.INSTALLATION_ROOT}/{self.PARFLOW_ENVIRONMENT_FILE}")
 
@@ -63,10 +69,13 @@ class ParflowInstaller:
     
 
     def install_pftools(self):
-        print(f"python3 -m pip install {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python")
         os.system(
             f"python3 -m pip install {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python"
         )
+        os.system(
+            f"python3 -m pip install -r {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python/requirements_all.txt"
+        )
+
 
     def cmake(self):
         # os.system("python3 -m pip install yaml") # this is a required package
