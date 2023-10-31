@@ -28,7 +28,7 @@ class ParflowInstaller:
 
     
     def install_pip_for_conda(self):
-        if os.environ["CONDA_DEFAULT_ENV"] != "":
+        if "CONDA_DEFAULT_ENV" in os.environ:
             os.system(f"conda install -y pip")
 
 
