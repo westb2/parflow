@@ -1214,7 +1214,10 @@ SetupRichards(PFModule * this_module)
     /*-------------------------------------------------------------------
      * Print out the initial well data?
      *-------------------------------------------------------------------*/
-
+    WriteReservoirs("ReservoirsOutput",
+                    problem,
+                    ProblemDataReservoirData(problem_data),
+                    t, WELLDATA_WRITEHEADER);
     if (print_wells)
     {
       WriteWells(file_prefix,
@@ -3027,7 +3030,125 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
     FinalizeVectorUpdate(handle);
     }
 
+    //TODO define these variables somewhere that makes more sense
+    ReservoirData         *reservoir_data = ProblemDataReservoirData(problem_data);
+    if (ReservoirDataNumFluxReservoirs(reservoir_data) > 0) {
+      double reservoir_reset_pressure = 0.0;
+      ReservoirDataPhysical *reservoir_data_physical;
+      Subgrid          *tmp_subgrid, *reservoir_intake_subgrid;
+      Subgrid          *reservoir_secondary_intake_subgrid;
+      for (int reservoir = 0; reservoir < ReservoirDataNumFluxReservoirs(reservoir_data); reservoir++) {
+        reservoir_data_physical = ReservoirDataFluxReservoirPhysical(reservoir_data, reservoir);
+        ReservoirDataPhysicalReleaseAmountSinceLastPrint(reservoir_data_physical) += ReservoirDataPhysicalReleaseAmountInSolver(reservoir_data_physical) * dt;
+          ReservoirDataPhysicalCurrentStorage(reservoir_data_physical) -= ReservoirDataPhysicalReleaseAmountInSolver(reservoir_data_physical) * dt;
+        reservoir_intake_subgrid = ReservoirDataPhysicalIntakeSubgrid(reservoir_data_physical);
+        GrGeomSolid *gr_domain = ProblemDataGrDomain(problem_data);
 
+        int i, j, k, r, is;
+        int ix, iy, iz;
+        int nx, ny, nz;
+        int ip;
+        // JLW add declarations for use without CLM
+        Subvector *p_sub_sp;
+        double *pp_sp;
+
+        Subgrid *subgrid;
+        Grid *grid = VectorGrid(evap_trans_sum);
+
+        ForSubgridI(is, GridSubgrids(grid))
+        {
+          subgrid = GridSubgrid(grid, is);
+          if (tmp_subgrid = IntersectSubgrids(subgrid, reservoir_intake_subgrid))
+          {
+            p_sub_sp = VectorSubvector(instance_xtra->pressure, is);
+
+            r = SubgridRX(tmp_subgrid);
+
+            ix = SubgridIX(tmp_subgrid);
+            iy = SubgridIY(tmp_subgrid);
+            iz = SubgridIZ(tmp_subgrid);
+
+            nx = SubgridNX(tmp_subgrid);
+            ny = SubgridNY(tmp_subgrid);
+            nz = SubgridNZ(tmp_subgrid);
+            double dx = SubgridDX(tmp_subgrid);
+            double dy = SubgridDY(tmp_subgrid);
+            int grid_nz = SubgridNZ(subgrid);
+
+            pp_sp = SubvectorData(p_sub_sp);
+            GrGeomInLoop(i, j, k, gr_domain, r, ix, iy, iz, nx, ny, nz,
+                         {
+                           ip = SubvectorEltIndex(p_sub_sp, i, j, k);
+                           if (k == (grid_nz - 1))
+                           {
+                             //   printf(" %d %d %d %d  \n",i,j,k,ip);
+                             //   printf(" pp[ip] %10.3f \n",pp[ip]);
+                             if (pp_sp[ip] > reservoir_reset_pressure)
+                             {
+                               double volume = ReservoirDataPhysicalSize(reservoir_data_physical);
+                                 ReservoirDataPhysicalCurrentStorage(reservoir_data_physical)= ReservoirDataPhysicalCurrentStorage(reservoir_data_physical) + pp_sp[ip] * dx * dy;
+                               ReservoirDataPhysicalIntakeAmountSinceLastPrint(reservoir_data_physical) = ReservoirDataPhysicalIntakeAmountSinceLastPrint(reservoir_data_physical) + dx*dy * pp_sp[ip];
+                               pp_sp[ip] = reservoir_reset_pressure;
+                             }
+                           }
+                         }
+            );
+          }
+        }
+        if (ReservoirDataPhysicalHasSecondaryIntakeCell(reservoir_data_physical)){
+          reservoir_secondary_intake_subgrid = ReservoirDataPhysicalSecondaryIntakeSubgrid(reservoir_data_physical);
+
+          ForSubgridI(is, GridSubgrids(grid))
+          {
+            subgrid = GridSubgrid(grid, is);
+            if (tmp_subgrid = IntersectSubgrids(subgrid, reservoir_secondary_intake_subgrid))
+            {
+              p_sub_sp = VectorSubvector(instance_xtra->pressure, is);
+
+              r = SubgridRX(tmp_subgrid);
+
+              ix = SubgridIX(tmp_subgrid);
+              iy = SubgridIY(tmp_subgrid);
+              iz = SubgridIZ(tmp_subgrid);
+
+              nx = SubgridNX(tmp_subgrid);
+              ny = SubgridNY(tmp_subgrid);
+              nz = SubgridNZ(tmp_subgrid);
+              double dx = SubgridDX(tmp_subgrid);
+              double dy = SubgridDY(tmp_subgrid);
+              int grid_nz = SubgridNZ(subgrid);
+
+              pp_sp = SubvectorData(p_sub_sp);
+              printf("1\n");
+              GrGeomInLoop(i, j, k, gr_domain, r, ix, iy, iz, nx, ny, nz,
+                           {
+                             printf("2\n");
+                             ip = SubvectorEltIndex(p_sub_sp, i, j, k);
+                             if (k == (grid_nz - 1))
+                             {
+                               printf("pressure:%f\n", pp_sp[ip]);
+                               if (pp_sp[ip] > reservoir_reset_pressure)
+                               {
+                                 printf("4\n");
+                                 double volume = ReservoirDataPhysicalSize(reservoir_data_physical);
+                                   ReservoirDataPhysicalCurrentStorage(reservoir_data_physical)= ReservoirDataPhysicalCurrentStorage(reservoir_data_physical) + pp_sp[ip] * dx * dy;
+                                 ReservoirDataPhysicalIntakeAmountSinceLastPrint(reservoir_data_physical) = ReservoirDataPhysicalIntakeAmountSinceLastPrint(reservoir_data_physical) + dx*dy * pp_sp[ip];
+                                 pp_sp[ip] = reservoir_reset_pressure;
+                               }
+                             }
+                           }
+              );
+            }
+          };
+
+        }
+
+        /* update pressure,  not sure if we need to do this but we might if pressures are reset along processor edges RMM */
+
+      }
+      handle = InitVectorUpdate(instance_xtra->pressure, VectorUpdateAll);
+      FinalizeVectorUpdate(handle);
+    }
 
     /* velocity updates - not sure these are necessary jjb */
     handle = InitVectorUpdate(instance_xtra->x_velocity, VectorUpdateAll);
@@ -3800,9 +3921,14 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
     }
 
     /*******************************************************************/
-    /*                   Print the Well Data                           */
+    /*                   Print the Well and Reservoir Data                           */
     /*******************************************************************/
-
+    if (dump_files) {
+      WriteReservoirs("ReservoirsOutput",
+                      problem,
+                      ProblemDataReservoirData(problem_data),
+                      t, WELLDATA_DONTWRITEHEADER);
+    }
     if (print_wells && dump_files)
     {
       WriteWells(file_prefix,
