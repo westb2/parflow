@@ -209,8 +209,9 @@ void         ReservoirPackage(
 
       ForSubgridI(subgrid_index, rank_subgrids){
         tmp_subgrid = SubgridArraySubgrid(rank_subgrids, subgrid_index);
+        printf("If we dont intersect reservoir release cell exists on rank %d\n", process);
         if((tmp_subgrid = IntersectSubgrids(tmp_subgrid, new_release_subgrid))){
-          printf("Reservoir release cell exists on rank %d", process);
+          printf("Reservoir release cell exists on rank %d\n", process);
         };
       };
 
