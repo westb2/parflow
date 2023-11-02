@@ -81,7 +81,7 @@ CMAKE_ARGUMENTS = f"-D CMAKE_BUILD_TYPE=Release\
                     -D PARFLOW_ENABLE_TIMING=TRUE\
                     -D PARFLOW_ENABLE_PROFILING=TRUE\
                     -D PARFLOW_AMPS_LAYER=mpi1\
-                    -D PARFLOW_AMPS_SEQUENTIAL_IO=FALSE\
+                    -D PARFLOW_AMPS_SEQUENTIAL_IO=TRUE\
                     -D PARFLOW_ENABLE_NETCDF=FALSE\
                     -D NETCDF_DIR={INSTALLATION_ROOT}/{NETCDF_DIR} \
                     -D PARFLOW_ENABLE_SILO=FALSE\

@@ -167,4 +167,7 @@ installer/installation/
 
 local/
 
+cmake-build*/
+
+
 *cmake-build*
