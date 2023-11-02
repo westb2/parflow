@@ -199,6 +199,21 @@ void         ReservoirPackage(
       dy = SubgridDY(new_release_subgrid);
       dz = SubgridDZ(new_release_subgrid);
 
+      Grid * grid = problem_data->rsz->grid;
+
+      //The subgrids thi mpi rank knows about
+      SubgridArray   *rank_subgrids = GridSubgrids(grid);
+
+      Subgrid *tmp_subgrid;
+      int subgrid_index;
+
+      ForSubgridI(subgrid_index, rank_subgrids){
+        tmp_subgrid = SubgridArraySubgrid(rank_subgrids, subgrid_index);
+        if((tmp_subgrid = IntersectSubgrids(tmp_subgrid, new_release_subgrid))){
+          printf("Reservoir release cell exists on rank %d", process);
+        };
+      };
+
       release_subgrid_volume = (nx * dx) * (ny * dy) * (nz * dz);
         reservoir_data_physical = ctalloc(ReservoirDataPhysical, 1);
         ReservoirDataPhysicalNumber(reservoir_data_physical) = sequence_number;
