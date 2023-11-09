@@ -565,8 +565,8 @@ void         WellPackage(
               method = (dummy1->method_inj);
             }
 
-            iz_lower = GetIndexSpaceZ(dummy0->z_lower, problem_data);
-            iz_upper = GetIndexSpaceZ(dummy0->z_upper, problem_data);
+            iz_lower = GetIndexSpaceZ(z_lower, problem_data);
+            iz_upper = GetIndexSpaceZ(z_upper, problem_data);
 
             nx = 1;
             ny = 1;
