@@ -96,6 +96,66 @@ typedef struct {
  * WellPackage
  *--------------------------------------------------------------------------*/
 
+//Will return -1 if we can't find it
+int GetIndexSpaceZ(double real_space_z, ProblemData* problem_data){
+  Grid           *grid = VectorGrid(problem_data->rsz);
+  SubgridArray   *subgrids = GridSubgrids(grid);
+  Subgrid        *subgrid;
+  Subvector      *dz_sub;
+  Subvector      *rsz_sub;
+  int subgrid_index;
+  int index_space_z;
+  bool found_index_space_z = false;
+  ForSubgridI(subgrid_index, subgrids) {
+    subgrid = SubgridArraySubgrid(subgrids, subgrid_index);
+    Subvector  *real_space_zs_subvector = VectorSubvector(problem_data->rsz, subgrid_index);
+
+    int ix = SubgridIX(subgrid);
+    int iy = SubgridIY(subgrid);
+    int iz = SubgridIZ(subgrid);
+
+    int nx = 1;
+    int ny = 1;
+    int nz = SubgridNZ(subgrid);
+
+    /* RDF: assume resolution is the same in all 3 directions */
+    int r = SubgridRZ(subgrid);
+    //TODO need to already know z of bottom of grid
+    //TODO need to get iz and nz without going straight to problem data
+    GrGeomSolid *gr_domain = problem_data->gr_domain;
+    double* real_space_zs_data = SubvectorData(real_space_zs_subvector);
+    double* dz_mult_data = SubvectorData(VectorSubvector(problem_data->dz_mult, subgrid_index));
+    //I think I can set ix and iy to 0 because the dzscale does not vary in x or y
+    int i, j, k = 0;
+
+    int index;
+    double current_z;
+
+    GrGeomInLoop(i, j, k, gr_domain, r, ix, iy, iz, nx, ny, nz,
+                 {
+                   index = SubvectorEltIndex(real_space_zs_subvector, i, j, k);
+//                   real space z will give us the cell center...not the cell bottom. So we correct for that
+                   current_z = real_space_zs_data[index] + 0.5*dz_mult_data[index];
+                   printf("Current z: %f\n", current_z);
+                   // the checks here needs to be thought through a bit more carefully.   Is this >  or >= ???
+                   if (!found_index_space_z && (current_z > real_space_z))
+                   {
+                     // inside well, going up we have found index where well starts
+                     index_space_z = k;
+                     found_index_space_z = true;
+                   }
+
+                 });
+  };
+  if (found_index_space_z){
+    return index_space_z;
+  }
+  else{
+    return -1;
+  }
+};
+
+
 void         WellPackage(
                          ProblemData *problem_data)
 {
@@ -190,20 +250,15 @@ void         WellPackage(
 
           ix = IndexSpaceX((dummy0->xlocation), 0);
           iy = IndexSpaceY((dummy0->ylocation), 0);
-          iz_lower = IndexSpaceZ((dummy0->z_lower), 0);
-          iz_upper = IndexSpaceZ((dummy0->z_upper), 0);
+          iz_lower = GetIndexSpaceZ(dummy0->z_lower, problem_data);
+          iz_upper = GetIndexSpaceZ(dummy0->z_upper, problem_data);
 
 
-            Subvector      *dz_sub;
-            Subvector      *val_sub;
-            double         *dz_dat;
-            Vector *dz_mult;
-            dz_mult = ProblemDataZmult(problem_data);
+          Subvector      *dz_sub;
+          Subvector      *val_sub;
+          double         *dz_dat;
+          Vector *dz_mult;
 
-//            double a = dz_mult->subvectors[0];
-            dz_sub = VectorSubvector(dz_mult, iz_lower);
-            dz_dat = SubvectorData(dz_sub);
-//            double a = dz_dat[0];
           nx = 1;
           ny = 1;
           nz = iz_upper - iz_lower + 1;
@@ -510,8 +565,8 @@ void         WellPackage(
               method = (dummy1->method_inj);
             }
 
-            iz_lower = IndexSpaceZ(z_lower, 0);
-            iz_upper = IndexSpaceZ(z_upper, 0);
+            iz_lower = GetIndexSpaceZ(dummy0->z_lower, problem_data);
+            iz_upper = GetIndexSpaceZ(dummy0->z_upper, problem_data);
 
             nx = 1;
             ny = 1;

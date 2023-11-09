@@ -164,3 +164,6 @@ ipython_config.py
 
 # space for local dev
 local/
+*cmake-build*
+installer/installation
+*.pfb
