@@ -106,7 +106,7 @@ class ParflowInstaller:
         # self.install_silo()
         # self.install_hypre()
         os.chdir(config.INSTALLATION_ROOT)
-        self.save_package_locations()
+        # self.save_package_locations()
 
     def install_hypre(self):
         os.chdir(config.INSTALLATION_ROOT)
