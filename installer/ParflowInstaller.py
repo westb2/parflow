@@ -62,8 +62,8 @@ class ParflowInstaller:
             file.write(
                 f"cmake -S {self.parflow_source_dir}\
                 -B {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}\
-                {config.CMAKE_ARGUMENTS} \n&&\
-                python3 -m pip install {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python &&\n\
+                {config.CMAKE_ARGUMENTS} \n\
+                python3 -m pip install {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python\n\
                 python3 -m pip install -r {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python/requirements_all.txt"
             )
         ALL_PERMISSIONS = 0o777
@@ -110,9 +110,8 @@ class ParflowInstaller:
         self.install_hdf5()
         self.install_netcdf()
         # self.install_silo()
-        # self.install_hypre()
+        self.install_hypre()
         os.chdir(config.INSTALLATION_ROOT)
-        self.save_package_locations()
 
     def install_hypre(self):
         os.chdir(config.INSTALLATION_ROOT)
