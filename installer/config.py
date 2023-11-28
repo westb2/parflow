@@ -21,8 +21,8 @@ def detect_user_profile():
 
 USER_PROFILE_FILE = detect_user_profile()
 
-# INSTALLATION_ROOT = os.path.expanduser("~/parflow_installation")
-INSTALLATION_ROOT = f"{os.getcwd()}/installation"
+INSTALLATION_ROOT = os.path.expanduser("~/parflow_installation")
+# INSTALLATION_ROOT = f"{os.getcwd()}/installation"
 
 # These are the required packages for Mac
 REQUIRED_PACKAGES = [
@@ -70,7 +70,27 @@ CMAKE_ENVIRONMENT_VARIABLES = {
     "PARFLOW_MPIEXEC_EXTRA_FLAGS": "--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"
 }
 
-CMAKE_ARGUMENTS = f"-D CMAKE_BUILD_TYPE=Release\
+CMAKE_ARGUMENTS = {
+    "CMAKE_BUILD_TYPE":"Release",
+    "CURL_LIBRARY":f"{CURL_LOCATION}",
+    "PARFLOW_ENABLE_HDF5":f"TRUE",
+    "HDF5_ROOT":f"{INSTALLATION_ROOT}/{HDF5_DIR}",
+    "PARFLOW_ENABLE_HYPRE":f"TRUE",
+    "HYPRE_ROOT":f"{INSTALLATION_ROOT}/{HYPRE_DIR}",
+    "PARFLOW_HAVE_CLM":f"TRUE",
+    "PARFLOW_ENABLE_PYTHON":f"TRUE",
+    "PARFLOW_ENABLE_TIMING":f"TRUE",
+    "PARFLOW_ENABLE_PROFILING":f"TRUE",
+    "PARFLOW_AMPS_LAYER":f"mpi1",
+    "PARFLOW_AMPS_SEQUENTIAL_IO":f"TRUE",
+    "PARFLOW_ENABLE_NETCDF":f"FALSE",
+    "NETCDF_DIR":f"{INSTALLATION_ROOT}/{NETCDF_DIR} ",
+    "PARFLOW_ENABLE_SILO":f"FALSE",
+    "SILO_ROOT":f"{INSTALLATION_ROOT}/{SILO_DIR}",
+    "CMAKE_POLICY_DEFAULT_CMP0144":f"NEW ",
+}
+
+f"-D CMAKE_BUILD_TYPE=Release\
                     -D CURL_LIBRARY={CURL_LOCATION}\
                     -D PARFLOW_ENABLE_HDF5=TRUE\
                     -D HDF5_ROOT={INSTALLATION_ROOT}/{HDF5_DIR}\

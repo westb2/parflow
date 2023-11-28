@@ -11,6 +11,7 @@ class ParflowInstaller:
         self.package_locations = {}
         self.PARFLOW_ENVIRONMENT_FILE = "set_parflow_env.sh"
         self.REBUILD_PARFLOW_SCRIPT_FILE = "rebuild_parflow.sh"
+        self.REBUILD_PARFLOW_WITHOUT_PFTOOLS_SCRIPT_FILE = "rebuild_parflow_without_pftools.sh"
         self.parflow_source_dir=f"{config.INSTALLATION_ROOT}/../.."
 
     def install_parflow(self):
@@ -53,21 +54,31 @@ class ParflowInstaller:
             file.write(f'export PARFLOW_DIR="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}"\n')
             file.write(f'export PF_SRC="{self.parflow_source_dir}"\n')
             file.write(f'alias rebuild_parflow="{config.INSTALLATION_ROOT}/rebuild_parflow.sh"')
+            file.write(f'alias rebuild_parflow_without_pftools="{config.INSTALLATION_ROOT}/rebuild_parflow_without_pftools.sh"')
         ALL_PERMISSIONS = 0o777
         os.chmod(self.PARFLOW_ENVIRONMENT_FILE, ALL_PERMISSIONS)
+        
 
     def write_rebuild_parflow_script(self):
         with open(self.REBUILD_PARFLOW_SCRIPT_FILE, "w") as file:
             file.write(f'cd {config.INSTALLATION_ROOT}/..\n')
+            cmake_command = self.create_cmake_command()
             file.write(
-                f"cmake -S {self.parflow_source_dir}\
-                -B {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}\
-                {config.CMAKE_ARGUMENTS} \n\
+                f"{cmake_command} \n\
                 python3 -m pip install {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python\n\
                 python3 -m pip install -r {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python/requirements_all.txt"
             )
         ALL_PERMISSIONS = 0o777
         os.chmod(self.REBUILD_PARFLOW_SCRIPT_FILE, ALL_PERMISSIONS)
+
+
+    def write_rebuild_parflow_without_pftools_script(self):
+        with open(self.REBUILD_PARFLOW_WITHOUT_PFTOOLS_SCRIPT_FILE, "w") as file:
+            file.write(f'cd {config.INSTALLATION_ROOT}/..\n')
+            cmake_command = self.create_cmake_command(build_pftools=False)
+            file.write(cmake_command)
+        ALL_PERMISSIONS = 0o777
+        os.chmod(self.REBUILD_PARFLOW_WITHOUT_PFTOOLS_SCRIPT_FILE, ALL_PERMISSIONS)
 
 
     def download_parflow_source(self):
@@ -82,15 +93,24 @@ class ParflowInstaller:
             f"python3 -m pip install -r {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python/requirements_all.txt"
         )
 
+    def create_cmake_command(self, build_pftools=True):
+        cmake_command = f"cmake -S {self.parflow_source_dir}\
+            -B {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}"
+        cmake_arguments = config.CMAKE_ARGUMENTS.copy()
+        if not build_pftools:
+            cmake_arguments["PARFLOW_ENABLE_PYTHON"] = "FALSE"
+        for key, value in cmake_arguments.items():
+            cmake_command += f" -B {key}={value}"
+        cmake_command += f"&& cmake --build {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}\
+                    && cmake --install {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}\
+                    --prefix {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}"
+        return cmake_command
 
     def cmake(self):
         # os.system("python3 -m pip install yaml") # this is a required package
         create_directory(config.PARFLOW_SRC_DIR)
-        os.system(
-            f"cmake -S {self.parflow_source_dir}\
-            -B {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}\
-            {config.CMAKE_ARGUMENTS}"
-        )
+        cmake_command = self.create_cmake_command()
+        os.system(cmake_command)
 
 
     def set_environment_variables(self):
