@@ -20,17 +20,20 @@ class ParflowInstaller:
         create_directory(config.INSTALLATION_ROOT)
         os.chdir(config.INSTALLATION_ROOT)
         self.install_pip_for_conda()
-        self.set_environment_variables()
-        self.write_env_file()
-        self.write_rebuild_parflow_script()
-        self.write_rebuild_parflow_without_pftools_script()
-        self.add_env_file_to_user_profile()
-        self.set_environment()
+        self.create_system_utils()
         self.cmake()
         self.install_pftools()
         print("Installation complete :)\n")
 
-    
+    def create_system_utils(self):
+        self.set_environment_variables()
+        self.write_env_file()
+        self.write_rebuild_parflow_script()
+        self.write_rebuild_parflow_without_pftools_script()
+        self.write_delete_parflow_build_script()
+        self.add_env_file_to_user_profile()
+        self.set_environment()
+
     def install_pip_for_conda(self):
         if "CONDA_DEFAULT_ENV" in os.environ:
             os.system(f"conda install -y pip")
@@ -62,8 +65,8 @@ class ParflowInstaller:
         ALL_PERMISSIONS = 0o777
         os.chmod(self.PARFLOW_ENVIRONMENT_FILE, ALL_PERMISSIONS)
 
-    def write_clear_build_cache_script(self):
-        with open(self.delete_parflow_build_file) as file:
+    def write_delete_parflow_build_script(self):
+        with open(self.delete_parflow_build_file, "w") as file:
             file.write(f"rm -R {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}")
         ALL_PERMISSIONS = 0o777
         os.chmod(self.delete_parflow_build_file, ALL_PERMISSIONS)
