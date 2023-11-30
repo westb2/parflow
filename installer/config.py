@@ -87,29 +87,10 @@ CMAKE_ARGUMENTS = {
     "NETCDF_DIR":f"{INSTALLATION_ROOT}/{NETCDF_DIR} ",
     "PARFLOW_ENABLE_SILO":f"FALSE",
     "SILO_ROOT":f"{INSTALLATION_ROOT}/{SILO_DIR}",
-    "CMAKE_POLICY_DEFAULT_CMP0144":f"NEW ",
+    "CMAKE_POLICY_DEFAULT_CMP0144":f"NEW",
 }
 
-f"-D CMAKE_BUILD_TYPE=Release\
-                    -D CURL_LIBRARY={CURL_LOCATION}\
-                    -D PARFLOW_ENABLE_HDF5=TRUE\
-                    -D HDF5_ROOT={INSTALLATION_ROOT}/{HDF5_DIR}\
-                    -D PARFLOW_ENABLE_HYPRE=TRUE\
-                    -D HYPRE_ROOT={INSTALLATION_ROOT}/{HYPRE_DIR}\
-                    -D PARFLOW_HAVE_CLM=TRUE\
-                    -D PARFLOW_ENABLE_PYTHON=TRUE\
-                    -D PARFLOW_ENABLE_TIMING=TRUE\
-                    -D PARFLOW_ENABLE_PROFILING=TRUE\
-                    -D PARFLOW_AMPS_LAYER=mpi1\
-                    -D PARFLOW_AMPS_SEQUENTIAL_IO=TRUE\
-                    -D PARFLOW_ENABLE_NETCDF=FALSE\
-                    -D NETCDF_DIR={INSTALLATION_ROOT}/{NETCDF_DIR} \
-                    -D PARFLOW_ENABLE_SILO=FALSE\
-                     -D SILO_ROOT={INSTALLATION_ROOT}/{SILO_DIR}\
-                    -DCMAKE_POLICY_DEFAULT_CMP0144=NEW \
-                    && cmake --build {INSTALLATION_ROOT}/{PARFLOW_BUILD_DIR}\
-                    && cmake --install {INSTALLATION_ROOT}/{PARFLOW_BUILD_DIR} --prefix {INSTALLATION_ROOT}/{PARFLOW_INSTALLATION_DIR}\
-                    "
+
 
 #Add the following lines back once we fix the install scripts
 

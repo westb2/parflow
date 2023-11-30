@@ -12,7 +12,9 @@ class ParflowInstaller:
         self.PARFLOW_ENVIRONMENT_FILE = "set_parflow_env.sh"
         self.REBUILD_PARFLOW_SCRIPT_FILE = "rebuild_parflow.sh"
         self.REBUILD_PARFLOW_WITHOUT_PFTOOLS_SCRIPT_FILE = "rebuild_parflow_without_pftools.sh"
-        self.parflow_source_dir=f"{config.INSTALLATION_ROOT}/../.."
+        self.delete_parflow_build_file = f"{config.INSTALLATION_ROOT}/delete_parflow_build.sh"
+        # TODO dont hardcode this
+        self.parflow_source_dir=f"/Users/ben/Documents/Github/parflow"
 
     def install_parflow(self):
         create_directory(config.INSTALLATION_ROOT)
@@ -21,6 +23,7 @@ class ParflowInstaller:
         self.set_environment_variables()
         self.write_env_file()
         self.write_rebuild_parflow_script()
+        self.write_rebuild_parflow_without_pftools_script()
         self.add_env_file_to_user_profile()
         self.set_environment()
         self.cmake()
@@ -55,9 +58,15 @@ class ParflowInstaller:
             file.write(f'export PF_SRC="{self.parflow_source_dir}"\n')
             file.write(f'alias rebuild_parflow="{config.INSTALLATION_ROOT}/rebuild_parflow.sh"')
             file.write(f'alias rebuild_parflow_without_pftools="{config.INSTALLATION_ROOT}/rebuild_parflow_without_pftools.sh"')
+            file.write(f'alias delete_parflow_build="{self.delete_parflow_build_file}"')
         ALL_PERMISSIONS = 0o777
         os.chmod(self.PARFLOW_ENVIRONMENT_FILE, ALL_PERMISSIONS)
-        
+
+    def write_clear_build_cache_script(self):
+        with open(self.delete_parflow_build_file) as file:
+            file.write(f"rm -R {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}")
+        ALL_PERMISSIONS = 0o777
+        os.chmod(self.delete_parflow_build_file, ALL_PERMISSIONS)
 
     def write_rebuild_parflow_script(self):
         with open(self.REBUILD_PARFLOW_SCRIPT_FILE, "w") as file:
@@ -100,8 +109,8 @@ class ParflowInstaller:
         if not build_pftools:
             cmake_arguments["PARFLOW_ENABLE_PYTHON"] = "FALSE"
         for key, value in cmake_arguments.items():
-            cmake_command += f" -B {key}={value}"
-        cmake_command += f"&& cmake --build {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}\
+            cmake_command += f" -D {key}={value}"
+        cmake_command += f" && cmake --build {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}\
                     && cmake --install {config.INSTALLATION_ROOT}/{config.PARFLOW_BUILD_DIR}\
                     --prefix {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}"
         return cmake_command
@@ -124,7 +133,6 @@ class ParflowInstaller:
         # first install everything we can via our system package manager
         for package in config.REQUIRED_PACKAGES:
             self.system_package_manager.install_package(package)
-            self.package_locations[package] = self.system_package_manager.get_package_location(package)
         # next install the packages we need to build and configure from source.
         # The order of these matters!
         self.install_hdf5()
@@ -140,8 +148,6 @@ class ParflowInstaller:
         os.system(f"git clone {config.HYPRE_URL} --single-branch")
         os.chdir("hypre/src")
         os.system(f"./configure --prefix={config.INSTALLATION_ROOT}/{config.HYPRE_DIR} CC=mpicc && make && make install")
-        self.package_locations["hypre"] = config.INSTALLATION_ROOT + "/" + config.HYPRE_DIR
-
 
     def install_hdf5(self):
         os.chdir(config.INSTALLATION_ROOT)
@@ -153,8 +159,6 @@ class ParflowInstaller:
                     --enable-parallel && \
                     make && make install"
                   )
-        self.package_locations["hdf5"] = config.INSTALLATION_ROOT + config.HDF5_DIR
-
 
     def install_netcdf(self):
         os.chdir(config.INSTALLATION_ROOT)
@@ -165,8 +169,6 @@ class ParflowInstaller:
                     ./configure --disable-shared --disable-dap --prefix=${config.NETCDF_DIR} && \
                     make && make install"
                   )
-        self.package_locations["netcdf"] = config.INSTALLATION_ROOT + config.NETCDF_DIR
-
     
     def install_silo(self):
         os.chdir(config.INSTALLATION_ROOT)
@@ -176,8 +178,6 @@ class ParflowInstaller:
                     ./configure  --prefix={config.SILO_DIR} --disable-silex --disable-hzip --disable-fpzip && \
                     make && make install"
                   )
-        self.package_locations["silo"] = config.INSTALLATION_ROOT + config.SILO_DIR
-
 
 
 

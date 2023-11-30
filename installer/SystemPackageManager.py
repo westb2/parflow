@@ -16,6 +16,7 @@ class SystemPackageManager:
 
     def get_package_location(self, package, package_manager="homebrew"):
         if package_manager=="homebrew":
+            print("LOCATING PACKAGE" + self.get_homebrew_package_location(package)+"\n")
             return self.get_homebrew_package_location(package)
 
 
