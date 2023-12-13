@@ -57,251 +57,251 @@
  *--------------------------------------------------------------------------*/
 
 typedef struct {
-  PFModule *permeability_face;
-  PFModule *advect_concen;
-  PFModule *set_problem_data;
-  PFModule *nonlin_solver;
+    PFModule *permeability_face;
+    PFModule *advect_concen;
+    PFModule *set_problem_data;
+    PFModule *nonlin_solver;
 
-  Problem *problem;
+    Problem *problem;
 
-  int advect_order;
-  double CFL;
-  double drop_tol;
-  int max_iterations;
-  int max_convergence_failures; /* maximum number of convergence failures that are allowed */
-  int lsm;                      /* land surface model */
-  int terrain_following_grid;   /* @RMM flag for terrain following grid in NL fn eval, sets sslopes=toposl */
-  int variable_dz;              /* @RMM flag for variable dz-multipliers */
+    int advect_order;
+    double CFL;
+    double drop_tol;
+    int max_iterations;
+    int max_convergence_failures; /* maximum number of convergence failures that are allowed */
+    int lsm;                      /* land surface model */
+    int terrain_following_grid;   /* @RMM flag for terrain following grid in NL fn eval, sets sslopes=toposl */
+    int variable_dz;              /* @RMM flag for variable dz-multipliers */
 
-  int print_subsurf_data;       /* print permeability/porosity? */
-  int print_press;              /* print pressures? */
-  int print_slopes;             /* print slopes? */
-  int print_mannings;           /* print mannings? */
-  int print_specific_storage;   /* print spec storage? */
-  int print_top;                /* print top? */
-  int print_velocities;         /* print velocities? */
-  int print_satur;              /* print saturations? */
-  int print_mask;               /* print mask? */
-  int print_concen;             /* print concentrations? */
-  int print_wells;              /* print well data? */
-  int print_dzmult;             /* print dz multiplier? */
-  int print_evaptrans;          /* print evaptrans? */
-  int print_evaptrans_sum;      /* print evaptrans_sum? */
-  int print_overland_sum;       /* print overland_sum? */
-  int print_overland_bc_flux;   /* print overland outflow boundary condition flux? */
-  int write_silo_subsurf_data;  /* write permeability/porosity? */
-  int write_silo_press;         /* write pressures? */
-  int write_silo_velocities;    /* write velocities? */
-  int write_silo_satur;         /* write saturations? */
-  int write_silo_concen;        /* write concentrations? */
-  int write_silo_mask;          /* write mask? */
-  int write_silo_evaptrans;     /* write evaptrans? */
-  int write_silo_evaptrans_sum; /* write evaptrans sum? */
-  int write_silo_slopes;        /* write slopes? */
-  int write_silo_mannings;      /* write mannings? */
-  int write_silo_specific_storage;      /* write specific storage? */
-  int write_silo_top;           /* write top? */
-  int write_silo_overland_sum;  /* write sum of overland outflow? */
-  int write_silo_overland_bc_flux;      /* write overland outflow boundary condition flux? */
-  int write_silo_dzmult;        /* write dz multiplier */
-  int write_silopmpio_subsurf_data;     /* write permeability/porosity as PMPIO? */
-  int write_silopmpio_press;    /* write pressures as PMPIO? */
-  int write_silopmpio_velocities;       /* write velocities as PMPIO? */
-  int write_silopmpio_satur;    /* write saturations as PMPIO? */
-  int write_silopmpio_concen;   /* write concentrations as PMPIO? */
-  int write_silopmpio_mask;     /* write mask as PMPIO? */
-  int write_silopmpio_evaptrans;        /* write evaptrans as PMPIO? */
-  int write_silopmpio_evaptrans_sum;    /* write evaptrans sum as PMPIO? */
-  int write_silopmpio_slopes;   /* write slopes as PMPIO? */
-  int write_silopmpio_mannings; /* write mannings as PMPIO? */
-  int write_silopmpio_specific_storage; /* write specific storage as PMPIO? */
-  int write_silopmpio_top;      /* write top as PMPIO? */
-  int write_silopmpio_overland_sum;     /* write sum of overland outflow as PMPIO? */
-  int write_silopmpio_overland_bc_flux; /* write overland outflow boundary condition flux as PMPIO? */
-  int write_silopmpio_dzmult;   /* write dz multiplier as PMPIO? */
-  int spinup;                   /* spinup flag, remove ponded water */
-  int reset_surface_pressure;   /* surface pressure flag set to True and pressures are reset per threshold keys */
-  int threshold_pressure;       /* surface pressure threshold pressure */
-  int reset_pressure;           /* surface pressure reset pressure */
-  int evap_trans_file;          /* read evap_trans as a SS file before advance richards */
-  int evap_trans_file_transient;        /* read evap_trans as a transient file before advance richards timestep */
-  char *evap_trans_filename;    /* File name for evap trans */
-  int evap_trans_file_looping;  /* Loop over the flux files if we run out */
-  int surface_predictor;  /* key to turn on surface predictor feature RMM */
-  double surface_predictor_pressure;  /* surface predictor pressure value RMM */
-  int surface_predictor_print;  /* key to turn on surface predictor printing RMM */
+    int print_subsurf_data;       /* print permeability/porosity? */
+    int print_press;              /* print pressures? */
+    int print_slopes;             /* print slopes? */
+    int print_mannings;           /* print mannings? */
+    int print_specific_storage;   /* print spec storage? */
+    int print_top;                /* print top? */
+    int print_velocities;         /* print velocities? */
+    int print_satur;              /* print saturations? */
+    int print_mask;               /* print mask? */
+    int print_concen;             /* print concentrations? */
+    int print_wells;              /* print well data? */
+    int print_dzmult;             /* print dz multiplier? */
+    int print_evaptrans;          /* print evaptrans? */
+    int print_evaptrans_sum;      /* print evaptrans_sum? */
+    int print_overland_sum;       /* print overland_sum? */
+    int print_overland_bc_flux;   /* print overland outflow boundary condition flux? */
+    int write_silo_subsurf_data;  /* write permeability/porosity? */
+    int write_silo_press;         /* write pressures? */
+    int write_silo_velocities;    /* write velocities? */
+    int write_silo_satur;         /* write saturations? */
+    int write_silo_concen;        /* write concentrations? */
+    int write_silo_mask;          /* write mask? */
+    int write_silo_evaptrans;     /* write evaptrans? */
+    int write_silo_evaptrans_sum; /* write evaptrans sum? */
+    int write_silo_slopes;        /* write slopes? */
+    int write_silo_mannings;      /* write mannings? */
+    int write_silo_specific_storage;      /* write specific storage? */
+    int write_silo_top;           /* write top? */
+    int write_silo_overland_sum;  /* write sum of overland outflow? */
+    int write_silo_overland_bc_flux;      /* write overland outflow boundary condition flux? */
+    int write_silo_dzmult;        /* write dz multiplier */
+    int write_silopmpio_subsurf_data;     /* write permeability/porosity as PMPIO? */
+    int write_silopmpio_press;    /* write pressures as PMPIO? */
+    int write_silopmpio_velocities;       /* write velocities as PMPIO? */
+    int write_silopmpio_satur;    /* write saturations as PMPIO? */
+    int write_silopmpio_concen;   /* write concentrations as PMPIO? */
+    int write_silopmpio_mask;     /* write mask as PMPIO? */
+    int write_silopmpio_evaptrans;        /* write evaptrans as PMPIO? */
+    int write_silopmpio_evaptrans_sum;    /* write evaptrans sum as PMPIO? */
+    int write_silopmpio_slopes;   /* write slopes as PMPIO? */
+    int write_silopmpio_mannings; /* write mannings as PMPIO? */
+    int write_silopmpio_specific_storage; /* write specific storage as PMPIO? */
+    int write_silopmpio_top;      /* write top as PMPIO? */
+    int write_silopmpio_overland_sum;     /* write sum of overland outflow as PMPIO? */
+    int write_silopmpio_overland_bc_flux; /* write overland outflow boundary condition flux as PMPIO? */
+    int write_silopmpio_dzmult;   /* write dz multiplier as PMPIO? */
+    int spinup;                   /* spinup flag, remove ponded water */
+    int reset_surface_pressure;   /* surface pressure flag set to True and pressures are reset per threshold keys */
+    int threshold_pressure;       /* surface pressure threshold pressure */
+    int reset_pressure;           /* surface pressure reset pressure */
+    int evap_trans_file;          /* read evap_trans as a SS file before advance richards */
+    int evap_trans_file_transient;        /* read evap_trans as a transient file before advance richards timestep */
+    char *evap_trans_filename;    /* File name for evap trans */
+    int evap_trans_file_looping;  /* Loop over the flux files if we run out */
+    int surface_predictor;  /* key to turn on surface predictor feature RMM */
+    double surface_predictor_pressure;  /* surface predictor pressure value RMM */
+    int surface_predictor_print;  /* key to turn on surface predictor printing RMM */
 
 
 #ifdef HAVE_CLM                 /* VARIABLES FOR CLM ONLY */
-  char *clm_file_dir;           /* directory location for CLM files */
-  int clm_dump_interval;        /* time interval, integer, for CLM output */
-  int clm_1d_out;               /* boolean 0-1, integer, for CLM 1-d output */
-  int clm_forc_veg;             /* boolean 0-1, integer, for CLM vegetation forcing option */
-  /*BH*/ int clm_bin_out_dir;   /* boolean 0-1, integer, for sep dirs for each clm binary output */
-  // int                clm_dump_files;     /* boolean 0-1, integer, for write CLM output from PF */
+    char *clm_file_dir;           /* directory location for CLM files */
+    int clm_dump_interval;        /* time interval, integer, for CLM output */
+    int clm_1d_out;               /* boolean 0-1, integer, for CLM 1-d output */
+    int clm_forc_veg;             /* boolean 0-1, integer, for CLM vegetation forcing option */
+    /*BH*/ int clm_bin_out_dir;   /* boolean 0-1, integer, for sep dirs for each clm binary output */
+    // int                clm_dump_files;     /* boolean 0-1, integer, for write CLM output from PF */
 
-  int clm_nz;                   /* Number of CLM soil layers (layers in root zone) */
-  int clm_SoiLayer;             /* NBE: Layer number for LAI seasonal variations */
-  int clm_istep_start;          /* CLM time counter for met forcing (line in 1D file; name extension of 2D/3D files) */
-  int clm_fstep_start;          /* CLM time counter for inside met forcing files -- used for time keeping w/in 3D met files */
-  int clm_metforce;             /* CLM met forcing  -- 1=uniform (default), 2=distributed, 3=distributed w/ multiple timesteps */
-  int clm_metnt;                /* CLM met forcing  -- if 3D, length of time axis in each file */
-  int clm_metsub;               /* Flag for met vars in subdirs of clm_metpath or all in clm_metpath */
-  char *clm_metfile;            /* File name for 1D forcing *or* base name for 2D forcing */
-  char *clm_metpath;            /* Path to CLM met forcing file(s) */
-  double *sw1d, *lw1d, *prcp1d, /* 1D forcing variables */
+    int clm_nz;                   /* Number of CLM soil layers (layers in root zone) */
+    int clm_SoiLayer;             /* NBE: Layer number for LAI seasonal variations */
+    int clm_istep_start;          /* CLM time counter for met forcing (line in 1D file; name extension of 2D/3D files) */
+    int clm_fstep_start;          /* CLM time counter for inside met forcing files -- used for time keeping w/in 3D met files */
+    int clm_metforce;             /* CLM met forcing  -- 1=uniform (default), 2=distributed, 3=distributed w/ multiple timesteps */
+    int clm_metnt;                /* CLM met forcing  -- if 3D, length of time axis in each file */
+    int clm_metsub;               /* Flag for met vars in subdirs of clm_metpath or all in clm_metpath */
+    char *clm_metfile;            /* File name for 1D forcing *or* base name for 2D forcing */
+    char *clm_metpath;            /* Path to CLM met forcing file(s) */
+    double *sw1d, *lw1d, *prcp1d, /* 1D forcing variables */
     *tas1d, *u1d, *v1d, *patm1d, *qatm1d, *lai1d, *sai1d, *z0m1d, *displa1d;    /* BH: added lai, sai, z0m, displa */
 
-  int clm_beta_function;        /* CLM evap function for var sat 0=none, 1=linear, 2=cos */
-  double clm_res_sat;           /* CLM residual saturation in soil sat units [-] */
-  int clm_veg_function;         /* CLM veg function for water stress 0=none, 1=press, 2=sat */
-  double clm_veg_wilting;       /* CLM veg function wilting point in meters or soil moisture */
-  double clm_veg_fieldc;        /* CLM veg function field capacity in meters or soil moisture */
+    int clm_beta_function;        /* CLM evap function for var sat 0=none, 1=linear, 2=cos */
+    double clm_res_sat;           /* CLM residual saturation in soil sat units [-] */
+    int clm_veg_function;         /* CLM veg function for water stress 0=none, 1=press, 2=sat */
+    double clm_veg_wilting;       /* CLM veg function wilting point in meters or soil moisture */
+    double clm_veg_fieldc;        /* CLM veg function field capacity in meters or soil moisture */
 
-  int clm_irr_type;             /* CLM irrigation type flag -- 0=none, 1=Spray, 2=Drip, 3=Instant */
-  int clm_irr_cycle;            /* CLM irrigation cycle flag -- 0=Constant, 1=Deficit */
-  double clm_irr_rate;          /* CLM irrigation application rate [mm/s] */
-  double clm_irr_start;         /* CLM irrigation schedule -- start time of constant cycle [GMT] */
-  double clm_irr_stop;          /* CLM irrigation schedule -- stop time of constant cyle [GMT] */
-  double clm_irr_threshold;     /* CLM irrigation schedule -- soil moisture threshold for deficit cycle */
-  int clm_irr_thresholdtype;    /* Deficit-based saturation criteria (top, bottom, column avg) */
+    int clm_irr_type;             /* CLM irrigation type flag -- 0=none, 1=Spray, 2=Drip, 3=Instant */
+    int clm_irr_cycle;            /* CLM irrigation cycle flag -- 0=Constant, 1=Deficit */
+    double clm_irr_rate;          /* CLM irrigation application rate [mm/s] */
+    double clm_irr_start;         /* CLM irrigation schedule -- start time of constant cycle [GMT] */
+    double clm_irr_stop;          /* CLM irrigation schedule -- stop time of constant cyle [GMT] */
+    double clm_irr_threshold;     /* CLM irrigation schedule -- soil moisture threshold for deficit cycle */
+    int clm_irr_thresholdtype;    /* Deficit-based saturation criteria (top, bottom, column avg) */
 
-  int clm_reuse_count;          /* NBE: Number of times to use each CLM input */
-  int clm_write_logs;           /* NBE: Write the processor logs for CLM or not */
-  int clm_last_rst;             /* NBE: Only write/overwrite one rst file or write a lot of them */
-  int clm_daily_rst;            /* NBE: Write daily RST files or hourly */
+    int clm_reuse_count;          /* NBE: Number of times to use each CLM input */
+    int clm_write_logs;           /* NBE: Write the processor logs for CLM or not */
+    int clm_last_rst;             /* NBE: Only write/overwrite one rst file or write a lot of them */
+    int clm_daily_rst;            /* NBE: Write daily RST files or hourly */
 #endif
 
-  int print_lsm_sink;           /* print LSM sink term? */
-  int write_silo_CLM;           /* write CLM output as silo? */
-  int write_silopmpio_CLM;      /* write CLM output as silo as PMPIO? */
-  int print_CLM;                /* print CLM output as PFB? */
-  int write_CLM_binary;         /* write binary output (**default**)? */
-  int slope_accounting_CLM;     /* account for slopes in energy budget */
+    int print_lsm_sink;           /* print LSM sink term? */
+    int write_silo_CLM;           /* write CLM output as silo? */
+    int write_silopmpio_CLM;      /* write CLM output as silo as PMPIO? */
+    int print_CLM;                /* print CLM output as PFB? */
+    int write_CLM_binary;         /* write binary output (**default**)? */
+    int slope_accounting_CLM;     /* account for slopes in energy budget */
 
-  int single_clm_file;          /* NBE: Write all CLM outputs into a single multi-layer PFB */
+    int single_clm_file;          /* NBE: Write all CLM outputs into a single multi-layer PFB */
 
-  /* KKu netcdf output flags */
-  int write_netcdf_press;       /* write pressures? */
-  int write_netcdf_satur;       /* write saturations? */
-  int write_netcdf_evaptrans;   /* write evaptrans? */
-  int write_netcdf_evaptrans_sum;       /* write evaptrans_sum? */
-  int write_netcdf_overland_sum;        /* write overland_sum? */
-  int write_netcdf_overland_bc_flux;    /* write overland_bc_flux? */
-  int write_netcdf_mask;        /* write mask? */
-  int write_netcdf_mannings;    /* write mask? */
-  int write_netcdf_subsurface;  /* write subsurface? */
-  int write_netcdf_slopes;      /* write subsurface? */
-  int write_netcdf_dzmult;      /* write subsurface? */
-  int numVarTimeVariant;        /*This variable is added to keep track of number of
+    /* KKu netcdf output flags */
+    int write_netcdf_press;       /* write pressures? */
+    int write_netcdf_satur;       /* write saturations? */
+    int write_netcdf_evaptrans;   /* write evaptrans? */
+    int write_netcdf_evaptrans_sum;       /* write evaptrans_sum? */
+    int write_netcdf_overland_sum;        /* write overland_sum? */
+    int write_netcdf_overland_bc_flux;    /* write overland_bc_flux? */
+    int write_netcdf_mask;        /* write mask? */
+    int write_netcdf_mannings;    /* write mask? */
+    int write_netcdf_subsurface;  /* write subsurface? */
+    int write_netcdf_slopes;      /* write subsurface? */
+    int write_netcdf_dzmult;      /* write subsurface? */
+    int numVarTimeVariant;        /*This variable is added to keep track of number of
                                  * time variant variable in NetCDF file */
-  int numVarIni;                /*This variable is added to keep track of number of
+    int numVarIni;                /*This variable is added to keep track of number of
                                  * time invariant variable in NetCDF file */
-  int write_netcdf_clm;         /* Write CLM in NetCDF file? */
-  int numCLMVarTimeVariant;     /* Number of CLM variables to be written in NetCDF file */
+    int write_netcdf_clm;         /* Write CLM in NetCDF file? */
+    int numCLMVarTimeVariant;     /* Number of CLM variables to be written in NetCDF file */
 
-  int nc_evap_trans_file_transient;     /* read NetCDF evap_trans as a transient file before advance richards timestep */
-  char *nc_evap_trans_filename; /* NetCDF File name for evap trans */
+    int nc_evap_trans_file_transient;     /* read NetCDF evap_trans as a transient file before advance richards timestep */
+    char *nc_evap_trans_filename; /* NetCDF File name for evap trans */
 } PublicXtra;
 
 typedef struct {
-  PFModule *permeability_face;
-  PFModule *advect_concen;
-  PFModule *set_problem_data;
+    PFModule *permeability_face;
+    PFModule *advect_concen;
+    PFModule *set_problem_data;
 
-  PFModule *retardation;
-  PFModule *phase_rel_perm;
-  PFModule *ic_phase_pressure;
-  PFModule *ic_phase_concen;
-  PFModule *problem_saturation;
-  PFModule *phase_density;
-  PFModule *select_time_step;
-  PFModule *l2_error_norm;
-  PFModule *nonlin_solver;
+    PFModule *retardation;
+    PFModule *phase_rel_perm;
+    PFModule *ic_phase_pressure;
+    PFModule *ic_phase_concen;
+    PFModule *problem_saturation;
+    PFModule *phase_density;
+    PFModule *select_time_step;
+    PFModule *l2_error_norm;
+    PFModule *nonlin_solver;
 
-  Grid *grid;
-  Grid *grid2d;
-  Grid *x_grid;
-  Grid *y_grid;
-  Grid *z_grid;
+    Grid *grid;
+    Grid *grid2d;
+    Grid *x_grid;
+    Grid *y_grid;
+    Grid *z_grid;
 
-  ProblemData *problem_data;
+    ProblemData *problem_data;
 
-  double *temp_data;
+    double *temp_data;
 
-  /****************************************************************************
-   * Local variables that need to be kept around
-   *****************************************************************************/
-  Vector *pressure;
-  Vector *saturation;
-  Vector *density;
-  Vector *old_density;
-  Vector *old_saturation;
-  Vector *old_pressure;
-  Vector *mask;
+    /****************************************************************************
+     * Local variables that need to be kept around
+     *****************************************************************************/
+    Vector *pressure;
+    Vector *saturation;
+    Vector *density;
+    Vector *old_density;
+    Vector *old_saturation;
+    Vector *old_pressure;
+    Vector *mask;
 
-  Vector *evap_trans;           /* sk: Vector that contains the sink terms from the land surface model */
-  Vector *evap_trans_sum;       /* running sum of evaporation and transpiration */
-  Vector *overland_sum;
-  Vector *ovrl_bc_flx;          /* vector containing outflow at the boundary */
-  Vector *dz_mult;              /* vector containing dz multplier values for all cells */
-  Vector *x_velocity;           /* vector containing x-velocity face values */
-  Vector *y_velocity;           /* vector containing y-velocity face values */
-  Vector *z_velocity;           /* vector containing z-velocity face values */
+    Vector *evap_trans;           /* sk: Vector that contains the sink terms from the land surface model */
+    Vector *evap_trans_sum;       /* running sum of evaporation and transpiration */
+    Vector *overland_sum;
+    Vector *ovrl_bc_flx;          /* vector containing outflow at the boundary */
+    Vector *dz_mult;              /* vector containing dz multplier values for all cells */
+    Vector *x_velocity;           /* vector containing x-velocity face values */
+    Vector *y_velocity;           /* vector containing y-velocity face values */
+    Vector *z_velocity;           /* vector containing z-velocity face values */
 #ifdef HAVE_CLM
-  /* RM: vars for pf printing of clm output */
-  Vector *eflx_lh_tot;          /* total LH flux from canopy height to atmosphere [W/m^2] */
-  Vector *eflx_lwrad_out;       /* outgoing LW radiation from ground+canopy [W/m^2] */
-  Vector *eflx_sh_tot;          /* total SH flux from canopy height to atmosphere [W/m^2] */
-  Vector *eflx_soil_grnd;       /* ground heat flux [W/m^2] */
-  Vector *qflx_evap_tot;        /* total ET flux from canopy height to atmosphere [mm/s] */
-  Vector *qflx_evap_grnd;       /* evap flux from ground (first soil layer) [mm/s] (defined equal to qflx_evap_soi) */
-  Vector *qflx_evap_soi;        /* evap flux from ground [mm/s] */
-  Vector *qflx_evap_veg;        /* evap+trans from leaves [mm/s] */
-  Vector *qflx_tran_veg;        /* trans from veg [mm/s] */
-  Vector *qflx_infl;            /* infiltration [mm/s] */
-  Vector *swe_out;              /* snow water equivalent [mm] */
-  Vector *t_grnd;               /* CLM soil surface temperature [K] */
-  Vector *tsoil;                /* CLM soil temp, all 10 layers [K] */
-  Grid *gridTs;                 /* New grid fro tsoi (nx*ny*10) */
+    /* RM: vars for pf printing of clm output */
+    Vector *eflx_lh_tot;          /* total LH flux from canopy height to atmosphere [W/m^2] */
+    Vector *eflx_lwrad_out;       /* outgoing LW radiation from ground+canopy [W/m^2] */
+    Vector *eflx_sh_tot;          /* total SH flux from canopy height to atmosphere [W/m^2] */
+    Vector *eflx_soil_grnd;       /* ground heat flux [W/m^2] */
+    Vector *qflx_evap_tot;        /* total ET flux from canopy height to atmosphere [mm/s] */
+    Vector *qflx_evap_grnd;       /* evap flux from ground (first soil layer) [mm/s] (defined equal to qflx_evap_soi) */
+    Vector *qflx_evap_soi;        /* evap flux from ground [mm/s] */
+    Vector *qflx_evap_veg;        /* evap+trans from leaves [mm/s] */
+    Vector *qflx_tran_veg;        /* trans from veg [mm/s] */
+    Vector *qflx_infl;            /* infiltration [mm/s] */
+    Vector *swe_out;              /* snow water equivalent [mm] */
+    Vector *t_grnd;               /* CLM soil surface temperature [K] */
+    Vector *tsoil;                /* CLM soil temp, all 10 layers [K] */
+    Grid *gridTs;                 /* New grid fro tsoi (nx*ny*10) */
 
-  /* IMF: vars for printing clm irrigation output */
-  Vector *irr_flag;             /* Flag for irrigating/pumping under deficit-based irrigation scheme */
-  Vector *qflx_qirr;            /* Irrigation applied at surface -- spray or drip */
-  Vector *qflx_qirr_inst;       /* Irrigation applied by inflating soil moisture -- "instant" */
+    /* IMF: vars for printing clm irrigation output */
+    Vector *irr_flag;             /* Flag for irrigating/pumping under deficit-based irrigation scheme */
+    Vector *qflx_qirr;            /* Irrigation applied at surface -- spray or drip */
+    Vector *qflx_qirr_inst;       /* Irrigation applied by inflating soil moisture -- "instant" */
 
-  /* IMF: vars for distributed met focing */
-  Grid *metgrid;                /* new grid for 2D or 3D met forcing vars (nx*ny*clm_metnt; clm_metnt defaults to 1) */
-  Vector *sw_forc;              /* shortwave radiation forcing [W/m^2] */
-  Vector *lw_forc;              /* longwave radiation forcing [W/m^2] */
-  Vector *prcp_forc;            /* precipitation [mm/s] */
-  Vector *tas_forc;             /* air temp [K] @ ref height (hgt set in drv_clmin.dat, currently 2m) */
-  Vector *u_forc;               /* east-west wind [m/s] @ ref height (hgt set in drv_clmin.dat, currently 10m) */
-  Vector *v_forc;               /* south-north wind [m/s] @ ref height (hgt set in drv_clmin.dat, currently 10m) */
-  Vector *patm_forc;            /* surface air pressure [Pa] */
-  Vector *qatm_forc;            /* surface air humidity [kg/kg] @ ref height (hgt set in drv_clmin.dat, currently 2m) */
-  Vector *lai_forc;             /* LAI                              BH */
-  Vector *sai_forc;             /* SAI                                                  BH */
-  Vector *z0m_forc;             /* Aerodynamic roughness length [m] BH */
-  Vector *displa_forc;          /* Displacement height [m]                  BH */
-  Vector *veg_map_forc;         /* Vegetation map [classes 1-18]    BH */
+    /* IMF: vars for distributed met focing */
+    Grid *metgrid;                /* new grid for 2D or 3D met forcing vars (nx*ny*clm_metnt; clm_metnt defaults to 1) */
+    Vector *sw_forc;              /* shortwave radiation forcing [W/m^2] */
+    Vector *lw_forc;              /* longwave radiation forcing [W/m^2] */
+    Vector *prcp_forc;            /* precipitation [mm/s] */
+    Vector *tas_forc;             /* air temp [K] @ ref height (hgt set in drv_clmin.dat, currently 2m) */
+    Vector *u_forc;               /* east-west wind [m/s] @ ref height (hgt set in drv_clmin.dat, currently 10m) */
+    Vector *v_forc;               /* south-north wind [m/s] @ ref height (hgt set in drv_clmin.dat, currently 10m) */
+    Vector *patm_forc;            /* surface air pressure [Pa] */
+    Vector *qatm_forc;            /* surface air humidity [kg/kg] @ ref height (hgt set in drv_clmin.dat, currently 2m) */
+    Vector *lai_forc;             /* LAI                              BH */
+    Vector *sai_forc;             /* SAI                                                  BH */
+    Vector *z0m_forc;             /* Aerodynamic roughness length [m] BH */
+    Vector *displa_forc;          /* Displacement height [m]                  BH */
+    Vector *veg_map_forc;         /* Vegetation map [classes 1-18]    BH */
 
-  Grid *snglclm;                /* NBE: New grid for single file CLM ouptut */
-  Vector *clm_out_grid;         /* NBE - Holds multi-layer, single file output of CLM */
+    Grid *snglclm;                /* NBE: New grid for single file CLM ouptut */
+    Vector *clm_out_grid;         /* NBE - Holds multi-layer, single file output of CLM */
 #endif
 
-  double *time_log;
-  double *dt_log;
-  int *seq_log;
-  int *dumped_log;
-  char *recomp_log;
-  char *dt_info_log;
+    double *time_log;
+    double *dt_log;
+    int *seq_log;
+    int *dumped_log;
+    char *recomp_log;
+    char *dt_info_log;
 
-  int file_number;
-  int number_logged;
-  int iteration_number;
-  double dump_index;
-  double clm_dump_index;
+    int file_number;
+    int number_logged;
+    int iteration_number;
+    double dump_index;
+    double clm_dump_index;
 } InstanceXtra;
 
 static const char* dswr_filenames[] = { "DSWR" };
@@ -318,27 +318,27 @@ static const char* vz0m_filenames[] = { "Z0M" };
 static const char* vdsp_filenames[] = { "DISPLA" };
 
 typedef struct _CLMForcingField {
-  const char* field_name; // Name for human presentation.
-  const char* field_units; // Units (if available).
-  const char** component_names; // Filenames assigned to each component.
-  int num_components; // Number of components.
-  int vegetative; // Is this a vegetation forcing function?
+    const char* field_name; // Name for human presentation.
+    const char* field_units; // Units (if available).
+    const char** component_names; // Filenames assigned to each component.
+    int num_components; // Number of components.
+    int vegetative; // Is this a vegetation forcing function?
 } CLMForcingField;
 
 static const CLMForcingField clmForcingFields[] = {
-  { "downward shortwave radiation", NULL, dswr_filenames, sizeof(dswr_filenames) / sizeof(dswr_filenames[0]), 0 },
-  { "downward longwave radiation", NULL, dlwr_filenames, sizeof(dlwr_filenames) / sizeof(dlwr_filenames[0]), 0 },
-  { "precipitation", NULL, apcp_filenames, sizeof(apcp_filenames) / sizeof(apcp_filenames[0]), 0 },
-  { "temperature", NULL, temp_filenames, sizeof(temp_filenames) / sizeof(temp_filenames[0]), 0 },
-  { "wind velocity", NULL, wind_filenames, sizeof(wind_filenames) / sizeof(wind_filenames[0]), 0 },
-  { "atmospheric pressure", NULL, prss_filenames, sizeof(prss_filenames) / sizeof(prss_filenames[0]), 0 },
-  { "specific humidity", NULL, spfh_filenames, sizeof(spfh_filenames) / sizeof(spfh_filenames[0]), 0 },
+        { "downward shortwave radiation", NULL, dswr_filenames, sizeof(dswr_filenames) / sizeof(dswr_filenames[0]), 0 },
+        { "downward longwave radiation", NULL, dlwr_filenames, sizeof(dlwr_filenames) / sizeof(dlwr_filenames[0]), 0 },
+        { "precipitation", NULL, apcp_filenames, sizeof(apcp_filenames) / sizeof(apcp_filenames[0]), 0 },
+        { "temperature", NULL, temp_filenames, sizeof(temp_filenames) / sizeof(temp_filenames[0]), 0 },
+        { "wind velocity", NULL, wind_filenames, sizeof(wind_filenames) / sizeof(wind_filenames[0]), 0 },
+        { "atmospheric pressure", NULL, prss_filenames, sizeof(prss_filenames) / sizeof(prss_filenames[0]), 0 },
+        { "specific humidity", NULL, spfh_filenames, sizeof(spfh_filenames) / sizeof(spfh_filenames[0]), 0 },
 
-  // vegetative forcing functions (optionally enabled):
-  { "leaf area index", NULL, vlai_filenames, sizeof(vlai_filenames) / sizeof(vlai_filenames[0]), 1 },
-  { "stem area index", NULL, vsai_filenames, sizeof(vsai_filenames) / sizeof(vsai_filenames[0]), 1 },
-  { "aerodynamic roughness length", NULL, vz0m_filenames, sizeof(vz0m_filenames) / sizeof(vz0m_filenames[0]), 1 },
-  { "displacement height", NULL, vdsp_filenames, sizeof(vdsp_filenames) / sizeof(vdsp_filenames[0]), 1 },
+        // vegetative forcing functions (optionally enabled):
+        { "leaf area index", NULL, vlai_filenames, sizeof(vlai_filenames) / sizeof(vlai_filenames[0]), 1 },
+        { "stem area index", NULL, vsai_filenames, sizeof(vsai_filenames) / sizeof(vsai_filenames[0]), 1 },
+        { "aerodynamic roughness length", NULL, vz0m_filenames, sizeof(vz0m_filenames) / sizeof(vz0m_filenames[0]), 1 },
+        { "displacement height", NULL, vdsp_filenames, sizeof(vdsp_filenames) / sizeof(vdsp_filenames[0]), 1 },
 };
 int numForcingFields = sizeof(clmForcingFields) / sizeof(clmForcingFields[0]);
 
@@ -347,7 +347,7 @@ SetupRichards(PFModule * this_module)
 {
   PublicXtra *public_xtra = (PublicXtra*)PFModulePublicXtra(this_module);
   InstanceXtra *instance_xtra =
-    (InstanceXtra*)PFModuleInstanceXtra(this_module);
+          (InstanceXtra*)PFModuleInstanceXtra(this_module);
   Problem *problem = (public_xtra->problem);
   PFModule *ic_phase_pressure = (instance_xtra->ic_phase_pressure);
   PFModule *phase_density = (instance_xtra->phase_density);
@@ -413,25 +413,25 @@ SetupRichards(PFModule * this_module)
     for (ff = 0; ff < numForcingFields; ++ff)
     {
       if (
-          !clmForcingFields[ff].vegetative ||
-          (public_xtra->clm_metforce == 3 && public_xtra->clm_forc_veg == 1))
+              !clmForcingFields[ff].vegetative ||
+              (public_xtra->clm_metforce == 3 && public_xtra->clm_forc_veg == 1))
       {
 
         MetadataAddForcingField(
-                                js_inputs,
-                                clmForcingFields[ff].field_name,
-                                clmForcingFields[ff].field_units,
-                                "cell", "surface",
-                                public_xtra->clm_metforce,
-                                public_xtra->clm_metsub,
-                                public_xtra->clm_metpath,
-                                public_xtra->clm_metfile,
-                                public_xtra->clm_istep_start,
-                                public_xtra->clm_fstep_start,
-                                public_xtra->clm_metnt,
-                                clmForcingFields[ff].num_components,
-                                clmForcingFields[ff].component_names
-                                );
+                js_inputs,
+                clmForcingFields[ff].field_name,
+                clmForcingFields[ff].field_units,
+                "cell", "surface",
+                public_xtra->clm_metforce,
+                public_xtra->clm_metsub,
+                public_xtra->clm_metpath,
+                public_xtra->clm_metfile,
+                public_xtra->clm_istep_start,
+                public_xtra->clm_fstep_start,
+                public_xtra->clm_metnt,
+                clmForcingFields[ff].num_components,
+                clmForcingFields[ff].component_names
+        );
       }
     }
   }
@@ -471,10 +471,10 @@ SetupRichards(PFModule * this_module)
     Copy(ProblemDataTSlopeY(problem_data),
          ProblemDataSSlopeY(problem_data));
     handle =
-      InitVectorUpdate(ProblemDataSSlopeX(problem_data), VectorUpdateAll);
+            InitVectorUpdate(ProblemDataSSlopeX(problem_data), VectorUpdateAll);
     FinalizeVectorUpdate(handle);
     handle =
-      InitVectorUpdate(ProblemDataSSlopeY(problem_data), VectorUpdateAll);
+            InitVectorUpdate(ProblemDataSSlopeY(problem_data), VectorUpdateAll);
     FinalizeVectorUpdate(handle);
   }
 
@@ -506,29 +506,29 @@ SetupRichards(PFModule * this_module)
                   ProblemDataSpecificStorage(problem_data));
 
     PFModuleOutputStaticType(SaturationOutputStaticInvoke, ProblemSaturation(problem), (file_prefix, problem_data));
-    
+
     // Now add metadata entries:
     static const char* permeability_filenames[] = {
-      "perm_x", "perm_y", "perm_z"
+            "perm_x", "perm_y", "perm_z"
     };
     static const char* porosity_filenames[] = {
-      "porosity"
+            "porosity"
     };
     static const char* storage_filenames[] = {
-      "specific_storage"
+            "specific_storage"
     };
     MetadataAddStaticField(
-                           js_inputs, file_prefix, "permeability", NULL, "cell", "subsurface",
-                           sizeof(permeability_filenames) / sizeof(permeability_filenames[0]),
-                           permeability_filenames);
+            js_inputs, file_prefix, "permeability", NULL, "cell", "subsurface",
+            sizeof(permeability_filenames) / sizeof(permeability_filenames[0]),
+            permeability_filenames);
     MetadataAddStaticField(
-                           js_inputs, file_prefix, "porosity", NULL, "cell", "subsurface",
-                           sizeof(porosity_filenames) / sizeof(porosity_filenames[0]),
-                           porosity_filenames);
+            js_inputs, file_prefix, "porosity", NULL, "cell", "subsurface",
+            sizeof(porosity_filenames) / sizeof(porosity_filenames[0]),
+            porosity_filenames);
     MetadataAddStaticField(
-                           js_inputs, file_prefix, "specific storage", "1/m", "cell", "subsurface",
-                           sizeof(storage_filenames) / sizeof(storage_filenames[0]),
-                           storage_filenames);
+            js_inputs, file_prefix, "specific storage", "1/m", "cell", "subsurface",
+            sizeof(storage_filenames) / sizeof(storage_filenames[0]),
+            storage_filenames);
   }
 
 
@@ -602,12 +602,12 @@ SetupRichards(PFModule * this_module)
                   ProblemDataTSlopeY(problem_data));
 
     static const char* slope_filenames[] = {
-      "slope_x", "slope_y"
+            "slope_x", "slope_y"
     };
     MetadataAddStaticField(
-                           js_inputs, file_prefix, "slope", NULL, "cell", "surface",
-                           sizeof(slope_filenames) / sizeof(slope_filenames[0]),
-                           slope_filenames);
+            js_inputs, file_prefix, "slope", NULL, "cell", "surface",
+            sizeof(slope_filenames) / sizeof(slope_filenames[0]),
+            slope_filenames);
   }
 
   if (public_xtra->write_silo_slopes)
@@ -641,12 +641,12 @@ SetupRichards(PFModule * this_module)
                   ProblemDataMannings(problem_data));
 
     static const char* mannings_filenames[] = {
-      "mannings"
+            "mannings"
     };
     MetadataAddStaticField(
-                           js_inputs, file_prefix, "mannings", "s/m^(1/3)", "cell", "surface",
-                           sizeof(mannings_filenames) / sizeof(mannings_filenames[0]),
-                           mannings_filenames);
+            js_inputs, file_prefix, "mannings", "s/m^(1/3)", "cell", "surface",
+            sizeof(mannings_filenames) / sizeof(mannings_filenames[0]),
+            mannings_filenames);
   }
 
   if (public_xtra->write_silo_mannings)
@@ -671,12 +671,12 @@ SetupRichards(PFModule * this_module)
     WritePFBinary(file_prefix, file_postfix, instance_xtra->dz_mult);
 
     static const char* dzmult_filenames[] = {
-      "dzmult"
+            "dzmult"
     };
     MetadataAddStaticField(
-                           js_inputs, file_prefix, "dz multiplier", NULL, "cell", "subsurface",
-                           sizeof(dzmult_filenames) / sizeof(dzmult_filenames[0]),
-                           dzmult_filenames);
+            js_inputs, file_prefix, "dz multiplier", NULL, "cell", "subsurface",
+            sizeof(dzmult_filenames) / sizeof(dzmult_filenames[0]),
+            dzmult_filenames);
   }
 
   if (public_xtra->write_silo_dzmult)
@@ -708,12 +708,12 @@ SetupRichards(PFModule * this_module)
     if (!MetaDataHasField(js_inputs, "specific storage"))
     {
       static const char* storage_filenames[] = {
-        "specific_storage"
+              "specific_storage"
       };
       MetadataAddStaticField(
-                             js_inputs, file_prefix, "specific storage", "1/m", "cell", "subsurface",
-                             sizeof(storage_filenames) / sizeof(storage_filenames[0]),
-                             storage_filenames);
+              js_inputs, file_prefix, "specific storage", "1/m", "cell", "subsurface",
+              sizeof(storage_filenames) / sizeof(storage_filenames[0]),
+              storage_filenames);
     }
   }
 
@@ -787,32 +787,32 @@ SetupRichards(PFModule * this_module)
 
     /* SGS FIXME why are these here and not created in instance_xtra ? */
     instance_xtra->pressure =
-      NewVectorType(grid, 1, 1, vector_cell_centered);
+            NewVectorType(grid, 1, 1, vector_cell_centered);
     InitVectorAll(instance_xtra->pressure, -FLT_MAX);
 
     instance_xtra->saturation =
-      NewVectorType(grid, 1, 1, vector_cell_centered);
+            NewVectorType(grid, 1, 1, vector_cell_centered);
     InitVectorAll(instance_xtra->saturation, -FLT_MAX);
 
     instance_xtra->density =
-      NewVectorType(grid, 1, 1, vector_cell_centered);
+            NewVectorType(grid, 1, 1, vector_cell_centered);
     InitVectorAll(instance_xtra->density, 0.0);
 
     instance_xtra->old_pressure =
-      NewVectorType(grid, 1, 1, vector_cell_centered);
+            NewVectorType(grid, 1, 1, vector_cell_centered);
     InitVectorAll(instance_xtra->old_pressure, 0.0);
 
     instance_xtra->old_saturation =
-      NewVectorType(grid, 1, 1, vector_cell_centered);
+            NewVectorType(grid, 1, 1, vector_cell_centered);
     InitVectorAll(instance_xtra->old_saturation, 0.0);
 
     instance_xtra->old_density =
-      NewVectorType(grid, 1, 1, vector_cell_centered);
+            NewVectorType(grid, 1, 1, vector_cell_centered);
     InitVectorAll(instance_xtra->old_density, 0.0);
 
     /*sk Initialize Overland flow boundary fluxes */
     instance_xtra->ovrl_bc_flx =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->ovrl_bc_flx, 0.0);
 
     if (public_xtra->write_silo_overland_sum
@@ -821,7 +821,7 @@ SetupRichards(PFModule * this_module)
         || public_xtra->write_netcdf_overland_sum)
     {
       instance_xtra->overland_sum =
-        NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+              NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
       InitVectorAll(instance_xtra->overland_sum, 0.0);
     }
 
@@ -829,20 +829,20 @@ SetupRichards(PFModule * this_module)
     InitVectorAll(instance_xtra->mask, 0.0);
 
     instance_xtra->evap_trans_sum =
-      NewVectorType(grid, 1, 0, vector_cell_centered);
+            NewVectorType(grid, 1, 0, vector_cell_centered);
     InitVectorAll(instance_xtra->evap_trans_sum, 0.0);
 
     /* intialize vel vectors - jjb */
     instance_xtra->x_velocity =
-      NewVectorType(x_grid, 1, 1, vector_side_centered_x);
+            NewVectorType(x_grid, 1, 1, vector_side_centered_x);
     InitVectorAll(instance_xtra->x_velocity, 0.0);
 
     instance_xtra->y_velocity =
-      NewVectorType(y_grid, 1, 1, vector_side_centered_y);
+            NewVectorType(y_grid, 1, 1, vector_side_centered_y);
     InitVectorAll(instance_xtra->y_velocity, 0.0);
 
     instance_xtra->z_velocity =
-      NewVectorType(z_grid, 1, 2, vector_side_centered_z);
+            NewVectorType(z_grid, 1, 2, vector_side_centered_z);
     InitVectorAll(instance_xtra->z_velocity, 0.0);
 
     /*sk Initialize LSM terms */
@@ -865,57 +865,57 @@ SetupRichards(PFModule * this_module)
     if (public_xtra->single_clm_file)
     {
       instance_xtra->clm_out_grid =
-        NewVectorType(snglclm, 1, 1, vector_met);
+              NewVectorType(snglclm, 1, 1, vector_met);
       InitVectorAll(instance_xtra->clm_out_grid, 0.0);
     }
 
     /*IMF Initialize variables for printing CLM output */
     instance_xtra->eflx_lh_tot =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->eflx_lh_tot, 0.0);
 
     instance_xtra->eflx_lwrad_out =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->eflx_lwrad_out, 0.0);
 
     instance_xtra->eflx_sh_tot =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->eflx_sh_tot, 0.0);
 
     instance_xtra->eflx_soil_grnd =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->eflx_soil_grnd, 0.0);
 
     instance_xtra->qflx_evap_tot =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->qflx_evap_tot, 0.0);
 
     instance_xtra->qflx_evap_grnd =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->qflx_evap_grnd, 0.0);
 
     instance_xtra->qflx_evap_soi =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->qflx_evap_soi, 0.0);
 
     instance_xtra->qflx_evap_veg =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->qflx_evap_veg, 0.0);
 
     instance_xtra->qflx_tran_veg =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->qflx_tran_veg, 0.0);
 
     instance_xtra->qflx_infl =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->qflx_infl, 0.0);
 
     instance_xtra->swe_out =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->swe_out, 0.0);
 
     instance_xtra->t_grnd =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->t_grnd, 0.0);
 
     instance_xtra->tsoil = NewVectorType(gridTs, 1, 1, vector_clm_topsoil);
@@ -923,15 +923,15 @@ SetupRichards(PFModule * this_module)
 
     /*IMF Initialize variables for CLM irrigation output */
     instance_xtra->irr_flag =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->irr_flag, 0.0);
 
     instance_xtra->qflx_qirr =
-      NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+            NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
     InitVectorAll(instance_xtra->qflx_qirr, 0.0);
 
     instance_xtra->qflx_qirr_inst =
-      NewVectorType(gridTs, 1, 1, vector_clm_topsoil);
+            NewVectorType(gridTs, 1, 1, vector_clm_topsoil);
     InitVectorAll(instance_xtra->qflx_qirr_inst, 0.0);
 
     /*IMF Initialize variables for CLM forcing fields
@@ -1015,8 +1015,8 @@ SetupRichards(PFModule * this_module)
       }
       // SGS this should be done as an array not individual elements
       invoice =
-        amps_NewInvoice("%d%d%d%d%d%d%d%d", &sw, &lw, &prcp, &tas, &u,
-                        &v, &patm, &qatm);
+              amps_NewInvoice("%d%d%d%d%d%d%d%d", &sw, &lw, &prcp, &tas, &u,
+                              &v, &patm, &qatm);
       for (n = 0; n < nc; n++)
       {
         amps_SFBCast(amps_CommWorld, metf1d, invoice);
@@ -1181,7 +1181,7 @@ SetupRichards(PFModule * this_module)
     PFModuleInvokeType(ICPhasePressureInvoke,
                        ic_phase_pressure,
                        (instance_xtra->pressure, instance_xtra->mask,
-                        problem_data, problem));
+                               problem_data, problem));
 
     handle = InitVectorUpdate(instance_xtra->pressure, VectorUpdateAll);
     FinalizeVectorUpdate(handle);
@@ -1190,7 +1190,7 @@ SetupRichards(PFModule * this_module)
     PFModuleInvokeType(PhaseDensityInvoke,
                        phase_density,
                        (0, instance_xtra->pressure, instance_xtra->density,
-                        &dtmp, &dtmp, CALCFCN));
+                               &dtmp, &dtmp, CALCFCN));
 
     handle = InitVectorUpdate(instance_xtra->density, VectorUpdateAll);
     FinalizeVectorUpdate(handle);
@@ -1198,8 +1198,8 @@ SetupRichards(PFModule * this_module)
     /* Set initial saturations */
     PFModuleInvokeType(SaturationInvoke, problem_saturation,
                        (instance_xtra->saturation, instance_xtra->pressure,
-                        instance_xtra->density, gravity, problem_data,
-                        CALCFCN));
+                               instance_xtra->density, gravity, problem_data,
+                               CALCFCN));
 
     handle = InitVectorUpdate(instance_xtra->pressure, VectorUpdateAll);
     FinalizeVectorUpdate(handle);
@@ -1214,6 +1214,16 @@ SetupRichards(PFModule * this_module)
     /*-------------------------------------------------------------------
      * Print out the initial well data?
      *-------------------------------------------------------------------*/
+    //write the first line of the predictor training file if appropriate
+    if (public_xtra->surface_predictor_print){
+      FILE * predictor_training_file;
+      predictor_training_file = fopen("predictor_training_output.csv", "w");
+      // print cell vol, vol max, flux in, pressure, i, j, t
+      fprintf(predictor_training_file, "volume,max_volume,flux_in,pressure,i,j,time,we_predicted,predicted_pressure\n");
+      fclose(predictor_training_file);
+      any_file_dumped = 1;
+    }
+
 
     if (print_wells)
     {
@@ -1221,6 +1231,7 @@ SetupRichards(PFModule * this_module)
                  problem,
                  ProblemDataWellData(problem_data),
                  t, WELLDATA_WRITEHEADER);
+      any_file_dumped = 1;
     }
     sprintf(nc_postfix, "%05d", instance_xtra->file_number);
     if (public_xtra->write_netcdf_press || public_xtra->write_netcdf_satur
@@ -1245,12 +1256,12 @@ SetupRichards(PFModule * this_module)
       any_file_dumped = 1;
 
       static const char* press_filenames[] = {
-        "press"
+              "press"
       };
       MetadataAddDynamicField(
-                              js_outputs, file_prefix, t, 0, "pressure", "m", "cell", "subsurface",
-                              sizeof(press_filenames) / sizeof(press_filenames[0]),
-                              press_filenames);
+              js_outputs, file_prefix, t, 0, "pressure", "m", "cell", "subsurface",
+              sizeof(press_filenames) / sizeof(press_filenames[0]),
+              press_filenames);
     }
 
     if (public_xtra->write_silo_press)
@@ -1293,12 +1304,12 @@ SetupRichards(PFModule * this_module)
       any_file_dumped = 1;
 
       static const char* satur_filenames[] = {
-        "satur"
+              "satur"
       };
       MetadataAddDynamicField(
-                              js_outputs, file_prefix, t, 0, "saturation", NULL, "cell", "subsurface",
-                              sizeof(satur_filenames) / sizeof(satur_filenames[0]),
-                              satur_filenames);
+              js_outputs, file_prefix, t, 0, "saturation", NULL, "cell", "subsurface",
+              sizeof(satur_filenames) / sizeof(satur_filenames[0]),
+              satur_filenames);
     }
 
     if (public_xtra->write_silo_satur)
@@ -1412,12 +1423,12 @@ SetupRichards(PFModule * this_module)
       any_file_dumped = 1;
 
       static const char* mask_filenames[] = {
-        "mask"
+              "mask"
       };
       MetadataAddStaticField(
-                             js_inputs, file_prefix, "mask", NULL, "cell", "subsurface",
-                             sizeof(mask_filenames) / sizeof(mask_filenames[0]),
-                             mask_filenames);
+              js_inputs, file_prefix, "mask", NULL, "cell", "subsurface",
+              sizeof(mask_filenames) / sizeof(mask_filenames[0]),
+              mask_filenames);
     }
 
     if (public_xtra->write_netcdf_mask)
@@ -1457,34 +1468,34 @@ SetupRichards(PFModule * this_module)
       WritePFBinary(file_prefix, file_postfix,
                     instance_xtra->x_velocity);
       static const char* velx_filenames[] = {
-        "velx"
+              "velx"
       };
       MetadataAddDynamicField(
-                              js_outputs, file_prefix, t, 0, "x-velocity", "m/s", "x-face", "subsurface",
-                              sizeof(velx_filenames) / sizeof(velx_filenames[0]),
-                              velx_filenames);
+              js_outputs, file_prefix, t, 0, "x-velocity", "m/s", "x-face", "subsurface",
+              sizeof(velx_filenames) / sizeof(velx_filenames[0]),
+              velx_filenames);
 
       sprintf(file_postfix, "vely.%05d", instance_xtra->file_number);
       WritePFBinary(file_prefix, file_postfix,
                     instance_xtra->y_velocity);
       static const char* vely_filenames[] = {
-        "vely"
+              "vely"
       };
       MetadataAddDynamicField(
-                              js_outputs, file_prefix, t, 0, "y-velocity", "m/s", "y-face", "subsurface",
-                              sizeof(vely_filenames) / sizeof(vely_filenames[0]),
-                              vely_filenames);
+              js_outputs, file_prefix, t, 0, "y-velocity", "m/s", "y-face", "subsurface",
+              sizeof(vely_filenames) / sizeof(vely_filenames[0]),
+              vely_filenames);
 
       sprintf(file_postfix, "velz.%05d", instance_xtra->file_number);
       WritePFBinary(file_prefix, file_postfix,
                     instance_xtra->z_velocity);
       static const char* velz_filenames[] = {
-        "velz"
+              "velz"
       };
       MetadataAddDynamicField(
-                              js_outputs, file_prefix, t, 0, "z-velocity", "m/s", "z-face", "subsurface",
-                              sizeof(velz_filenames) / sizeof(velz_filenames[0]),
-                              velz_filenames);
+              js_outputs, file_prefix, t, 0, "z-velocity", "m/s", "z-face", "subsurface",
+              sizeof(velz_filenames) / sizeof(velz_filenames[0]),
+              velz_filenames);
 
       any_file_dumped = 1;
     }
@@ -1502,19 +1513,19 @@ SetupRichards(PFModule * this_module)
       if (instance_xtra->number_logged > public_xtra->max_iterations + 1)
       {
         printf
-          ("Error: max_iterations reached, can't log anymore data\n");
+                ("Error: max_iterations reached, can't log anymore data\n");
         exit(1);
       }
 
       instance_xtra->seq_log[instance_xtra->number_logged] =
-        instance_xtra->iteration_number;
+              instance_xtra->iteration_number;
       instance_xtra->time_log[instance_xtra->number_logged] = t;
       instance_xtra->dt_log[instance_xtra->number_logged] = dt;
       instance_xtra->dt_info_log[instance_xtra->number_logged] = 'i';
       if (any_file_dumped)
       {
         instance_xtra->dumped_log[instance_xtra->number_logged] =
-          instance_xtra->file_number;
+                instance_xtra->file_number;
       }
       else
       {
@@ -1541,7 +1552,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
 {
   PublicXtra *public_xtra = (PublicXtra*)PFModulePublicXtra(this_module);
   InstanceXtra *instance_xtra =
-    (InstanceXtra*)PFModuleInstanceXtra(this_module);
+          (InstanceXtra*)PFModuleInstanceXtra(this_module);
   Problem *problem = (public_xtra->problem);
 
   int max_iterations = (public_xtra->max_iterations);
@@ -1624,14 +1635,14 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
 
   /* IMF: For writing CLM output */
   Subvector *eflx_lh_tot_sub, *eflx_lwrad_out_sub, *eflx_sh_tot_sub,
-    *eflx_soil_grnd_sub, *qflx_evap_tot_sub, *qflx_evap_grnd_sub,
-    *qflx_evap_soi_sub, *qflx_evap_veg_sub, *qflx_tran_veg_sub,
-    *qflx_infl_sub, *swe_out_sub, *t_grnd_sub, *tsoil_sub, *irr_flag_sub,
-    *qflx_qirr_sub, *qflx_qirr_inst_sub;
+          *eflx_soil_grnd_sub, *qflx_evap_tot_sub, *qflx_evap_grnd_sub,
+          *qflx_evap_soi_sub, *qflx_evap_veg_sub, *qflx_tran_veg_sub,
+          *qflx_infl_sub, *swe_out_sub, *t_grnd_sub, *tsoil_sub, *irr_flag_sub,
+          *qflx_qirr_sub, *qflx_qirr_inst_sub;
 
   double *eflx_lh, *eflx_lwrad, *eflx_sh, *eflx_grnd, *qflx_tot, *qflx_grnd,
-    *qflx_soi, *qflx_eveg, *qflx_tveg, *qflx_in, *swe, *t_g, *t_soi, *iflag,
-    *qirr, *qirr_inst;
+          *qflx_soi, *qflx_eveg, *qflx_tveg, *qflx_in, *swe, *t_g, *t_soi, *iflag,
+          *qirr, *qirr_inst;
   int clm_file_dir_length;
 
   double print_cdt;
@@ -1642,7 +1653,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
   int any_file_dumped;
   int clm_file_dumped;
   int dump_files = 0;
-  
+
   int retval;
   int converged;
   int take_more_time_steps;
@@ -1832,7 +1843,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
             sai[c] = (public_xtra->sai1d)[(istep - 1) * 18 + c];
             z0m[c] = (public_xtra->z0m1d)[(istep - 1) * 18 + c];
             displa[c] =
-              (public_xtra->displa1d)[(istep - 1) * 18 + c];
+                    (public_xtra->displa1d)[(istep - 1) * 18 + c];
           }
 
           /*BH: end populating vegetation vectors */
@@ -2156,8 +2167,8 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
         for (ff = 0; ff < numForcingFields; ++ff)
         {
           if (
-              !clmForcingFields[ff].vegetative ||
-              (public_xtra->clm_metforce == 3 && public_xtra->clm_forc_veg == 1))
+                  !clmForcingFields[ff].vegetative ||
+                  (public_xtra->clm_metforce == 3 && public_xtra->clm_forc_veg == 1))
           {
             MetadataUpdateForcingField(js_inputs, clmForcingFields[ff].field_name, istep);
           }
@@ -2183,23 +2194,23 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
 
         /* IMF: Subvectors -- CLM surface fluxes, SWE, t_grnd */
         eflx_lh_tot_sub =
-          VectorSubvector(instance_xtra->eflx_lh_tot, is);
+                VectorSubvector(instance_xtra->eflx_lh_tot, is);
         eflx_lwrad_out_sub =
-          VectorSubvector(instance_xtra->eflx_lwrad_out, is);
+                VectorSubvector(instance_xtra->eflx_lwrad_out, is);
         eflx_sh_tot_sub =
-          VectorSubvector(instance_xtra->eflx_sh_tot, is);
+                VectorSubvector(instance_xtra->eflx_sh_tot, is);
         eflx_soil_grnd_sub =
-          VectorSubvector(instance_xtra->eflx_soil_grnd, is);
+                VectorSubvector(instance_xtra->eflx_soil_grnd, is);
         qflx_evap_tot_sub =
-          VectorSubvector(instance_xtra->qflx_evap_tot, is);
+                VectorSubvector(instance_xtra->qflx_evap_tot, is);
         qflx_evap_grnd_sub =
-          VectorSubvector(instance_xtra->qflx_evap_grnd, is);
+                VectorSubvector(instance_xtra->qflx_evap_grnd, is);
         qflx_evap_soi_sub =
-          VectorSubvector(instance_xtra->qflx_evap_soi, is);
+                VectorSubvector(instance_xtra->qflx_evap_soi, is);
         qflx_evap_veg_sub =
-          VectorSubvector(instance_xtra->qflx_evap_veg, is);
+                VectorSubvector(instance_xtra->qflx_evap_veg, is);
         qflx_tran_veg_sub =
-          VectorSubvector(instance_xtra->qflx_tran_veg, is);
+                VectorSubvector(instance_xtra->qflx_tran_veg, is);
         qflx_infl_sub = VectorSubvector(instance_xtra->qflx_infl, is);
         swe_out_sub = VectorSubvector(instance_xtra->swe_out, is);
         t_grnd_sub = VectorSubvector(instance_xtra->t_grnd, is);
@@ -2207,7 +2218,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
         irr_flag_sub = VectorSubvector(instance_xtra->irr_flag, is);
         qflx_qirr_sub = VectorSubvector(instance_xtra->qflx_qirr, is);
         qflx_qirr_inst_sub =
-          VectorSubvector(instance_xtra->qflx_qirr_inst, is);
+                VectorSubvector(instance_xtra->qflx_qirr_inst, is);
 
         /* IMF: Subvectors -- CLM met forcings */
         sw_forc_sub = VectorSubvector(instance_xtra->sw_forc, is);
@@ -2223,9 +2234,9 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
         sai_forc_sub = VectorSubvector(instance_xtra->sai_forc, is);
         z0m_forc_sub = VectorSubvector(instance_xtra->z0m_forc, is);
         displa_forc_sub =
-          VectorSubvector(instance_xtra->displa_forc, is);
+                VectorSubvector(instance_xtra->displa_forc, is);
         veg_map_forc_sub =
-          VectorSubvector(instance_xtra->veg_map_forc, is);
+                VectorSubvector(instance_xtra->veg_map_forc, is);
 
         /* Slope */
         slope_x_sub = VectorSubvector(ProblemDataTSlopeX(problem_data), is);
@@ -2539,13 +2550,13 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
         {
           PFModuleInvokeType(SelectTimeStepInvoke, time_step_control,
                              (&dt, &dt_info, t, problem,
-                              problem_data));
+                                     problem_data));
         }
         else
         {
           PFModuleInvokeType(SelectTimeStepInvoke, select_time_step,
                              (&dt, &dt_info, t, problem,
-                              problem_data));
+                                     problem_data));
         }
 
         PFVCopy(instance_xtra->density, instance_xtra->old_density);
@@ -2571,7 +2582,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
           else
           {
             PARFLOW_ERROR
-              ("Time increment is too small; solver has failed\n");
+            ("Time increment is too small; solver has failed\n");
           }
         }
 
@@ -2639,7 +2650,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
               else
               {
                 PARFLOW_ERROR
-                  ("Time increment is too small; CLM wants a small timestep\n");
+                ("Time increment is too small; CLM wants a small timestep\n");
               }
             }
           }
@@ -2674,7 +2685,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
             else
             {
               PARFLOW_ERROR
-                ("Time increment is too small; CLM wants a small timestep\n");
+              ("Time increment is too small; CLM wants a small timestep\n");
             }
           }
         }
@@ -2697,8 +2708,8 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
       if (dump_interval > 0)
       {
         print_dt =
-          ProblemStartTime(problem) +
-          instance_xtra->dump_index * dump_interval - t;
+                ProblemStartTime(problem) +
+                instance_xtra->dump_index * dump_interval - t;
 
         if ((dt + TIME_EPSILON) > print_dt)
         {
@@ -2737,9 +2748,9 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
       if (public_xtra->clm_dump_interval > 0)
       {
         print_cdt =
-          ProblemStartTime(problem) +
-          instance_xtra->clm_dump_index *
-          public_xtra->clm_dump_interval - t;
+                ProblemStartTime(problem) +
+                instance_xtra->clm_dump_index *
+                public_xtra->clm_dump_interval - t;
         if ((dt + TIME_EPSILON) > print_cdt)
         {
           clm_dump_files = 1;
@@ -2777,7 +2788,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
         {
           // PARFLOW_ERROR("Time increment is too small for last iteration\n");
           amps_Printf
-            ("Time increment is too small for last iteration \n");
+                  ("Time increment is too small for last iteration \n");
           //@RMM had to get rid of the error trap, was driving me crazy that it doesn't complete the log file
         }
 
@@ -2805,7 +2816,8 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
 
         Subgrid *subgrid;
         Grid *grid = VectorGrid(evap_trans_sum);
-
+        FILE * predictor_training_file;
+        predictor_training_file = fopen("predictor_training_output.csv","a");
         ForSubgridI(is, GridSubgrids(grid))
         {
           subgrid = GridSubgrid(grid, is);
@@ -2836,31 +2848,38 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
           sp = SubvectorData(s_sub);
 
           GrGeomInLoop(i, j, k, gr_domain, r, ix, iy, iz, nx, ny, nz,
-          {
-            ip = SubvectorEltIndex(p_sub, i, j, k);
+                       {
+                         ip = SubvectorEltIndex(p_sub, i, j, k);
 
-            if (k == (nz - 1))
-            {
-              vol = dx*dy*dz*dz_dat[ip]*po_dat[ip]*sp[ip];
-              flux_in = dx*dy*dz*dz_dat[ip]*et[ip]*dt;
-              vol_max = dx*dy*dz*dz_dat[ip]*po_dat[ip];
-              press_pred = (flux_in-(vol_max - vol))/(dx*dy*po_dat[ip]);
-              if (flux_in > (vol_max - vol))
-              {
-                if (pp[ip] < 0.0){
+                         if (k == (nz - 1))
+                         {
+                           vol = dx*dy*dz*dz_dat[ip]*po_dat[ip]*sp[ip];
+                           flux_in = dx*dy*dz*dz_dat[ip]*et[ip]*dt;
+                           vol_max = dx*dy*dz*dz_dat[ip]*po_dat[ip];
+                           press_pred = (flux_in-(vol_max - vol))/(dx*dy*po_dat[ip]);
+                           // print cell vol, vol max, flux in, pressure, i, j, t
+                           fprintf(predictor_training_file, "%f,%f,%f,%f,%d,%d,%f,%f,", vol, vol_max,flux_in,pp[ip],i,j,t,press_pred);
+                           //For now turn off the adjustment but note when we would make it
+                           int we_predicted = 0;
+                           if (flux_in > (vol_max - vol))
+                           {
+                             if (pp[ip] < 0.0){
+                               we_predicted = 1;
+                               press_pred = public_xtra->surface_predictor_pressure;
+                               if (public_xtra->surface_predictor_print == 1) {
+                                 amps_Printf(" Cell vol: %3.6e vol_max: %3.6e flux_in: %3.6e  Pressure: %3.6e I: %d J: %d  \n",vol, vol_max,flux_in,pp[ip],i,j);
+                               }
 
-                  press_pred = public_xtra->surface_predictor_pressure;
-                  if (public_xtra->surface_predictor_print == 1) {
-                    amps_Printf(" Cell vol: %3.6e vol_max: %3.6e flux_in: %3.6e  Pressure: %3.6e I: %d J: %d  \n",vol, vol_max,flux_in,pp[ip],i,j);
-                  }
-                  pp[ip] = press_pred;
+                               //pp[ip] = press_pred;
 
-                }
-              }
-            }
-          }
-        );
+                             }
+                           }
+                           fprintf(predictor_training_file, "%d,\n", we_predicted);
+                         }
+                       }
+          );
         }
+        fclose(predictor_training_file);
       }
 
       /*******************************************************************/
@@ -2869,18 +2888,18 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
 
       retval = PFModuleInvokeType(NonlinSolverInvoke, nonlin_solver,
                                   (instance_xtra->pressure,
-                                   instance_xtra->density,
-                                   instance_xtra->old_density,
-                                   instance_xtra->saturation,
-                                   instance_xtra->old_saturation,
-                                   t, dt,
-                                   problem_data,
-                                   instance_xtra->old_pressure,
-                                   evap_trans,
-                                   instance_xtra->ovrl_bc_flx,
-                                   instance_xtra->x_velocity,
-                                   instance_xtra->y_velocity,
-                                   instance_xtra->z_velocity));
+                                          instance_xtra->density,
+                                          instance_xtra->old_density,
+                                          instance_xtra->saturation,
+                                          instance_xtra->old_saturation,
+                                          t, dt,
+                                          problem_data,
+                                          instance_xtra->old_pressure,
+                                          evap_trans,
+                                          instance_xtra->ovrl_bc_flx,
+                                          instance_xtra->x_velocity,
+                                          instance_xtra->y_velocity,
+                                          instance_xtra->z_velocity));
 
       if (retval != 0)
       {
@@ -2944,32 +2963,31 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
         pp_sp = SubvectorData(p_sub_sp);
 
         GrGeomInLoop(i, j, k, gr_domain, r, ix, iy, iz, nx, ny, nz,
-        {
-          ip = SubvectorEltIndex(p_sub_sp, i, j, k);
-          // printf(" %d %d %d %d  \n",i,j,k,ip);
-          // printf(" pp[ip] %10.3f \n",pp[ip]);
-          // printf(" NZ: %d \n",nz);
-          if (k == (nz - 1))
-          {
-            //   printf(" %d %d %d %d  \n",i,j,k,ip);
-            //   printf(" pp[ip] %10.3f \n",pp[ip]);
+                     {
+                       ip = SubvectorEltIndex(p_sub_sp, i, j, k);
+                       // printf(" %d %d %d %d  \n",i,j,k,ip);
+                       // printf(" pp[ip] %10.3f \n",pp[ip]);
+                       // printf(" NZ: %d \n",nz);
+                       if (k == (nz - 1))
+                       {
+                         //   printf(" %d %d %d %d  \n",i,j,k,ip);
+                         //   printf(" pp[ip] %10.3f \n",pp[ip]);
 
-            if (pp_sp[ip] > 0.0)
-            {
-              printf(" pressure-> 0 %d %d %d %10.3f \n", i, j, k,
-                     pp_sp[ip]); pp_sp[ip] = 0.0;
-            }
-          }
-        }
-                     );
+                         if (pp_sp[ip] > 0.0)
+                         {
+                           printf(" pressure-> 0 %d %d %d %10.3f \n", i, j, k,
+                                  pp_sp[ip]); pp_sp[ip] = 0.0;
+                         }
+                       }
+                     }
+        );
       }
     }
 
 
-   /***************************************************************
-    *          modify land surface pressures                      *
-    ***************************************************************/
-   
+    /***************************************************************
+     *          modify land surface pressures                      *
+     ***************************************************************/
     if (public_xtra->reset_surface_pressure == 1)
     {
       GrGeomSolid *gr_domain = ProblemDataGrDomain(problem_data);
@@ -3003,30 +3021,29 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
         pp_sp = SubvectorData(p_sub_sp);
 
         GrGeomInLoop(i, j, k, gr_domain, r, ix, iy, iz, nx, ny, nz,
-        {
-          ip = SubvectorEltIndex(p_sub_sp, i, j, k);
-          // printf(" %d %d %d %d  \n",i,j,k,ip);
-          // printf(" pp[ip] %10.3f \n",pp[ip]);
-          // printf(" NZ: %d \n",nz);
-          if (k == (nz - 1))
-          {
-            //   printf(" %d %d %d %d  \n",i,j,k,ip);
-            //   printf(" pp[ip] %10.3f \n",pp[ip]);
+                     {
+                       ip = SubvectorEltIndex(p_sub_sp, i, j, k);
+                       // printf(" %d %d %d %d  \n",i,j,k,ip);
+                       // printf(" pp[ip] %10.3f \n",pp[ip]);
+                       // printf(" NZ: %d \n",nz);
+                       if (k == (nz - 1))
+                       {
+                         //   printf(" %d %d %d %d  \n",i,j,k,ip);
+                         //   printf(" pp[ip] %10.3f \n",pp[ip]);
 
-            if (pp_sp[ip] > public_xtra->threshold_pressure)
-            {
-              amps_Printf(" time: %10.3f  pressure reset: %d %d %d %10.3f \n",t, i, j, k,
-                     pp_sp[ip]); pp_sp[ip] = public_xtra->reset_pressure;
-            }
-          }
-        }
-                     );
+                         if (pp_sp[ip] > public_xtra->threshold_pressure)
+                         {
+                           amps_Printf(" time: %10.3f  pressure reset: %d %d %d %10.3f \n",t, i, j, k,
+                                       pp_sp[ip]); pp_sp[ip] = public_xtra->reset_pressure;
+                         }
+                       }
+                     }
+        );
       }
-    /* update pressure,  not sure if we need to do this but we might if pressures are reset along processor edges RMM */
-    handle = InitVectorUpdate(instance_xtra->pressure, VectorUpdateAll);
-    FinalizeVectorUpdate(handle);
+      /* update pressure,  not sure if we need to do this but we might if pressures are reset along processor edges RMM */
+      handle = InitVectorUpdate(instance_xtra->pressure, VectorUpdateAll);
+      FinalizeVectorUpdate(handle);
     }
-
 
 
     /* velocity updates - not sure these are necessary jjb */
@@ -3043,14 +3060,14 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
     /* Calculate densities and saturations for the new pressure. */
     PFModuleInvokeType(PhaseDensityInvoke, phase_density,
                        (0, instance_xtra->pressure, instance_xtra->density,
-                        &dtmp, &dtmp, CALCFCN));
+                               &dtmp, &dtmp, CALCFCN));
     handle = InitVectorUpdate(instance_xtra->density, VectorUpdateAll);
     FinalizeVectorUpdate(handle);
 
     PFModuleInvokeType(SaturationInvoke, problem_saturation,
                        (instance_xtra->saturation, instance_xtra->pressure,
-                        instance_xtra->density, gravity, problem_data,
-                        CALCFCN));
+                               instance_xtra->density, gravity, problem_data,
+                               CALCFCN));
 
     /***************************************************************
      * Compute running sum of evap trans for water balance
@@ -3108,8 +3125,8 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
 
         // Update with new timesteps
         MetadataAddDynamicField(
-                                js_outputs, file_prefix, t, instance_xtra->file_number,
-                                "pressure", "m", "cell", "subsurface", 0, NULL);
+                js_outputs, file_prefix, t, instance_xtra->file_number,
+                "pressure", "m", "cell", "subsurface", 0, NULL);
       }
 
       if (public_xtra->write_silo_press)
@@ -3149,24 +3166,24 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
                       instance_xtra->x_velocity);
         // Update with new timesteps
         MetadataAddDynamicField(
-                                js_outputs, file_prefix, t, instance_xtra->file_number,
-                                "x-velocity", "m/s", "x-face", "subsurface", 0, NULL);
+                js_outputs, file_prefix, t, instance_xtra->file_number,
+                "x-velocity", "m/s", "x-face", "subsurface", 0, NULL);
 
         sprintf(file_postfix, "vely.%05d", instance_xtra->file_number);
         WritePFBinary(file_prefix, file_postfix,
                       instance_xtra->y_velocity);
         // Update with new timesteps
         MetadataAddDynamicField(
-                                js_outputs, file_prefix, t, instance_xtra->file_number,
-                                "y-velocity", "m/s", "y-face", "subsurface", 0, NULL);
+                js_outputs, file_prefix, t, instance_xtra->file_number,
+                "y-velocity", "m/s", "y-face", "subsurface", 0, NULL);
 
         sprintf(file_postfix, "velz.%05d", instance_xtra->file_number);
         WritePFBinary(file_prefix, file_postfix,
                       instance_xtra->z_velocity);
         // Update with new timesteps
         MetadataAddDynamicField(
-                                js_outputs, file_prefix, t, instance_xtra->file_number,
-                                "z-velocity", "m/s", "z-face", "subsurface", 0, NULL);
+                js_outputs, file_prefix, t, instance_xtra->file_number,
+                "z-velocity", "m/s", "z-face", "subsurface", 0, NULL);
 
         any_file_dumped = 1;
 
@@ -3183,8 +3200,8 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
 
         // Update with new timesteps
         MetadataAddDynamicField(
-                                js_outputs, file_prefix, t, instance_xtra->file_number,
-                                "saturation", "1/m", "cell", "subsurface", 0, NULL);
+                js_outputs, file_prefix, t, instance_xtra->file_number,
+                "saturation", "1/m", "cell", "subsurface", 0, NULL);
       }
 
       if (public_xtra->write_silo_satur)
@@ -3790,7 +3807,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
 
     PFModuleInvokeType(L2ErrorNormInvoke, l2_error_norm,
                        (t, instance_xtra->pressure, problem_data,
-                        &err_norm));
+                               &err_norm));
     if ((!amps_Rank(amps_CommWorld)) && (err_norm >= 0.0))
     {
       amps_Printf("l2-error in pressure: %20.8e\n", err_norm);
@@ -3799,16 +3816,17 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
       fflush(NULL);
     }
 
+
     /*******************************************************************/
     /*                   Print the Well Data                           */
     /*******************************************************************/
-
     if (print_wells && dump_files)
     {
       WriteWells(file_prefix,
                  problem,
                  ProblemDataWellData(problem_data),
                  t, WELLDATA_DONTWRITEHEADER);
+
     }
 
     /*-----------------------------------------------------------------
@@ -3823,18 +3841,18 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
       if (instance_xtra->number_logged > public_xtra->max_iterations + 1)
       {
         amps_Printf
-          ("Error: max_iterations reached, can't log anymore data\n");
+                ("Error: max_iterations reached, can't log anymore data\n");
         exit(1);
       }
 
       instance_xtra->seq_log[instance_xtra->number_logged] =
-        instance_xtra->iteration_number;
+              instance_xtra->iteration_number;
       instance_xtra->time_log[instance_xtra->number_logged] = t;
       instance_xtra->dt_log[instance_xtra->number_logged] = dt;
       instance_xtra->dt_info_log[instance_xtra->number_logged] = dt_info;
       if (any_file_dumped || clm_file_dumped)
         instance_xtra->dumped_log[instance_xtra->number_logged] =
-          instance_xtra->file_number;
+                instance_xtra->file_number;
       else
         instance_xtra->dumped_log[instance_xtra->number_logged] = -1;
       instance_xtra->recomp_log[instance_xtra->number_logged] = 'y';
@@ -3853,8 +3871,8 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
     if (take_more_time_steps)
     {
       take_more_time_steps =
-        (instance_xtra->iteration_number < max_iterations)
-        && (t < stop_time);
+              (instance_xtra->iteration_number < max_iterations)
+              && (t < stop_time);
     }
 
 #ifdef HAVE_SLURM
@@ -4054,7 +4072,7 @@ TeardownRichards(PFModule * this_module)
 {
   PublicXtra *public_xtra = (PublicXtra*)PFModulePublicXtra(this_module);
   InstanceXtra *instance_xtra =
-    (InstanceXtra*)PFModuleInstanceXtra(this_module);
+          (InstanceXtra*)PFModuleInstanceXtra(this_module);
 
   Problem *problem = (public_xtra->problem);
   ProblemData *problem_data = (instance_xtra->problem_data);
@@ -4419,45 +4437,45 @@ SolverRichardsInitInstanceXtra()
   if (PFModuleInstanceXtra(this_module) == NULL)
   {
     (instance_xtra->advect_concen) =
-      PFModuleNewInstanceType(AdvectionConcentrationInitInstanceXtraType,
-                              (public_xtra->advect_concen),
-                              (problem, grid, NULL));
+            PFModuleNewInstanceType(AdvectionConcentrationInitInstanceXtraType,
+                                    (public_xtra->advect_concen),
+                                    (problem, grid, NULL));
     (instance_xtra->set_problem_data) =
-      PFModuleNewInstanceType(SetProblemDataInitInstanceXtraInvoke,
-                              (public_xtra->set_problem_data),
-                              (problem, grid, grid2d, NULL));
+            PFModuleNewInstanceType(SetProblemDataInitInstanceXtraInvoke,
+                                    (public_xtra->set_problem_data),
+                                    (problem, grid, grid2d, NULL));
 
     (instance_xtra->retardation) =
-      PFModuleNewInstanceType(RetardationInitInstanceXtraInvoke,
-                              ProblemRetardation(problem), (NULL));
+            PFModuleNewInstanceType(RetardationInitInstanceXtraInvoke,
+                                    ProblemRetardation(problem), (NULL));
     (instance_xtra->phase_rel_perm) =
-      PFModuleNewInstanceType(PhaseRelPermInitInstanceXtraInvoke,
-                              ProblemPhaseRelPerm(problem), (grid, NULL));
+            PFModuleNewInstanceType(PhaseRelPermInitInstanceXtraInvoke,
+                                    ProblemPhaseRelPerm(problem), (grid, NULL));
     (instance_xtra->ic_phase_concen) =
-      PFModuleNewInstance(ProblemICPhaseConcen(problem), ());
+            PFModuleNewInstance(ProblemICPhaseConcen(problem), ());
 
     (instance_xtra->permeability_face) =
-      PFModuleNewInstanceType(PermeabilityFaceInitInstanceXtraInvoke,
-                              (public_xtra->permeability_face), (z_grid));
+            PFModuleNewInstanceType(PermeabilityFaceInitInstanceXtraInvoke,
+                                    (public_xtra->permeability_face), (z_grid));
 
     (instance_xtra->ic_phase_pressure) =
-      PFModuleNewInstanceType(ICPhasePressureInitInstanceXtraInvoke,
-                              ProblemICPhasePressure(problem),
-                              (problem, grid, NULL));
+            PFModuleNewInstanceType(ICPhasePressureInitInstanceXtraInvoke,
+                                    ProblemICPhasePressure(problem),
+                                    (problem, grid, NULL));
     (instance_xtra->problem_saturation) =
-      PFModuleNewInstanceType(SaturationInitInstanceXtraInvoke,
-                              ProblemSaturation(problem), (grid, NULL));
+            PFModuleNewInstanceType(SaturationInitInstanceXtraInvoke,
+                                    ProblemSaturation(problem), (grid, NULL));
     (instance_xtra->phase_density) =
-      PFModuleNewInstance(ProblemPhaseDensity(problem), ());
+            PFModuleNewInstance(ProblemPhaseDensity(problem), ());
     (instance_xtra->select_time_step) =
-      PFModuleNewInstance(ProblemSelectTimeStep(problem), ());
+            PFModuleNewInstance(ProblemSelectTimeStep(problem), ());
     (instance_xtra->l2_error_norm) =
-      PFModuleNewInstance(ProblemL2ErrorNorm(problem), ());
+            PFModuleNewInstance(ProblemL2ErrorNorm(problem), ());
     (instance_xtra->nonlin_solver) =
-      PFModuleNewInstanceType(NonlinSolverInitInstanceXtraInvoke,
-                              public_xtra->nonlin_solver,
-                              (problem, grid, instance_xtra->problem_data,
-                               NULL));
+            PFModuleNewInstanceType(NonlinSolverInitInstanceXtraInvoke,
+                                    public_xtra->nonlin_solver,
+                                    (problem, grid, instance_xtra->problem_data,
+                                            NULL));
   }
   else
   {
@@ -4473,7 +4491,7 @@ SolverRichardsInitInstanceXtra()
 
     PFModuleReNewInstanceType(PhaseRelPermInitInstanceXtraInvoke,
                               (instance_xtra->phase_rel_perm), (grid,
-                                                                NULL));
+            NULL));
     PFModuleReNewInstance((instance_xtra->ic_phase_concen), ());
 
     PFModuleReNewInstanceType(PermeabilityFaceInitInstanceXtraInvoke,
@@ -4521,8 +4539,8 @@ SolverRichardsInitInstanceXtra()
   nonlin_sz = PFModuleSizeOfTempData(instance_xtra->nonlin_solver);
 
   /* Compute size for problem parameters */
-  parameter_sz = PFModuleSizeOfTempData(instance_xtra->problem_saturation);
-  parameter_sz  += PFModuleSizeOfTempData(instance_xtra->phase_rel_perm);
+  parameter_sz = PFModuleSizeOfTempData(instance_xtra->problem_saturation)
+                 + PFModuleSizeOfTempData(instance_xtra->phase_rel_perm);
 
   /* set temp_data size to max of velocity_sz, concen_sz, and ic_sz. */
   /* The temp vector space for the nonlinear solver is added in because */
@@ -4553,7 +4571,7 @@ SolverRichardsInitInstanceXtra()
   PFModuleReNewInstanceType(NonlinSolverInitInstanceXtraInvoke,
                             (instance_xtra->nonlin_solver),
                             (NULL, NULL, instance_xtra->problem_data,
-                             temp_data));
+                                    temp_data));
 
   /* renew set_problem_data module */
   PFModuleReNewInstanceType(SetProblemDataInitInstanceXtraInvoke,
@@ -4575,10 +4593,9 @@ SolverRichardsInitInstanceXtra()
                             (instance_xtra->advect_concen),
                             (NULL, NULL, temp_data_placeholder));
 
-  int size_retardation = PFModuleSizeOfTempData(instance_xtra->retardation);
-  int size_advect = PFModuleSizeOfTempData(instance_xtra->advect_concen);
-  temp_data_placeholder += pfmax(size_retardation, size_advect);
- 
+  temp_data_placeholder +=
+          pfmax(PFModuleSizeOfTempData(instance_xtra->retardation),
+                PFModuleSizeOfTempData(instance_xtra->advect_concen));
   /* set temporary vector data used for advection */
 
   temp_data += temp_data_size;
@@ -4597,7 +4614,7 @@ SolverRichardsFreeInstanceXtra()
 {
   PFModule *this_module = ThisPFModule;
   InstanceXtra *instance_xtra =
-    (InstanceXtra*)PFModuleInstanceXtra(this_module);
+          (InstanceXtra*)PFModuleInstanceXtra(this_module);
 
   if (instance_xtra)
   {
@@ -4682,7 +4699,7 @@ SolverRichardsNewPublicXtra(char *name)
     case 0:
     {
       (public_xtra->nonlin_solver) =
-        PFModuleNewModule(KinsolNonlinSolver, ());
+              PFModuleNewModule(KinsolNonlinSolver, ());
       break;
     }
 
@@ -4711,8 +4728,8 @@ SolverRichardsNewPublicXtra(char *name)
       public_xtra->lsm = 1;
 #else
       InputError
-        ("Error: <%s> used for key <%s> but this version of Parflow is compiled without CLM\n",
-        switch_name, key);
+          ("Error: <%s> used for key <%s> but this version of Parflow is compiled without CLM\n",
+           switch_name, key);
 #endif
       break;
     }
@@ -4916,7 +4933,7 @@ SolverRichardsNewPublicXtra(char *name)
   switch_name = GetStringDefault(key, "True");
   switch_value = NA_NameToIndexExitOnError(switch_na, switch_name, key);
   public_xtra->write_CLM_binary = switch_value;
-  
+
 /* IMF Account for slope in CLM energy budget (default=False) */
   sprintf(key, "%s.CLM.UseSlopeAspect", name);
   switch_name = GetStringDefault(key, "False");
@@ -5159,13 +5176,13 @@ SolverRichardsNewPublicXtra(char *name)
   {
     amps_Printf("Warning: Input variable <%s> \n", key);
     amps_Printf
-      ("         is set to a large value that may cause problems\n");
+            ("         is set to a large value that may cause problems\n");
     amps_Printf
-      ("         with how time cycles calculations are evaluated.  Values\n");
+            ("         with how time cycles calculations are evaluated.  Values\n");
     amps_Printf
-      ("         specified via a time cycle may be on/off at the slightly\n");
+            ("         specified via a time cycle may be on/off at the slightly\n");
     amps_Printf
-      ("         wrong times times due to how Parflow discretizes time.\n");
+            ("         wrong times times due to how Parflow discretizes time.\n");
   }
 
   sprintf(key, "%s.AdvectOrder", name);
@@ -5475,14 +5492,14 @@ SolverRichardsNewPublicXtra(char *name)
   }
 
 
-  /*
-   * ---------------------------
-   * End of NetCDF Tcl flags
-   * --------------------------
-   */
+    /*
+     * ---------------------------
+     * End of NetCDF Tcl flags
+     * --------------------------
+     */
 
 #ifndef HAVE_CLM
-  if (public_xtra->write_silo_overland_bc_flux)
+    if (public_xtra->write_silo_overland_bc_flux)
   {
     InputError("Error: setting %s to %s but do not have CLM\n",
                switch_name, key);
@@ -5636,8 +5653,8 @@ SolverRichardsNewPublicXtra(char *name)
   switch_value = NA_NameToIndexExitOnError(switch_na, switch_name, key);
   public_xtra->spinup = switch_value;
 
- //RMM surface pressure keys
- //Solver.ResetSurfacePressure “True”
+  //RMM surface pressure keys
+  //Solver.ResetSurfacePressure “True”
   sprintf(key, "%s.ResetSurfacePressure", name);
   switch_name = GetStringDefault(key, "False");
   switch_value = NA_NameToIndexExitOnError(switch_na, switch_name, key);
@@ -5651,17 +5668,19 @@ SolverRichardsNewPublicXtra(char *name)
 
 //RMM surface predictor keys
   sprintf(key, "%s.SurfacePredictor", name);
+  //TODO swtich abck to false
   switch_name = GetStringDefault(key, "False");
   switch_value = NA_NameToIndexExitOnError(switch_na, switch_name, key);
-  public_xtra->surface_predictor = switch_value;
+  public_xtra->surface_predictor = 1;
 
   sprintf(key, "%s.SurfacePredictor.PressureValue", name);
   public_xtra->surface_predictor_pressure = GetDoubleDefault(key, 0.00001);
 
   sprintf(key, "%s.SurfacePredictor.PrintValues", name);
+  //TODO swtich abck to false
   switch_name = GetStringDefault(key, "False");
   switch_value = NA_NameToIndexExitOnError(switch_na, switch_name, key);
-  public_xtra->surface_predictor_print = switch_value;
+  public_xtra->surface_predictor_print = 1;
 
 
 
@@ -5790,7 +5809,7 @@ ProblemData *
 GetProblemDataRichards(PFModule * this_module)
 {
   InstanceXtra *instance_xtra =
-    (InstanceXtra*)PFModuleInstanceXtra(this_module);
+          (InstanceXtra*)PFModuleInstanceXtra(this_module);
 
   return(instance_xtra->problem_data);
 }
@@ -5807,7 +5826,7 @@ PFModule *
 GetICPhasePressureRichards(PFModule * this_module)
 {
   InstanceXtra *instance_xtra =
-    (InstanceXtra*)PFModuleInstanceXtra(this_module);
+          (InstanceXtra*)PFModuleInstanceXtra(this_module);
 
   return(instance_xtra->ic_phase_pressure);
 }
