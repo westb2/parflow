@@ -6,7 +6,7 @@ import shutil
 # is and either add it to the list right below or set the USER_PROFILE_FILE variable
 def detect_user_profile():
     possible_locations = [
-        "~/.zshrc",
+        "~/.zprofile",
         "~/.bashrc",
         "~/.profile"
     ]
