@@ -1217,9 +1217,9 @@ SetupRichards(PFModule * this_module)
     //write the first line of the predictor training file if appropriate
     if (public_xtra->surface_predictor_print){
       FILE * predictor_training_file;
-      predictor_training_file = fopen("predictor_training_output.csv", "w");
+      predictor_training_file = amps_Fopen("predictor_training_output.csv", "w");
       // print cell vol, vol max, flux in, pressure, i, j, t
-      fprintf(predictor_training_file, "volume,max_volume,flux_in,pressure,i,j,time,we_predicted,predicted_pressure\n");
+      fprintf(predictor_training_file, "volume,max_volume,flux_in,pressure,i,j,time,we_predicted,predicted_pressure,dt\n");
       fclose(predictor_training_file);
       any_file_dumped = 1;
     }
@@ -2817,7 +2817,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
         Subgrid *subgrid;
         Grid *grid = VectorGrid(evap_trans_sum);
         FILE * predictor_training_file;
-        predictor_training_file = fopen("predictor_training_output.csv","a");
+        predictor_training_file = amps_Fopen("predictor_training_output.csv","a");
         ForSubgridI(is, GridSubgrids(grid))
         {
           subgrid = GridSubgrid(grid, is);
@@ -2858,7 +2858,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
                            vol_max = dx*dy*dz*dz_dat[ip]*po_dat[ip];
                            press_pred = (flux_in-(vol_max - vol))/(dx*dy*po_dat[ip]);
                            // print cell vol, vol max, flux in, pressure, i, j, t
-                           fprintf(predictor_training_file, "%f,%f,%f,%f,%d,%d,%f,%f,", vol, vol_max,flux_in,pp[ip],i,j,t,press_pred);
+                           fprintf(predictor_training_file, "%f,%f,%f,%f,%d,%d,%f,%f,%f", vol, vol_max,flux_in,pp[ip],i,j,t,press_pred,dt);
                            //For now turn off the adjustment but note when we would make it
                            int we_predicted = 0;
                            if (flux_in > (vol_max - vol))
@@ -2874,7 +2874,7 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
 
                              }
                            }
-                           fprintf(predictor_training_file, "%d,\n", we_predicted);
+                           fprintf(predictor_training_file, "%d\n", we_predicted);
                          }
                        }
           );
