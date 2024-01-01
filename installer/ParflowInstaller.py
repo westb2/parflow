@@ -59,7 +59,7 @@ class ParflowInstaller:
             file.write(f'export PATH="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/bin:$PATH"\n')
             file.write(f'export PARFLOW_DIR="{config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}"\n')
             file.write(f'export PF_SRC="{self.parflow_source_dir}"\n')
-            file.write(f'alias rebuild_parflow="{config.INSTALLATION_ROOT}/rebuild_parflow.sh\n"')
+            file.write(f'alias rebuild_parflow="{config.INSTALLATION_ROOT}/rebuild_parflow.sh"\n')
             file.write(f'alias rebuild_parflow_without_pftools="{config.INSTALLATION_ROOT}/rebuild_parflow_without_pftools.sh"\n')
             file.write(f'alias delete_parflow_build="{self.delete_parflow_build_file}"\n')
         ALL_PERMISSIONS = 0o777
