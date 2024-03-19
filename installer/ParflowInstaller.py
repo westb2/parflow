@@ -78,7 +78,8 @@ class ParflowInstaller:
             file.write(
                 f"{cmake_command} \n\
                 python3 -m pip install {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python\n\
-                python3 -m pip install -r {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python/requirements_all.txt"
+                python3 -m pip install -r {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python/requirements_all.txt\n\
+                cp -R {config.INSTALLATION_ROOT}/{config.PARFLOW_INSTALLATION_DIR}/python/parflow/tools/ref /opt/homebrew/anaconda3/envs/test-env/lib/python3.11/site-packages/parflow/tools/ref/"
             )
         ALL_PERMISSIONS = 0o777
         os.chmod(self.REBUILD_PARFLOW_SCRIPT_FILE, ALL_PERMISSIONS)
