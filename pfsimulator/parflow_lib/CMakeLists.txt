@@ -113,6 +113,7 @@ set (SRC_FILES_CONST advect.F
   usergrid_input.c
   w_jacobi.c
   well.c
+        predictor.c
   well_package.c
   wells_lb.c
   wrf_parflow.c
@@ -196,6 +197,10 @@ endif(${PARFLOW_HAVE_KOKKOS})
 
 
   add_library(pfsimulator ${SRC_FILES_ARCH} ${SRC_FILES_CONST})
+
+  #TODO wrap in appropriate check
+  target_link_libraries (parflow xgboost::xgboost)
+
 
   if ( ${PARFLOW_HAVE_CUDA} )
     target_link_libraries(pfsimulator nvToolsExt)

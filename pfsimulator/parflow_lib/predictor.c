@@ -26,59 +26,47 @@
  *  USA
  **********************************************************************EHEADER*/
 
+#include "parflow.h"
+
+#include <string.h>
+
+
 /*****************************************************************************
-* Header file to include all header information for parflow.
 *
-*-----------------------------------------------------------------------------
+* The functions in this file are for manipulating the WellData structure
+*   in ProblemData and work in conjuction with the WellPackage module.
+*
+* Because of the times things are called, the New function is twinky
+* (it was basically put in to be symmetric with the New/Free paradigm
+* used through out the code) and is invoked by SetProblemData.  The Alloc
+* function actually allocates the data within the sub-structures and is
+* invoked by the WellPackage (which has the data needed to compute the array
+* sizes and such).  The Free is smart enough to clean up after both the New
+* and Alloc functions and is called by SetProblemData.
 *
 *****************************************************************************/
 
-#ifndef _PARFLOW_HEADER
-#define _PARFLOW_HEADER
 
-#ifndef _WIN32
-#include <sys/param.h>
-#endif
+/*--------------------------------------------------------------------------
+ * NewWellData
+ *--------------------------------------------------------------------------*/
 
-#include "amps.h"
-#include <xgboost/c_api.h>
+SurfaceFlowPredictor *NewSurfaceFlowPredictor()
+{
+  SurfaceFlowPredictor*  surface_flow_predictor;
+  surface_flow_predictor = ctalloc(SurfaceFlowPredictor, 1);
+  return surface_flow_predictor;
+}
 
-#include "info_header.h"
-#include "general.h"
-#include "file_versions.h"
-#include "input_database.h"
-#include "logging.h"
-#include "timing.h"
-#include "loops.h"
-#include "background.h"
-#include "communication.h"
-#include "computation.h"
-#include "region.h"
-#include "grid.h"
-#include "matrix.h"
-#include "vector.h"
-#include "pf_module.h"
-#include "geometry.h"
-#include "grgeometry.h"
-#include "geostats.h"
-#include "lb.h"
-#include "globals.h"
-#include "time_cycle_data.h"
-#include "problem_bc.h"
-#include "problem_eval.h"
-#include "well.h"
-#include "predictor.h"
-#include "bc_pressure.h"
-#include "problem.h"
-#include "solver.h"
-#include "nl_function_eval.h"
-#include "parflow_proto.h"
-#include "parflow_proto_f.h"
 
-// SGS FIXME this should not be here, in fact this whole parflow.h file is dumb.
-#include <math.h>
+/*--------------------------------------------------------------------------
+ * FreeWellData
+ *--------------------------------------------------------------------------*/
 
-// backend_mapping.h must be included as the last header
-#include "backend_mapping.h"
+void FreeSurfaceFlowPredictor(
+        SurfaceFlowPredictor *surface_flow_predictor)
+{
 
-#endif
+}
+
+

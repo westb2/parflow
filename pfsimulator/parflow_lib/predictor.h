@@ -26,59 +26,25 @@
  *  USA
  **********************************************************************EHEADER*/
 
-/*****************************************************************************
-* Header file to include all header information for parflow.
-*
-*-----------------------------------------------------------------------------
-*
-*****************************************************************************/
+#ifndef _SURFACE_FLOW_PREDICTOR_HEADER
+#define _SURFACE_FLOW_PREDICTOR_HEADER
 
-#ifndef _PARFLOW_HEADER
-#define _PARFLOW_HEADER
+/*----------------------------------------------------------------
+ * Well Data structure
+ *----------------------------------------------------------------*/
 
-#ifndef _WIN32
-#include <sys/param.h>
+typedef struct {
+    BoosterHandle booster;
+} SurfaceFlowPredictor;
+
+
+
+/*--------------------------------------------------------------------------
+ * Accessor macros: WellDataPhysical
+ *--------------------------------------------------------------------------*/
+#define WellDataPhysicalNumber(well_data_physical) \
+  ((well_data_physical)->number)
 #endif
 
-#include "amps.h"
-#include <xgboost/c_api.h>
 
-#include "info_header.h"
-#include "general.h"
-#include "file_versions.h"
-#include "input_database.h"
-#include "logging.h"
-#include "timing.h"
-#include "loops.h"
-#include "background.h"
-#include "communication.h"
-#include "computation.h"
-#include "region.h"
-#include "grid.h"
-#include "matrix.h"
-#include "vector.h"
-#include "pf_module.h"
-#include "geometry.h"
-#include "grgeometry.h"
-#include "geostats.h"
-#include "lb.h"
-#include "globals.h"
-#include "time_cycle_data.h"
-#include "problem_bc.h"
-#include "problem_eval.h"
-#include "well.h"
-#include "predictor.h"
-#include "bc_pressure.h"
-#include "problem.h"
-#include "solver.h"
-#include "nl_function_eval.h"
-#include "parflow_proto.h"
-#include "parflow_proto_f.h"
 
-// SGS FIXME this should not be here, in fact this whole parflow.h file is dumb.
-#include <math.h>
-
-// backend_mapping.h must be included as the last header
-#include "backend_mapping.h"
-
-#endif

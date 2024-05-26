@@ -218,6 +218,13 @@ if ( ${PARFLOW_AMPS_LAYER} IN_LIST PARFLOW_AMPS_LAYER_REQUIRE_MPI )
 
 endif ( ${PARFLOW_AMPS_LAYER} IN_LIST PARFLOW_AMPS_LAYER_REQUIRE_MPI )
 
+#TODO wrap this in an appropriate check
+# Find the xgboost library
+find_package(xgboost REQUIRED HINTS /opt/homebrew/anaconda3/envs/test-env/lib/cmake/xgboost)
+#add_executable(parflow_predictor ./main.c)
+#target_link_libraries(pfsimulator xgboost::xgboost)
+
+
 find_package(TCL QUIET)
 if (${TCL_FOUND})
   set(PARFLOW_HAVE_TCL "yes")
