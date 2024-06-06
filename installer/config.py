@@ -25,24 +25,45 @@ INSTALLATION_ROOT = os.path.expanduser("~/parflow_installation")
 # INSTALLATION_ROOT = f"{os.getcwd()}/installation"
 
 # These are the required packages for Mac
-REQUIRED_PACKAGES = [
-    # "curl",
-    # "libcurl4",
-    "git",
-    "vim",
-    "gfortran",
-    # "libopenblas-dev",
-    # "liblapack-dev",
-    # "openssh-client",
-    # "openssh-server",
-    # "openmpi-bin",
-    # "libopenmpi-dev",
-    "open-mpi",
-    "python3",
-    "tcl-tk"
-    # "tcl-dev",
-    # "tk-dev",
-]
+REQUIRED_PACKAGES = {
+    "brew": [
+        # "curl",
+        # "libcurl4",
+        "git",
+        "vim",
+        "gfortran",
+        # "libopenblas-dev",
+        # "liblapack-dev",
+        # "openssh-client",
+        # "openssh-server",
+        # "openmpi-bin",
+        # "libopenmpi-dev",
+        "open-mpi",
+        "python3",
+        "tcl-tk"
+        # "tcl-dev",
+        # "tk-dev",
+    ],
+    "yum": [
+        "gcc",
+        "gcc-c++",
+        "gcc-gfortran",
+        "tcl",
+        "tcl-devel",
+        "openmpi",
+        "openmpi-devel",
+        "hypre-openmpi",
+        "hypre-openmpi-devel",
+        "hfd5",
+        "hdf5-devel",
+        "hdf5-openmpi",
+        "hdf5-openmpi-devel",
+        "zlib",
+        "zlib-devel"
+    ]
+}
+
+
 PACKAGE_MANAGER = "AUTO_CONFIGURED"
 
 

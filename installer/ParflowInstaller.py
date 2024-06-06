@@ -135,7 +135,7 @@ class ParflowInstaller:
         create_directory(config.INSTALLATION_ROOT)
         os.chdir(config.INSTALLATION_ROOT)
         # first install everything we can via our system package manager
-        for package in config.REQUIRED_PACKAGES:
+        for package in config.REQUIRED_PACKAGES[self.system_package_manager.package_manager]:
             self.system_package_manager.install_package(package)
         # next install the packages we need to build and configure from source.
         # The order of these matters!
