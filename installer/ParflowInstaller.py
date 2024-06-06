@@ -139,11 +139,11 @@ class ParflowInstaller:
             self.system_package_manager.install_package(package)
         # next install the packages we need to build and configure from source.
         # The order of these matters!
-        self.install_hdf5()
-        self.install_netcdf()
-        # self.install_silo()
-        self.install_hypre()
-        os.chdir(config.INSTALLATION_ROOT)
+        # self.install_hdf5()
+        # self.install_netcdf()
+        # # self.install_silo()
+        # self.install_hypre()
+        # os.chdir(config.INSTALLATION_ROOT)
 
     def install_hypre(self):
         os.chdir(config.INSTALLATION_ROOT)
