@@ -14,7 +14,7 @@ class SystemPackageManager:
             else:
                 self.automatic_yes_flag = "-y"
 
-    def determine_package_manager():
+    def determine_package_manager(self):
         potential_package_managers = ["yum", "brew", "apt-get"]
         for package_manager in potential_package_managers:
             package_manager_can_be_found = os.system(f"which {package_manager}") == 0
