@@ -20,6 +20,7 @@ class SystemPackageManager:
             package_manager_location = subprocess.check_output(["which",  f"{package_manager}"])
             if package_manager_location != "":
                     return package_manager
+        print(f"We could not determine the system package manager\n")
         raise Exception(
         '''Could not detect your systems package manager. Try going to config.py and
         either setting it manually, but if it is not one of brew, yum, or apt-get this tool
