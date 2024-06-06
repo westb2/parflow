@@ -14,7 +14,7 @@ class ParflowInstaller:
         self.REBUILD_PARFLOW_WITHOUT_PFTOOLS_SCRIPT_FILE = "rebuild_parflow_without_pftools.sh"
         self.delete_parflow_build_file = f"{config.INSTALLATION_ROOT}/delete_parflow_build.sh"
         # TODO dont hardcode this
-        self.parflow_source_dir=f"/Users/ben/Documents/Github/parflow"
+        self.parflow_source_dir=f"./.."
 
     def install_parflow(self):
         create_directory(config.INSTALLATION_ROOT)
