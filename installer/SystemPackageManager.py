@@ -13,7 +13,7 @@ class SystemPackageManager:
                 self.automatic_yes_flag = ""
             else:
                 self.automatic_yes_flag = "-y"
-            os.system(f"{self.package_manager} update")
+            # os.system(f"{self.package_manager} update")
 
     def determine_package_manager(self):
         potential_package_managers = ["yum", "brew", "apt-get"]
