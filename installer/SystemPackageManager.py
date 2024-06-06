@@ -14,18 +14,17 @@ class SystemPackageManager:
             else:
                 self.automatic_yes_flag = "-y"
 
-    def determine_package_manager(self):
-        potential_package_managers = ["brew", "yum", "apt-get"]
+    def determine_package_manager():
+        potential_package_managers = ["yum", "brew", "apt-get"]
         for package_manager in potential_package_managers:
-            package_manager_location = subprocess.check_output(["which",  f"{package_manager}"])
-            if package_manager_location != "":
+            package_manager_can_be_found = os.system(f"which {package_manager}") == 0
+            if package_manager_can_be_found:
                     return package_manager
-        print(f"We could not determine the system package manager\n")
         raise Exception(
         '''Could not detect your systems package manager. Try going to config.py and
         either setting it manually, but if it is not one of brew, yum, or apt-get this tool
         may not work for you'''
-    )
+        )
 
 
     def get_homebrew_package_location(self, package):
