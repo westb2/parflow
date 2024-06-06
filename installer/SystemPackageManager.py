@@ -7,7 +7,7 @@ class SystemPackageManager:
     def __init__(self, package_manager):
         if package_manager == "AUTO_CONFIGURED":
             # make this instantiate a HomebrewManager child class
-            self.package_manager = self.determine_package_manager
+            self.package_manager = self.determine_package_manager()
             print(f"We determined the package manager to be {self.package_manager}\n")
             if self.package_manager == "brew":
                 self.automatic_yes_flag = ""
