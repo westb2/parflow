@@ -4,4 +4,4 @@ from ParflowInstaller import ParflowInstaller
 parflow_installer = ParflowInstaller()
 
 # parflow_installer.install_requirements()
-parflow_installer.install_parflow()
+# parflow_installer.install_parflow()
