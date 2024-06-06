@@ -60,6 +60,26 @@ REQUIRED_PACKAGES = {
         "hdf5-openmpi-devel",
         "zlib",
         "zlib-devel"
+    ],
+    "apt-get": [
+        "tzdata",
+        "build-essential",
+        "curl",
+        "libcurl4",
+        "git",
+        "vim",
+        "gfortran",
+        "libopenblas-dev",
+        "liblapack-dev",
+        "openssh-client",
+        "openssh-server",
+        "openmpi-bin",
+        "libopenmpi-dev",
+        "python3",
+        "python3-pip",
+        "python3-venv",
+        "tcl-dev",
+        "tk-dev"
     ]
 }
 
