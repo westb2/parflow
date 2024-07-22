@@ -135,6 +135,4 @@ CMAKE_ARGUMENTS = {
 
 
 #Add the following lines back once we fix the install scripts
-
-
-                                    # -D PARFLOW_PYTHON_VIRTUAL_ENV=TRUE\
+# -D PARFLOW_PYTHON_VIRTUAL_ENV=TRUE\
