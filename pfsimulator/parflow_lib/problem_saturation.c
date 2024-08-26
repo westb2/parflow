@@ -1,30 +1,30 @@
-/*BHEADER*********************************************************************
- *
- *  Copyright (c) 1995-2009, Lawrence Livermore National Security,
- *  LLC. Produced at the Lawrence Livermore National Laboratory. Written
- *  by the Parflow Team (see the CONTRIBUTORS file)
- *  <parflow@lists.llnl.gov> CODE-OCEC-08-103. All rights reserved.
- *
- *  This file is part of Parflow. For details, see
- *  http://www.llnl.gov/casc/parflow
- *
- *  Please read the COPYRIGHT file or Our Notice and the LICENSE file
- *  for the GNU Lesser General Public License.
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License (as published
- *  by the Free Software Foundation) version 2.1 dated February 1999.
- *
- *  This program is distributed in the hope that it will be useful, but
- *  WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms
- *  and conditions of the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
- *  USA
- **********************************************************************EHEADER*/
+/*BHEADER**********************************************************************
+*
+*  Copyright (c) 1995-2024, Lawrence Livermore National Security,
+*  LLC. Produced at the Lawrence Livermore National Laboratory. Written
+*  by the Parflow Team (see the CONTRIBUTORS file)
+*  <parflow@lists.llnl.gov> CODE-OCEC-08-103. All rights reserved.
+*
+*  This file is part of Parflow. For details, see
+*  http://www.llnl.gov/casc/parflow
+*
+*  Please read the COPYRIGHT file or Our Notice and the LICENSE file
+*  for the GNU Lesser General Public License.
+*
+*  This program is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License (as published
+*  by the Free Software Foundation) version 2.1 dated February 1999.
+*
+*  This program is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms
+*  and conditions of the GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this program; if not, write to the Free Software
+*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+*  USA
+**********************************************************************EHEADER*/
 
 #include "parflow.h"
 
@@ -840,7 +840,7 @@ PFModule   *SaturationNewPublicXtra()
   public_xtra = ctalloc(PublicXtra, 1);
 
   switch_name = GetString("Phase.Saturation.Type");
-  public_xtra->type = NA_NameToIndex(type_na, switch_name);
+  public_xtra->type = NA_NameToIndexExitOnError(type_na, switch_name, "Phase.Saturation.Type");
 
 
   switch_name = GetString("Phase.Saturation.GeomNames");
@@ -1299,6 +1299,7 @@ void  SaturationOutputStatic(
       alphas = (dummy1->alphas);
       ns = (dummy1->ns);
       s_ress = (dummy1->s_ress);
+      double* s_difs = (dummy1->s_difs);
       data_from_file = (dummy1->data_from_file);
 
       if (data_from_file == 0) /* Soil parameters given by region */
@@ -1338,10 +1339,13 @@ void  SaturationOutputStatic(
 	      double alpha = alphas[ir];
 	      double n = ns[ir];
 	      double s_res = s_ress[ir];
+	      double s_dif = s_difs[ir];
 	      
 	      pd_alpha_dat[ips] = alpha;  //BB
 	      pd_n_dat[ips] = n;  //BB
 	      pd_sres_dat[ips] = s_res;  //BB  // no ssat???
+	      // Storing s_dif in the stucture, convert back to s_sat for output
+	      pd_ssat_dat[ips] = s_dif + s_res;
 	      
 	    });
           }     /* End subgrid loop */

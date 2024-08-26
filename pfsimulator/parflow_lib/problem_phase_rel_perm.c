@@ -1,30 +1,30 @@
-/*BHEADER*********************************************************************
- *
- *  Copyright (c) 1995-2009, Lawrence Livermore National Security,
- *  LLC. Produced at the Lawrence Livermore National Laboratory. Written
- *  by the Parflow Team (see the CONTRIBUTORS file)
- *  <parflow@lists.llnl.gov> CODE-OCEC-08-103. All rights reserved.
- *
- *  This file is part of Parflow. For details, see
- *  http://www.llnl.gov/casc/parflow
- *
- *  Please read the COPYRIGHT file or Our Notice and the LICENSE file
- *  for the GNU Lesser General Public License.
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License (as published
- *  by the Free Software Foundation) version 2.1 dated February 1999.
- *
- *  This program is distributed in the hope that it will be useful, but
- *  WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms
- *  and conditions of the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
- *  USA
- **********************************************************************EHEADER*/
+/*BHEADER**********************************************************************
+*
+*  Copyright (c) 1995-2024, Lawrence Livermore National Security,
+*  LLC. Produced at the Lawrence Livermore National Laboratory. Written
+*  by the Parflow Team (see the CONTRIBUTORS file)
+*  <parflow@lists.llnl.gov> CODE-OCEC-08-103. All rights reserved.
+*
+*  This file is part of Parflow. For details, see
+*  http://www.llnl.gov/casc/parflow
+*
+*  Please read the COPYRIGHT file or Our Notice and the LICENSE file
+*  for the GNU Lesser General Public License.
+*
+*  This program is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License (as published
+*  by the Free Software Foundation) version 2.1 dated February 1999.
+*
+*  This program is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms
+*  and conditions of the GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this program; if not, write to the Free Software
+*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+*  USA
+**********************************************************************EHEADER*/
 
 #include "parflow.h"
 
@@ -196,6 +196,9 @@ VanGTable *VanGComputeTable(
     }
   }
 
+  // GCC 11.3.0 WITH optimization warns that del is possibly used without initialization.
+  // This silences the warning.   Looks like a false warning, what is the opt doing?
+  memset(del, num_sample_points+1, sizeof(double));
   // begin monotonic spline (see Fritsch and Carlson, SIAM J. Num. Anal., 17 (2), 1980)
   for (index = 0; index < num_sample_points; index++)
   {
@@ -349,6 +352,7 @@ static inline double VanGLookupSpline(
   return rel_perm;
 }
 
+#ifdef PF_PRINT_VG_TABLE
 static inline double VanGLookupLinear(
                                       double     pressure_head,
                                       VanGTable *lookup_table,
@@ -391,6 +395,7 @@ static inline double VanGLookupLinear(
 
   return rel_perm;
 }
+#endif
 
 
 /*--------------------------------------------------------------------------
@@ -1811,7 +1816,7 @@ PFModule   *PhaseRelPermNewPublicXtra()
   public_xtra = ctalloc(PublicXtra, 1);
 
   switch_name = GetString("Phase.RelPerm.Type");
-  public_xtra->type = NA_NameToIndex(type_na, switch_name);
+  public_xtra->type = NA_NameToIndexExitOnError(type_na, switch_name, "Phase.RelPerm.Type");
 
   NA_FreeNameArray(type_na);
 
@@ -1897,14 +1902,7 @@ PFModule   *PhaseRelPermNewPublicXtra()
 
             sprintf(key, "Geom.%s.RelPerm.InterpolationMethod", region);
             switch_name = GetStringDefault(key, "Spline");
-            int interpolation_method = NA_NameToIndex(type_na, switch_name);
-
-            if (interpolation_method < 0)
-            {
-              InputError("Error: invalid type <%s> for key <%s>\n",
-                         switch_name, key);
-            }
-
+            int interpolation_method = NA_NameToIndexExitOnError(type_na, switch_name, key);
             NA_FreeNameArray(type_na);
 
             dummy1->lookup_tables[ir] = VanGComputeTable(
@@ -2032,8 +2030,7 @@ PFModule   *PhaseRelPermNewPublicXtra()
 
     default:
     {
-      InputError("Error: invalid type <%s> for key <%s>\n",
-                 switch_name, key);
+      InputError("Invalid switch value <%s> for key <%s>", switch_name, key);
     }
   }      /* End switch */
 

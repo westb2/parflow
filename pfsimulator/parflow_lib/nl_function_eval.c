@@ -1,30 +1,30 @@
-/*BHEADER*********************************************************************
- *
- *  Copyright (c) 1995-2009, Lawrence Livermore National Security,
- *  LLC. Produced at the Lawrence Livermore National Laboratory. Written
- *  by the Parflow Team (see the CONTRIBUTORS file)
- *  <parflow@lists.llnl.gov> CODE-OCEC-08-103. All rights reserved.
- *
- *  This file is part of Parflow. For details, see
- *  http://www.llnl.gov/casc/parflow
- *
- *  Please read the COPYRIGHT file or Our Notice and the LICENSE file
- *  for the GNU Lesser General Public License.
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License (as published
- *  by the Free Software Foundation) version 2.1 dated February 1999.
- *
- *  This program is distributed in the hope that it will be useful, but
- *  WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms
- *  and conditions of the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
- *  USA
- **********************************************************************EHEADER*/
+/*BHEADER**********************************************************************
+*
+*  Copyright (c) 1995-2024, Lawrence Livermore National Security,
+*  LLC. Produced at the Lawrence Livermore National Laboratory. Written
+*  by the Parflow Team (see the CONTRIBUTORS file)
+*  <parflow@lists.llnl.gov> CODE-OCEC-08-103. All rights reserved.
+*
+*  This file is part of Parflow. For details, see
+*  http://www.llnl.gov/casc/parflow
+*
+*  Please read the COPYRIGHT file or Our Notice and the LICENSE file
+*  for the GNU Lesser General Public License.
+*
+*  This program is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License (as published
+*  by the Free Software Foundation) version 2.1 dated February 1999.
+*
+*  This program is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms
+*  and conditions of the GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this program; if not, write to the Free Software
+*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+*  USA
+**********************************************************************EHEADER*/
 
 #include "parflow.h"
 #include "llnlmath.h"
@@ -1067,7 +1067,7 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
                                               rpp[ip - sz_p] * dp[ip - sz_p], rpp[ip] * dp[ip])
                                      / viscosity;
 
-                             sep = dz * z_mult_dat[ip] / 2.0;
+                             sep = dz * z_mult_dat[ip];
 
                              lower_cond = value / sep - 0.25 * dp[ip] * gravity;
                              upper_cond = pp[ip] / sep + 0.25 * dp[ip] * gravity;
@@ -1110,7 +1110,7 @@ void NlFunctionEval(Vector *     pressure, /* Current pressure values */
                                               rpp[ip] * dp[ip], rpp[ip + sz_p] * dp[ip + sz_p])
                                      / viscosity;
 
-                             sep = dz * z_mult_dat[ip] / 2.0;
+                             sep = dz * z_mult_dat[ip];
 
                              lower_cond = (pp[ip] / sep) - 0.25 * dp[ip] * gravity * z_dir_g;
                              upper_cond = (value / sep) + 0.25 * dp[ip] * gravity * z_dir_g;
@@ -2332,7 +2332,7 @@ PFModule   *NlFunctionEvalNewPublicXtra(char *name)
   upwind_switch_na = NA_NewNameArray("Original UpwindSine Upwind");
   sprintf(key, "Solver.TerrainFollowingGrid.SlopeUpwindFormulation");
   switch_name = GetStringDefault(key, "Original");
-  switch_value = NA_NameToIndex(upwind_switch_na, switch_name);
+  switch_value = NA_NameToIndexExitOnError(upwind_switch_na, switch_name, key);
   switch (switch_value)
   {
     case 0:
@@ -2355,8 +2355,7 @@ PFModule   *NlFunctionEvalNewPublicXtra(char *name)
 
     default:
     {
-      InputError("Error: Invalid value <%s> for key <%s>\n", switch_name,
-                 key);
+      InputError("Invalid switch value <%s> for key <%s>", switch_name, key);
     }
   }
   NA_FreeNameArray(upwind_switch_na);

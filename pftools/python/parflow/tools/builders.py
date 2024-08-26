@@ -465,6 +465,8 @@ class TableToProperties(ABC):
                     self.name_registration[unit_name] = set()
 
         if self.props_in_row_header is None:
+            print("Raising invalid table format, first line tokens are:\n")
+            print(first_line_tokens)
             raise Exception('Invalid table format')
 
         return True
@@ -631,9 +633,9 @@ class TableToProperties(ABC):
         if name_registration:
             names_to_set = addon_keys
             for unit_name in valid_unit_names:
-                if unit_name.casefold() in (registered_name.casefold() for registered_name in self.name_registration):
+                if unit_name in (registered_name for registered_name in self.name_registration):
                     for prop_name in self.name_registration[unit_name]:
-                        if prop_name.casefold() not in (name_to_set.casefold() for name_to_set in names_to_set):
+                        if prop_name not in (name_to_set for name_to_set in names_to_set):
                             names_to_set[prop_name] = []
                         names_to_set[prop_name].append(unit_name)
             self.run.pfset(flat_map=names_to_set)
@@ -813,22 +815,22 @@ class SubsurfacePropertiesBuilder(TableToProperties):
         return 'subsurface_'
 
 
-class WellPropertiesBuilder(TableToProperties):
+class ReservoirPropertiesBuilder(TableToProperties):
 
     def __init__(self, run=None):
         super().__init__(run)
 
     @property
     def reference_file(self):
-        return 'ref/well_keys.yaml'
+        return 'ref/reservoir_keys.yaml'
 
     @property
     def key_root(self):
-        return self.run.Wells
+        return self.run.Reservoirs
 
     @property
     def unit_string(self):
-        return 'Wells'
+        return 'Reservoirs'
 
     @property
     def default_db(self):
@@ -836,7 +838,7 @@ class WellPropertiesBuilder(TableToProperties):
 
     @property
     def db_prefix(self):
-        return 'wells_'
+        return 'reservoirs_'
 
 
 # -----------------------------------------------------------------------------
@@ -1174,6 +1176,33 @@ class DomainBuilder:
 
         return self
 
+    def reservoir(self, name, Intake_X, Intake_Y,Has_Secondary_Intake_Cell,
+                  Secondary_Intake_X, Secondary_Intake_Y,Release_X, 
+                  Release_Y, Release_Rate, Max_Storage, Storage,
+                  Min_Release_Storage, Overland_Flow_Solver
+                  ):
+        """Setting keys necessary to define a simple reservoir
+        """
+
+        if not self.run.Reservoirs.Names:
+            self.run.Reservoirs.Names = []
+
+        self.run.Reservoirs.Names += [name]
+        reservoir = self.run.Reservoirs[name]
+        reservoir.Intake_X = Intake_X
+        reservoir.Intake_Y = Intake_Y
+        reservoir.Secondary_Intake_X = Secondary_Intake_X
+        reservoir.Secondary_Intake_Y = Secondary_Intake_Y
+        reservoir.Has_Secondary_Intake_Cell = Has_Secondary_Intake_Cell
+        reservoir.Overland_Flow_Solver = Overland_Flow_Solver
+        reservoir.Release_X = Release_X
+        reservoir.Release_Y = Release_Y
+        reservoir.Release_Rate = Release_Rate
+        reservoir.Max_Storage = Max_Storage
+        reservoir.Storage = Storage
+        reservoir.Min_Release_Storage = Min_Release_Storage
+        return self
+
     def well(self, name, type, x, y, z_upper, z_lower,
              cycle_name, interval_name, action='Extraction',
              saturation=1.0, phase='water', hydrostatic_pressure=None,
@@ -1416,7 +1445,7 @@ class CLMImporter:
             array = vegm_data[:, :, i]
             if token == 'Color':
                 # This one needs to be an integer
-                array = array.astype(np.int)
+                array = array.astype(np.int32)
 
             if array.min() == array.max():
                 # All the values are the same

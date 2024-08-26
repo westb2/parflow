@@ -1,30 +1,30 @@
-/*BHEADER*********************************************************************
- *
- *  Copyright (c) 1995-2009, Lawrence Livermore National Security,
- *  LLC. Produced at the Lawrence Livermore National Laboratory. Written
- *  by the Parflow Team (see the CONTRIBUTORS file)
- *  <parflow@lists.llnl.gov> CODE-OCEC-08-103. All rights reserved.
- *
- *  This file is part of Parflow. For details, see
- *  http://www.llnl.gov/casc/parflow
- *
- *  Please read the COPYRIGHT file or Our Notice and the LICENSE file
- *  for the GNU Lesser General Public License.
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License (as published
- *  by the Free Software Foundation) version 2.1 dated February 1999.
- *
- *  This program is distributed in the hope that it will be useful, but
- *  WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms
- *  and conditions of the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
- *  USA
- **********************************************************************EHEADER*/
+/*BHEADER**********************************************************************
+*
+*  Copyright (c) 1995-2024, Lawrence Livermore National Security,
+*  LLC. Produced at the Lawrence Livermore National Laboratory. Written
+*  by the Parflow Team (see the CONTRIBUTORS file)
+*  <parflow@lists.llnl.gov> CODE-OCEC-08-103. All rights reserved.
+*
+*  This file is part of Parflow. For details, see
+*  http://www.llnl.gov/casc/parflow
+*
+*  Please read the COPYRIGHT file or Our Notice and the LICENSE file
+*  for the GNU Lesser General Public License.
+*
+*  This program is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License (as published
+*  by the Free Software Foundation) version 2.1 dated February 1999.
+*
+*  This program is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms
+*  and conditions of the GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this program; if not, write to the Free Software
+*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+*  USA
+**********************************************************************EHEADER*/
 /*****************************************************************************
 *
 *****************************************************************************/
@@ -107,8 +107,8 @@ void          BCPhaseSaturation(
   int nx_v, ny_v;
   int sx_v, sy_v, sz_v;
 
-  int indx, ipatch, is, i, j, k, ival;
-
+  int indx, ipatch, is, i, j, k, ival=0;
+  PF_UNUSED(ival);
 
   /*-----------------------------------------------------------------------
    * Get an offset into the PublicXtra data
@@ -437,11 +437,7 @@ PFModule  *BCPhaseSaturationNewPublicXtra(
 
   /* Determine the domain geom index from domain name */
   switch_name = GetString("Domain.GeomName");
-  domain_index = NA_NameToIndex(GlobalsGeomNames, switch_name);
-
-  if (domain_index < 0)
-    InputError("Error: invalid geometry name <%s> for key <%s>\n",
-               switch_name, "Domain.GeomName");
+  domain_index = NA_NameToIndexExitOnError(GlobalsGeomNames, switch_name, "Domain.GeomName");
 
   indx = 0;
   for (i = 0; i < num_phases - 1; i++)
@@ -454,12 +450,17 @@ PFModule  *BCPhaseSaturationNewPublicXtra(
 
       public_xtra->patch_indexes[indx] =
         NA_NameToIndex(GlobalsGeometries[domain_index]->patches,
-                       patch_name);
+		       patch_name);
+
+      if(public_xtra->patch_indexes[indx] < 0)
+      {
+	NA_InputError(GlobalsGeometries[domain_index]->patches, patch_name, "");
+      }
 
       sprintf(key, "Patch.%s.BCSaturation.%s.Type", patch_name, phase_name);
       switch_name = GetString(key);
       public_xtra->input_types[indx] =
-        NA_NameToIndex(type_na, switch_name);
+        NA_NameToIndexExitOnError(type_na, switch_name, key);
 
       switch ((public_xtra->input_types[indx]))
       {
@@ -545,8 +546,7 @@ PFModule  *BCPhaseSaturationNewPublicXtra(
 
         default:
         {
-          InputError("Error: invalid type <%s> for key <%s>\n",
-                     switch_name, key);
+	  InputError("Invalid switch value <%s> for key <%s>", switch_name, key);
         }
       }
       indx++;

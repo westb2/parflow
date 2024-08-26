@@ -11,6 +11,7 @@ set (SRC_FILES_CONST advect.F
   computation.c
   compute_maximums.c
   compute_top.c
+  compute_patch_top.c
   compute_total_concentration.c
   constantRF.c
   constant_porosity.c
@@ -114,6 +115,8 @@ set (SRC_FILES_CONST advect.F
   well.c
   well_package.c
   wells_lb.c
+  reservoir.c
+  reservoir_package.c
   wrf_parflow.c
   write_clm_netcdf.c
   write_parflow_binary.c
@@ -198,7 +201,6 @@ endif(${PARFLOW_HAVE_KOKKOS})
 
   if ( ${PARFLOW_HAVE_CUDA} )
     target_link_libraries(pfsimulator nvToolsExt)
-    target_include_directories(pfsimulator PUBLIC "../third_party/cub")
     target_include_directories(pfsimulator PUBLIC ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
   endif ( ${PARFLOW_HAVE_CUDA} )
 

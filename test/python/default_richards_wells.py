@@ -4,15 +4,14 @@
 #  3 nonlinear iterations.
 #-----------------------------------------------------------------------------
 
+import sys
 from parflow import Run
 from parflow.tools.fs import mkdir, get_absolute_path
-from utils import pfbs_are_equal_to_n_sig_figs
+from parflow.tools.compare import pf_test_file
 
 run_name = "default_richards_wells"
 drich = Run(run_name, __file__)
-
 #---------------------------------------------------------
-
 drich.FileVersion = 4
 
 drich.Process.Topology.P = 1
@@ -350,22 +349,34 @@ drich.Solver.Linear.Preconditioner = 'MGSemi'
 #-----------------------------------------------------------------------------
 # Run and Unload the ParFlow output files
 #-----------------------------------------------------------------------------
-
-new_output_dir_name = get_absolute_path('test_output/drich_w')
+new_output_dir_name = get_absolute_path('test_output/' + run_name)
 correct_output_dir_name = get_absolute_path('../correct_output')
 mkdir(new_output_dir_name)
 drich.run(working_directory=new_output_dir_name)
 
+passed = True
 
-perm_x_pfb = f"/{run_name}.out.perm_x.pfb"
-assert pfbs_are_equal_to_n_sig_figs(new_output_dir_name + perm_x_pfb, correct_output_dir_name + perm_x_pfb)
+filename = f"/{run_name}.out.perm_x.pfb"
+if not pf_test_file(new_output_dir_name + filename, correct_output_dir_name + filename, "Max difference in perm_x"):
+    passed = False
+filename = f"/{run_name}.out.perm_y.pfb"
+if not pf_test_file(new_output_dir_name + filename, correct_output_dir_name + filename, "Max difference in perm_y"):
+    passed = False
+filename = f"/{run_name}.out.perm_z.pfb"
+if not pf_test_file(new_output_dir_name + filename, correct_output_dir_name + filename, "Max difference in perm_z"):
+    passed = False
 
-perm_y_pfb = f"/{run_name}.out.perm_y.pfb"
-assert pfbs_are_equal_to_n_sig_figs(new_output_dir_name + perm_x_pfb, correct_output_dir_name + perm_x_pfb)
+timesteps = ["00000", "00001", "00002", "00003", "00004", "00005"]
+for i in timesteps:
+    filename = f"/{run_name}.out.press.{i}.pfb"
+    if not pf_test_file(new_output_dir_name + filename, correct_output_dir_name + filename, f"Max difference in Pressure for timestep {i}"):
+        passed = False
+    filename = f"/{run_name}.out.satur.{i}.pfb"
+    if not pf_test_file(new_output_dir_name + filename, correct_output_dir_name + filename, f"Max difference in Saturation for timestep {i}"):
+        passed = False
 
-perm_z_pfb = f"/{run_name}.out.perm_z.pfb"
-assert pfbs_are_equal_to_n_sig_figs(new_output_dir_name + perm_z_pfb, correct_output_dir_name + perm_z_pfb)
-
-for i in range(0,5):
-    press_pfb = f"/{run_name}.out.press.0000{i}.pfb"
-    assert pfbs_are_equal_to_n_sig_figs(new_output_dir_name + press_pfb, correct_output_dir_name + press_pfb)
+if passed:
+    print(f"{run_name} : PASSED")
+else:
+    print(f"{run_name} : FAILED")
+    sys.exit(1)

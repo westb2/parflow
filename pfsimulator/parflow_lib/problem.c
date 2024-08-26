@@ -1,30 +1,30 @@
-/*BHEADER*********************************************************************
- *
- *  Copyright (c) 1995-2009, Lawrence Livermore National Security,
- *  LLC. Produced at the Lawrence Livermore National Laboratory. Written
- *  by the Parflow Team (see the CONTRIBUTORS file)
- *  <parflow@lists.llnl.gov> CODE-OCEC-08-103. All rights reserved.
- *
- *  This file is part of Parflow. For details, see
- *  http://www.llnl.gov/casc/parflow
- *
- *  Please read the COPYRIGHT file or Our Notice and the LICENSE file
- *  for the GNU Lesser General Public License.
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License (as published
- *  by the Free Software Foundation) version 2.1 dated February 1999.
- *
- *  This program is distributed in the hope that it will be useful, but
- *  WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms
- *  and conditions of the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
- *  USA
- **********************************************************************EHEADER*/
+/*BHEADER**********************************************************************
+*
+*  Copyright (c) 1995-2024, Lawrence Livermore National Security,
+*  LLC. Produced at the Lawrence Livermore National Laboratory. Written
+*  by the Parflow Team (see the CONTRIBUTORS file)
+*  <parflow@lists.llnl.gov> CODE-OCEC-08-103. All rights reserved.
+*
+*  This file is part of Parflow. For details, see
+*  http://www.llnl.gov/casc/parflow
+*
+*  Please read the COPYRIGHT file or Our Notice and the LICENSE file
+*  for the GNU Lesser General Public License.
+*
+*  This program is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License (as published
+*  by the Free Software Foundation) version 2.1 dated February 1999.
+*
+*  This program is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms
+*  and conditions of the GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this program; if not, write to the Free Software
+*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+*  USA
+**********************************************************************EHEADER*/
 
 /*****************************************************************************
 *
@@ -111,13 +111,7 @@ Problem   *NewProblem(
 
   NameArray switch_na = NA_NewNameArray("False True");
   char *switch_name = GetStringDefault("TimingInfo.DumpAtEnd", "False");
-  int switch_value = NA_NameToIndex(switch_na, switch_name);
-  if (switch_value < 0)
-  {
-    InputError("Error: invalid print switch value <%s> for key <%s>\n",
-               switch_name, key);
-  }
-  ProblemDumpAtEnd(problem) = switch_value;
+  ProblemDumpAtEnd(problem) = NA_NameToIndexExitOnError(switch_na, switch_name, "TimingInfo.DumpAtEnd");
   NA_FreeNameArray(switch_na);
 
   /*-----------------------------------------------------------------------
@@ -335,6 +329,9 @@ Problem   *NewProblem(
     PFModuleNewModuleType(WellPackageNewPublicXtraInvoke,
                           WellPackage, (num_phases, num_contaminants));
 
+  ProblemReservoirPackage(problem) =
+      PFModuleNewModuleType(ReservoirPackageNewPublicXtraInvoke,
+                            ReservoirPackage, (num_phases, num_contaminants));
 
   return problem;
 }
@@ -349,6 +346,7 @@ void      FreeProblem(
                       int      solver)
 {
   PFModuleFreeModule(ProblemWellPackage(problem));
+  PFModuleFreeModule(ProblemReservoirPackage(problem));
 
 
   NA_FreeNameArray(GlobalsPhaseNames);
@@ -444,13 +442,15 @@ ProblemData   *NewProblemData(
   ProblemDataRealSpaceZ(problem_data) = NewVectorType(grid, 1, 1, vector_cell_centered);
 
   ProblemDataIndexOfDomainTop(problem_data) = NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
+  ProblemDataPatchIndexOfDomainTop(problem_data) = NewVectorType(grid2d, 1, 1, vector_cell_centered_2D);
 
   ProblemDataPorosity(problem_data) = NewVectorType(grid, 1, 1, vector_cell_centered);
 
   ProblemDataBCPressureData(problem_data) = NewBCPressureData();
 
   ProblemDataWellData(problem_data) = NewWellData();
-
+  ProblemDataReservoirData(problem_data) = NewReservoirData();
+  
   return problem_data;
 }
 
@@ -476,6 +476,7 @@ void          FreeProblemData(
 #endif
 
     FreeWellData(ProblemDataWellData(problem_data));
+    FreeReservoirData(ProblemDataReservoirData(problem_data));
     FreeBCPressureData(ProblemDataBCPressureData(problem_data));
     FreeVector(ProblemDataPorosity(problem_data));
     FreeVector(ProblemDataPermeabilityX(problem_data));
@@ -494,6 +495,7 @@ void          FreeProblemData(
 
     FreeVector(ProblemDataRealSpaceZ(problem_data));
     FreeVector(ProblemDataIndexOfDomainTop(problem_data));
+    FreeVector(ProblemDataPatchIndexOfDomainTop(problem_data));
 
     tfree(problem_data);
   }

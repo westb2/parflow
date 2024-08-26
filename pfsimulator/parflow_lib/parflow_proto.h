@@ -293,28 +293,6 @@ PFModule *InputRFNewPublicXtra(char *geom_name);
 void InputRFFreePublicXtra(void);
 int InputRFSizeOfTempData(void);
 
-/* input_database.c */
-void IDB_Print(FILE *file, void *entry);
-int IDB_Compare(void *a, void *b);
-void IDB_Free(void *a);
-IDB_Entry *IDB_NewEntry(char *key, char *value);
-IDB *IDB_NewDB(char *filename);
-void IDB_FreeDB(IDB *database);
-void IDB_PrintUsage(FILE *file, IDB *database);
-char *IDB_GetString(IDB *database, const char *key);
-char *IDB_GetStringDefault(IDB *database, const char *key, char *default_value);
-double IDB_GetDoubleDefault(IDB *database, const char *key, double default_value);
-double IDB_GetDouble(IDB *database, const char *key);
-int IDB_GetIntDefault(IDB *database, const char *key, int default_value);
-int IDB_GetInt(IDB *database, const char *key);
-NameArray NA_NewNameArray(char *string);
-int NA_AppendToArray(NameArray name_array, char *string);
-void NA_FreeNameArray(NameArray name_array);
-int NA_NameToIndex(NameArray name_array, char *name);
-char *NA_IndexToName(NameArray name_array, int index);
-int NA_Sizeof(NameArray name_array);
-void InputError(const char *format, const char *s1, const char *s2);
-
 typedef int (*NonlinSolverInvoke) (Vector *pressure, Vector *density, Vector *old_density, Vector *saturation, Vector *old_saturation, double t, double dt, ProblemData *problem_data, Vector *old_pressure, Vector *evap_trans, Vector *ovrl_bc_flx, Vector *x_velocity, Vector *y_velocity, Vector *z_velocity);
 typedef PFModule *(*NonlinSolverInitInstanceXtraInvoke) (Problem *problem, Grid *grid, ProblemData *problem_data, double *temp_data);
 
@@ -1325,8 +1303,27 @@ PFModule *WellPackageNewPublicXtra(int num_phases, int num_contaminants);
 void WellPackageFreePublicXtra(void);
 int WellPackageSizeOfTempData(void);
 
+/* reservoir.c */
+ReservoirData *NewReservoirData(void);
+void FreeReservoirData(ReservoirData *reservoir_data);
+void PrintReservoirData(ReservoirData *reservoir_data, unsigned int print_mask);
+void WriteReservoirs(char *file_prefix, Problem *problem, ReservoirData *reservoir_data, double time, int write_header);
+
+typedef void (*ReservoirPackageInvoke) (ProblemData *problem_data);
+typedef PFModule *(*ReservoirPackageNewPublicXtraInvoke) (int num_phases, int num_contaminants);
+
+
+
 /* wells_lb.c */
 void LBWells(Lattice *lattice, Problem *problem, ProblemData *problem_data);
+
+/* reservoir_package.c */
+void ReservoirPackage(ProblemData *problem_data);
+PFModule *ReservoirPackageInitInstanceXtra(void);
+void ReservoirPackageFreeInstanceXtra(void);
+PFModule *ReservoirPackageNewPublicXtra(void);
+void ReservoirPackageFreePublicXtra(void);
+int ReservoirPackageSizeOfTempData(void);
 
 /* write_parflow_binary.c */
 long SizeofPFBinarySubvector(Subvector *subvector, Subgrid *subgrid);
@@ -1359,7 +1356,7 @@ void     WriteSiloPMPIOInit(char *file_prefix);
 
 
 /* wrf_parflow.c */
-void wrfparflowinit_();
+void wrfparflowinit_(char *input_file);
 void wrfparflowadvance_(double *current_time,
                         double *dt,
                         float * wrf_flux,
@@ -1391,8 +1388,10 @@ void PF2WRF(Vector *pf_vector,
             Vector *top);
 
 void ComputeTop(Problem *    problem,
-                ProblemData *problem_data
-                );
+                ProblemData *problem_data);
+
+void ComputePatchTop(Problem *    problem,
+		     ProblemData *problem_data);
 
 int CheckTime(Problem *problem, char *key, double time);
 
