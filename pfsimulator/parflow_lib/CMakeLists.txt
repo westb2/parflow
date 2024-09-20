@@ -199,8 +199,8 @@ endif(${PARFLOW_HAVE_KOKKOS})
   add_library(pfsimulator ${SRC_FILES_ARCH} ${SRC_FILES_CONST})
 
   #TODO wrap in appropriate check
-  target_link_libraries (parflow xgboost::xgboost)
-
+  # target_link_libraries (parflow xgboost::xgboost)
+  target_link_libraries(pfsimulator xgboost::xgboost)
 
   if ( ${PARFLOW_HAVE_CUDA} )
     target_link_libraries(pfsimulator nvToolsExt)
@@ -287,3 +287,5 @@ if (${PARFLOW_HAVE_NETCDF})
   target_include_directories (pfsimulator PUBLIC "${netCDF_INCLUDE_DIRS}")
   target_include_directories (pfsimulator PUBLIC "${NETCDF_INCLUDE_DIRS}")
 endif (${PARFLOW_HAVE_NETCDF})
+
+# target_include_directories (pfsimulator PUBLIC ${XGBOOST_INCLUDE_DIR})

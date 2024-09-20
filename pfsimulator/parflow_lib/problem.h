@@ -247,6 +247,8 @@ typedef struct {
 /* packages */
 #define ProblemWellPackage(problem)               ((problem)->well_package)
 
+#define ProblemSurfaceFlowPredictorPackage(problem)               ((problem)->surface_flow_predictor_package)
+
 /* error calculations */
 #define ProblemL2ErrorNorm(problem)               ((problem)->l2_error_norm)
 

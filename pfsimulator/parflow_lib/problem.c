@@ -329,6 +329,10 @@ Problem   *NewProblem(
     PFModuleNewModuleType(WellPackageNewPublicXtraInvoke,
                           WellPackage, (num_phases, num_contaminants));
 
+  ProblemSurfaceFlowPredictorPackage(problem) =
+    PFModuleNewModuleType(SurfaceFlowPredictorPackageNewPublicXtraInvoke,
+                          SurfaceFlowPredictorPackage, ());
+
 
   return problem;
 }

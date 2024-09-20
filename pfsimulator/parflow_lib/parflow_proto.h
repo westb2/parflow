@@ -1303,6 +1303,14 @@ PFModule *WellPackageNewPublicXtra(int num_phases, int num_contaminants);
 void WellPackageFreePublicXtra(void);
 int WellPackageSizeOfTempData(void);
 
+/* predictor_package.c */
+void SurfaceFlowPredictorPackage(ProblemData *problem_data);
+PFModule *SurfaceFlowPredictorPackageInitInstanceXtra(void);
+void SurfaceFlowPredictorPackageFreeInstanceXtra(void);
+PFModule *SurfaceFlowPredictorPackageNewPublicXtra();
+void SurfaceFlowPredictorPackageFreePublicXtra(void);
+
+
 /* wells_lb.c */
 void LBWells(Lattice *lattice, Problem *problem, ProblemData *problem_data);
 

@@ -2990,6 +2990,8 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
      ***************************************************************/
     if (public_xtra->reset_surface_pressure == 1)
     {
+      SurfaceFlowPredictor *surface_flow_predictor =
+              ProblemDataSurfaceFlowPredictor(problem_data);
       GrGeomSolid *gr_domain = ProblemDataGrDomain(problem_data);
 
       int i, j, k, r, is;
@@ -3030,7 +3032,8 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
                        {
                          //   printf(" %d %d %d %d  \n",i,j,k,ip);
                          //   printf(" pp[ip] %10.3f \n",pp[ip]);
-
+                        float* prediction  = MakeSurfaceFlowPrediction(surface_flow_predictor);
+                        amps_Printf("prediction: %f", *prediction)
                          if (pp_sp[ip] > public_xtra->threshold_pressure)
                          {
                            amps_Printf(" time: %10.3f  pressure reset: %d %d %d %10.3f \n",t, i, j, k,

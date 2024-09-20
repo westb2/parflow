@@ -29,6 +29,8 @@
 #ifndef _SURFACE_FLOW_PREDICTOR_HEADER
 #define _SURFACE_FLOW_PREDICTOR_HEADER
 
+#include "/opt/homebrew/anaconda3/include/xgboost/c_api.h"
+
 /*----------------------------------------------------------------
  * Well Data structure
  *----------------------------------------------------------------*/

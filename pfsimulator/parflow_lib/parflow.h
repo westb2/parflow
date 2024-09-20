@@ -41,8 +41,6 @@
 #endif
 
 #include "amps.h"
-#include <xgboost/c_api.h>
-
 #include "info_header.h"
 #include "general.h"
 #include "file_versions.h"
