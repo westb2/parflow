@@ -1,6 +1,6 @@
 import os
 import config
-from utils import *
+from utils import create_directory
 from SystemPackageManager import SystemPackageManager
 
 
@@ -13,8 +13,6 @@ class ParflowInstaller:
         self.REBUILD_PARFLOW_SCRIPT_FILE = "rebuild_parflow.sh"
         self.REBUILD_PARFLOW_WITHOUT_PFTOOLS_SCRIPT_FILE = "rebuild_parflow_without_pftools.sh"
         self.delete_parflow_build_file = f"{config.INSTALLATION_ROOT}/delete_parflow_build.sh"
-        # TODO dont hardcode this. We are probably fchanging directories at some point and should
-        # save cwd when we initialize the class
         self.parflow_source_dir=f"{os.getcwd()}/.."
 
     def install_parflow(self):
