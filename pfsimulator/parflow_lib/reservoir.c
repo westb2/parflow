@@ -62,6 +62,8 @@ ReservoirData *NewReservoirData()
   reservoir_data = ctalloc(ReservoirData, 1);
 
   ReservoirDataNumReservoirs(reservoir_data) = -1;
+  ReservoirDataTimestep(reservoir_data) = 0.0;
+  ReservoirDataOutputHeaderWritten(reservoir_data) = 0;
 
   ReservoirDataReservoirPhysicals(reservoir_data) = NULL;
 
@@ -137,11 +139,25 @@ void WriteReservoirs(
   if (ReservoirDataNumReservoirs(reservoir_data) > 0)
   {
     p = amps_Rank(amps_CommWorld);
-    if (write_header)
+    /* The header is normally written with the initial conditions.  If those
+     * are not printed, write it with the first row instead, unless the file
+     * already exists (e.g. a restarted run appending to earlier output). */
+    if (write_header || !ReservoirDataOutputHeaderWritten(reservoir_data))
     {
-      if (p == 0)
+      ReservoirDataOutputHeaderWritten(reservoir_data) = 1;
+      sprintf(filename, "%s.%s", file_prefix, file_suffix);
+      int file_exists = 0;
+      if (!write_header && p == 0)
       {
-        sprintf(filename, "%s.%s", file_prefix, file_suffix);
+        FILE *existing = fopen(filename, "r");
+        if (existing)
+        {
+          file_exists = 1;
+          fclose(existing);
+        }
+      }
+      if (p == 0 && !file_exists)
+      {
         file = fopen(filename, "w");
         fprintf(file, "time");
         fprintf(file, ",name");
@@ -153,32 +169,110 @@ void WriteReservoirs(
         fclose(file);
       }
     }
-    for (reservoir = 0; reservoir < ReservoirDataNumReservoirs(reservoir_data); reservoir++)
+    /* Rank 0 may not own any part of a reservoir, so its copy of the
+     * reservoir state can be stale.  The rank that owns the release cell
+     * always has current values; it contributes them and every other rank
+     * contributes zero, and a single sum over all ranks delivers them to
+     * rank 0.  This only runs when reservoir output is written, so it adds
+     * no communication to ordinary timesteps.  All ranks must call
+     * WriteReservoirs. */
+    int num_reservoirs = ReservoirDataNumReservoirs(reservoir_data);
+    int num_values = 3 * num_reservoirs;
+    double *values = ctalloc(double, num_values);
+
+    for (reservoir = 0; reservoir < num_reservoirs; reservoir++)
     {
       reservoir_data_physical = ReservoirDataReservoirPhysical(reservoir_data, reservoir);
-      if (p == 0)
+#ifdef PARFLOW_HAVE_MPI
+      if (ReservoirDataPhysicalReleaseCellMpiRank(reservoir_data_physical) == p)
+#endif
       {
-        sprintf(filename, "%s.%s", file_prefix, file_suffix);
-        file = fopen(filename, "a");
-        if (file == NULL)
-        {
-          amps_Printf("Error: can't open output file %s\n", filename);
-          exit(1);
-        }
-        fprintf(file, "%f", time);
-        reservoir_data_physical = ReservoirDataReservoirPhysical(reservoir_data, reservoir);
-        fprintf(file, ",%s", ReservoirDataPhysicalName(reservoir_data_physical));
-        fprintf(file, ",%f", ReservoirDataPhysicalStorage(reservoir_data_physical));
-        fprintf(file, ",%f", ReservoirDataPhysicalIntakeAmountSinceLastPrint(reservoir_data_physical));
-        fprintf(file, ",%f", ReservoirDataPhysicalReleaseAmountSinceLastPrint(reservoir_data_physical));
-        fprintf(file, ",%f", ReservoirDataPhysicalReleaseRate(reservoir_data_physical));
-
-        ReservoirDataPhysicalReleaseAmountSinceLastPrint(reservoir_data_physical) = 0;
-        ReservoirDataPhysicalIntakeAmountSinceLastPrint(reservoir_data_physical) = 0;
-        fprintf(file, "\n");
-        fclose(file);
+        values[3 * reservoir] = ReservoirDataPhysicalStorage(reservoir_data_physical);
+        values[3 * reservoir + 1] = ReservoirDataPhysicalIntakeAmountSinceLastPrint(reservoir_data_physical);
+        values[3 * reservoir + 2] = ReservoirDataPhysicalReleaseAmountSinceLastPrint(reservoir_data_physical);
       }
+      /* Every rank resets its running totals for the next output row */
+      ReservoirDataPhysicalReleaseAmountSinceLastPrint(reservoir_data_physical) = 0;
+      ReservoirDataPhysicalIntakeAmountSinceLastPrint(reservoir_data_physical) = 0;
     }
+
+#ifdef PARFLOW_HAVE_MPI
+    amps_Invoice invoice = amps_NewInvoice("%*d", num_values, values);
+    amps_AllReduce(amps_CommWorld, invoice, amps_Add);
+    amps_FreeInvoice(invoice);
+#endif
+
+    if (p == 0)
+    {
+      sprintf(filename, "%s.%s", file_prefix, file_suffix);
+      file = fopen(filename, "a");
+      if (file == NULL)
+      {
+        amps_Printf("Error: can't open output file %s\n", filename);
+        exit(1);
+      }
+      for (reservoir = 0; reservoir < num_reservoirs; reservoir++)
+      {
+        reservoir_data_physical = ReservoirDataReservoirPhysical(reservoir_data, reservoir);
+        fprintf(file, "%f", time);
+        fprintf(file, ",%s", ReservoirDataPhysicalName(reservoir_data_physical));
+        fprintf(file, ",%f", values[3 * reservoir]);
+        fprintf(file, ",%f", values[3 * reservoir + 1]);
+        fprintf(file, ",%f", values[3 * reservoir + 2]);
+        fprintf(file, ",%f", ReservoirDataPhysicalReleaseRate(reservoir_data_physical));
+        fprintf(file, "\n");
+      }
+      fclose(file);
+    }
+
+    tfree(values);
   }
 }
 
+
+
+/*--------------------------------------------------------------------------
+ * ReservoirDataPhysicalComputeStepRelease
+ *
+ * Returns the release rate [L^3 T^-1] to apply over a timestep of length dt,
+ * based on the storage at the start of the step:
+ *
+ *   - Nothing is released once storage is at or below Min_Release_Storage.
+ *   - Otherwise Release_Rate is released.
+ *   - If storage is above Max_Storage, the excess is spilled over this step,
+ *     i.e. an extra (storage - max_storage) / dt is released on top of
+ *     Release_Rate, so the amount spilled does not depend on dt.
+ *   - The total is capped at (storage - min_release_storage) / dt so a single
+ *     step never releases storage below Min_Release_Storage.
+ *
+ * Inflow during the step is not counted, so the cap is conservative.  If dt
+ * is not known (dt <= 0) only Release_Rate is returned.
+ *--------------------------------------------------------------------------*/
+
+double ReservoirDataPhysicalComputeStepRelease(
+                                               ReservoirDataPhysical *reservoir_data_physical,
+                                               double                 dt)
+{
+  double storage = ReservoirDataPhysicalStorage(reservoir_data_physical);
+  double min_storage = ReservoirDataPhysicalMinReleaseStorage(reservoir_data_physical);
+  double max_storage = ReservoirDataPhysicalMaxStorage(reservoir_data_physical);
+  double rate;
+
+  if (storage <= min_storage)
+  {
+    return 0.0;
+  }
+
+  rate = ReservoirDataPhysicalReleaseRate(reservoir_data_physical);
+
+  if (dt > 0.0)
+  {
+    if (storage > max_storage)
+    {
+      rate += (storage - max_storage) / dt;
+    }
+    rate = pfmin(rate, (storage - min_storage) / dt);
+  }
+
+  return pfmax(rate, 0.0);
+}

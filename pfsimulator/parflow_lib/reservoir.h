@@ -63,6 +63,11 @@ typedef struct {
 typedef struct {
   int num_reservoirs;
   int overland_flow_solver;
+  /* Length of the timestep currently being solved; set by the solver before
+   * each nonlinear solve so releases can be sized to the step. 0 if unknown. */
+  double timestep;
+  /* Whether the reservoir output file header has been written this run */
+  int output_header_written;
   ReservoirDataPhysical  **reservoir_physicals;
 } ReservoirData;
 
@@ -104,10 +109,10 @@ typedef struct {
         ((reservoir_data_physical)->intake_y_upper)
 
 #define ReservoirDataPhysicalSecondaryIntakeXUpper(reservoir_data_physical) \
-        ((reservoir_data_physical)->intake_x_upper)
+        ((reservoir_data_physical)->secondary_intake_x_upper)
 
 #define ReservoirDataPhysicalSecondaryIntakeYUpper(reservoir_data_physical) \
-        ((reservoir_data_physical)->intake_y_upper)
+        ((reservoir_data_physical)->secondary_intake_y_upper)
 
 
 #define ReservoirDataPhysicalIntakeSubgrid(reservoir_data_physical) \
@@ -175,6 +180,10 @@ typedef struct {
 #define ReservoirDataNumReservoirs(reservoir_data)      ((reservoir_data)->num_reservoirs)
 
 #define ReservoirDataOverlandFlowSolver(reservoir_data)      ((reservoir_data)->overland_flow_solver)
+
+#define ReservoirDataTimestep(reservoir_data)      ((reservoir_data)->timestep)
+
+#define ReservoirDataOutputHeaderWritten(reservoir_data)      ((reservoir_data)->output_header_written)
 
 #define ReservoirDataReservoirPhysicals(reservoir_data) \
         ((reservoir_data)->reservoir_physicals)

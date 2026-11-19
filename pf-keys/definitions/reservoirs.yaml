@@ -89,15 +89,17 @@ Reservoirs:
     Min_Release_Storage:
 
       help: >
-        [Type: double] This key specifies the storage amount below which the reservoir will stop releasing water
+        [Type: double] This key specifies the storage amount below which the reservoir will stop releasing water.
+        A timestep never releases water that would take storage below this amount.
       domains:
         DoubleValue:
 
     Max_Storage:
 
       help: >
-        [Type: double] This key specifies a reservoir's maximum storage. If storage rises above this value, a 
-        reservoir will release extra water if necessary to get back down to this amount by the next timestep.
+        [Type: double] This key specifies a reservoir's maximum storage. If storage rises above this value, the
+        excess is released over the next timestep in addition to the normal release rate, bringing storage back
+        down to this amount. The amount released does not depend on the timestep size.
       domains:
         DoubleValue:
 

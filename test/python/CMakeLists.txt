@@ -36,6 +36,7 @@ if(${PARFLOW_HAVE_HYPRE})
         var_dz_with_well
         tilted_v_with_reservoir_overland_flow
         tilted_v_with_reservoir_overland_kinematic
+        reservoir_release_accounting
         pfmg
         pfmg_galerkin
         smg
@@ -127,6 +128,7 @@ if(${PARFLOW_AMPS_LAYER} IN_LIST PARFLOW_AMPS_LAYER_REQUIRE_MPI)
             overland_tiltedV_DWE
             richards_box_proctest_vardz
             reservoir_mpi_test
+            reservoir_release_accounting
         )
 
         if(${PARFLOW_HAVE_SILO})

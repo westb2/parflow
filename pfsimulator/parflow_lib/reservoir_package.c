@@ -61,8 +61,20 @@ typedef struct {
  * ReservoirPackage
  *--------------------------------------------------------------------------*/
 
-/** @brief Sets the slops at the outlet faces of a cell to 0 to stop flow.
- * Assumes an overlandkinematic boundary condition
+/** @brief Returns true if cell (i, j) lies in the interior of the subgrid
+ * (i.e. is owned by this rank rather than being a ghost cell).
+ */
+static bool CellIsOnSubgrid(int i, int j, Subgrid* subgrid)
+{
+  return i >= SubgridIX(subgrid) && i < SubgridIX(subgrid) + SubgridNX(subgrid) &&
+         j >= SubgridIY(subgrid) && j < SubgridIY(subgrid) + SubgridNY(subgrid);
+}
+
+/** @brief Sets the slopes at the outlet faces of a cell to 0 to stop flow.
+ * Assumes an overlandkinematic boundary condition, where the slope on a face
+ * is stored in the cell on the lower side of that face.  Each slope is only
+ * changed by the rank that owns it; call UpdateReservoirSlopeGhosts afterwards
+ * so neighbouring ranks see the change.
  * @param i the x index of the cell in question
  * @param j the y index of the cell in question
  * @return Null, but modifies the problem data x and y slopes
@@ -73,8 +85,7 @@ void StopOutletFlowAtCellOverlandKinematic(int i, int j, ProblemData* problem_da
   Vector      *slope_y = ProblemDataTSlopeY(problem_data);
   Subvector   *slope_x_subvector;
   Subvector   *slope_y_subvector;
-  int index_slope_x;
-  int index_slope_y;
+  int index;
   double *slope_x_ptr;
   double *slope_y_ptr;
   int subgrid_index;
@@ -82,62 +93,55 @@ void StopOutletFlowAtCellOverlandKinematic(int i, int j, ProblemData* problem_da
 
   ForSubgridI(subgrid_index, GridSubgrids(grid))
   {
-    int subgrid_x_floor, subgrid_y_floor, subgrid_x_ceiling, subgrid_y_ceiling;
-
     subgrid = GridSubgrid(grid, subgrid_index);
     slope_x_subvector = VectorSubvector(slope_x, subgrid_index);
     slope_y_subvector = VectorSubvector(slope_y, subgrid_index);
     slope_x_ptr = SubvectorData(slope_x_subvector);
     slope_y_ptr = SubvectorData(slope_y_subvector);
-    index_slope_y = SubvectorEltIndex(slope_y_subvector, i, j, 0);
-    subgrid_x_floor = SubgridIX(subgrid);
-    subgrid_y_floor = SubgridIY(subgrid);
-    subgrid_x_ceiling = subgrid_x_floor + SubgridNX(subgrid) - 1;
-    subgrid_y_ceiling = subgrid_y_floor + SubgridNY(subgrid) - 1;
 
-    // Check all 4 faces, as long as they live on this subgrid. First the East face
-    if (i >= subgrid_x_floor && i <= subgrid_x_ceiling && j >= subgrid_y_floor && j <= subgrid_y_ceiling)
+    // East face: slope_x at (i, j). Negative slope flows east, out of the cell
+    if (CellIsOnSubgrid(i, j, subgrid))
     {
-      index_slope_x = SubvectorEltIndex(slope_x_subvector, i, j, 0);
-      if (slope_x_ptr[index_slope_x] < 0)
+      index = SubvectorEltIndex(slope_x_subvector, i, j, 0);
+      if (slope_x_ptr[index] < 0)
       {
-        slope_x_ptr[index_slope_x] = 0;
+        slope_x_ptr[index] = 0;
       }
     }
-    // South face
-    if (i >= subgrid_x_floor && i <= subgrid_x_ceiling && j - 1 >= subgrid_y_floor && j - 1 <= subgrid_y_ceiling)
+    // West face: slope_x at (i - 1, j). Positive slope flows west, out of the cell
+    if (CellIsOnSubgrid(i - 1, j, subgrid))
     {
-      index_slope_y = SubvectorEltIndex(slope_y_subvector, i, j - 1, 0);
-      if (slope_y_ptr[index_slope_y] > 0)
+      index = SubvectorEltIndex(slope_x_subvector, i - 1, j, 0);
+      if (slope_x_ptr[index] > 0)
       {
-        slope_y_ptr[index_slope_y] = 0;
+        slope_x_ptr[index] = 0;
       }
     }
-    if (i >= subgrid_x_floor && i <= subgrid_x_ceiling && j >= subgrid_y_floor && j <= subgrid_y_ceiling)
+    // North face: slope_y at (i, j). Negative slope flows north, out of the cell
+    if (CellIsOnSubgrid(i, j, subgrid))
     {
-      index_slope_x = SubvectorEltIndex(slope_x_subvector, i - 1, j, 0);
-      if (slope_x_ptr[index_slope_x] > 0)
+      index = SubvectorEltIndex(slope_y_subvector, i, j, 0);
+      if (slope_y_ptr[index] < 0)
       {
-        slope_x_ptr[index_slope_x] = 0;
+        slope_y_ptr[index] = 0;
       }
     }
-    // South face
-    if (i >= subgrid_x_floor && i <= subgrid_x_ceiling && j >= subgrid_y_floor && j <= subgrid_y_ceiling)
+    // South face: slope_y at (i, j - 1). Positive slope flows south, out of the cell
+    if (CellIsOnSubgrid(i, j - 1, subgrid))
     {
-      index_slope_y = SubvectorEltIndex(slope_y_subvector, i, j, 0);
-      if (slope_y_ptr[index_slope_y] < 0)
+      index = SubvectorEltIndex(slope_y_subvector, i, j - 1, 0);
+      if (slope_y_ptr[index] > 0)
       {
-        slope_y_ptr[index_slope_y] = 0;
+        slope_y_ptr[index] = 0;
       }
     }
   }
 }
 
-/** @brief Sets the slops at the outlet faces of a cell to 0 to stop flow.
- * Assumes an overlandflow boundary condition
- *
- *
- *
+/** @brief Sets the slopes of a cell to 0 to stop flow out of it.
+ * Assumes an overlandflow boundary condition, where slopes are cell centered.
+ * Only the rank that owns the cell changes it; call UpdateReservoirSlopeGhosts
+ * afterwards so neighbouring ranks see the change.
  * @param i the x index of the cell in question
  * @param j the y index of the cell in question
  * @return Null, but modifies the problem data x and y slopes
@@ -148,23 +152,37 @@ void StopOutletFlowAtCellOverlandFlow(int i, int j, ProblemData* problem_data, G
   Vector      *slope_y = ProblemDataTSlopeY(problem_data);
   Subvector   *slope_x_subvector;
   Subvector   *slope_y_subvector;
-  int index_slope_x;
-  int index_slope_y;
   double *slope_x_ptr;
   double *slope_y_ptr;
   int subgrid_index;
+  Subgrid *subgrid;
 
   ForSubgridI(subgrid_index, GridSubgrids(grid))
   {
-    slope_x_subvector = VectorSubvector(slope_x, subgrid_index);
-    slope_y_subvector = VectorSubvector(slope_y, subgrid_index);
-    index_slope_y = SubvectorEltIndex(slope_y_subvector, i, j, 0);
-    index_slope_x = SubvectorEltIndex(slope_y_subvector, i, j, 0);
-    slope_x_ptr = SubvectorData(slope_x_subvector);
-    slope_y_ptr = SubvectorData(slope_y_subvector);
-    slope_x_ptr[index_slope_x] = 0;
-    slope_y_ptr[index_slope_y] = 0;
+    subgrid = GridSubgrid(grid, subgrid_index);
+    if (CellIsOnSubgrid(i, j, subgrid))
+    {
+      slope_x_subvector = VectorSubvector(slope_x, subgrid_index);
+      slope_y_subvector = VectorSubvector(slope_y, subgrid_index);
+      slope_x_ptr = SubvectorData(slope_x_subvector);
+      slope_y_ptr = SubvectorData(slope_y_subvector);
+      slope_x_ptr[SubvectorEltIndex(slope_x_subvector, i, j, 0)] = 0;
+      slope_y_ptr[SubvectorEltIndex(slope_y_subvector, i, j, 0)] = 0;
+    }
   }
+}
+
+/** @brief Copies the slopes changed by the StopOutletFlow functions into the
+ * ghost cells of neighbouring ranks.  Must be called on all ranks.
+ */
+static void UpdateReservoirSlopeGhosts(ProblemData* problem_data)
+{
+  VectorUpdateCommHandle *handle;
+
+  handle = InitVectorUpdate(ProblemDataTSlopeX(problem_data), VectorUpdateAll);
+  FinalizeVectorUpdate(handle);
+  handle = InitVectorUpdate(ProblemDataTSlopeY(problem_data), VectorUpdateAll);
+  FinalizeVectorUpdate(handle);
 }
 
 void         ReservoirPackage(
@@ -218,7 +236,6 @@ void         ReservoirPackage(
     for (i = 0; i < (public_xtra->num_reservoirs); i++)
     {
       dummy0 = (Type0*)(public_xtra->data[i]);
-      reservoir_data_physical = ctalloc(ReservoirDataPhysical, 1);
       intake_ix = IndexSpaceX((dummy0->intake_x_location), 0);
       intake_iy = IndexSpaceY((dummy0->intake_y_location), 0);
       secondary_intake_ix = IndexSpaceX((dummy0->secondary_intake_x_location), 0);
@@ -226,6 +243,8 @@ void         ReservoirPackage(
       release_ix = IndexSpaceX((dummy0->release_x_location), 0);
       release_iy = IndexSpaceY((dummy0->release_y_location), 0);
 
+      // -1 means "not on this rank"; the max reduction below finds the owning rank
+      intake_cell_rank = -1;
       secondary_intake_cell_rank = -1;
       release_cell_rank = -1;
 
@@ -238,13 +257,8 @@ void         ReservoirPackage(
       rx = 0;
       ry = 0;
       rz = 0;
-#ifdef PARFLOW_HAVE_MPI
+      // amps_Rank returns 0 when MPI is not used
       current_mpi_rank = amps_Rank(amps_CommWorld);
-#else
-      // SGS TODO This looks incorrect.  ranks start at 0 so with no mpi this should be 0?
-      // amps_Rank normally takes care of returning the correct value when MPI is not used.
-      current_mpi_rank = 1;
-#endif
 
       new_intake_subgrid = NewSubgrid(intake_ix, intake_iy, iz_lower,
                                       nx, ny, nz,
@@ -296,7 +310,7 @@ void         ReservoirPackage(
       if (public_xtra->overland_flow_solver == OVERLAND_FLOW)
       {
         StopOutletFlowAtCellOverlandFlow(intake_ix, intake_iy, problem_data, grid);
-        if (ReservoirDataPhysicalHasSecondaryIntakeCell(reservoir_data_physical))
+        if (dummy0->has_secondary_intake_cell)
         {
           StopOutletFlowAtCellOverlandFlow(secondary_intake_ix, secondary_intake_iy, problem_data, grid);
         }
@@ -304,15 +318,11 @@ void         ReservoirPackage(
       else if (public_xtra->overland_flow_solver == OVERLAND_KINEMATIC)
       {
         StopOutletFlowAtCellOverlandKinematic(intake_ix, intake_iy, problem_data, grid);
-        if (ReservoirDataPhysicalHasSecondaryIntakeCell(reservoir_data_physical))
+        if (dummy0->has_secondary_intake_cell)
         {
           StopOutletFlowAtCellOverlandKinematic(secondary_intake_ix, secondary_intake_iy, problem_data, grid);
         }
       }
-
-      // TODO SGS inserted this to fix memory leak BUT something is not correct here.   reservoir_data_physical
-      // is allocated above and referenced but was never set so two if statements above will never be true
-      tfree(reservoir_data_physical);
 
       reservoir_data_physical = ctalloc(ReservoirDataPhysical, 1);
       ReservoirDataPhysicalName(reservoir_data_physical) = ctalloc(char, strlen((dummy0->name)) + 1);
@@ -352,6 +362,9 @@ void         ReservoirPackage(
       reservoir_index++;
     }
     ReservoirDataNumReservoirs(reservoir_data) = (reservoir_index);
+
+    // The slope edits above were made only on the owning ranks
+    UpdateReservoirSlopeGhosts(problem_data);
   }
 }
 
@@ -544,11 +557,10 @@ void  ReservoirPackageFreePublicXtra()
         {
           tfree((dummy0->name));
         }
+        tfree(dummy0);
       }
       tfree(public_xtra->data);
       tfree(public_xtra->type);
-
-      tfree(dummy0);
     }
     tfree(public_xtra);
   }

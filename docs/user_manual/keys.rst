@@ -597,11 +597,13 @@ cell will always be placed on the domain surface. This key is only used when the
 a secondary intake cell, in which case it is required.
 
 *double* **Reservoirs.\ *reservoir_name*.Min_Release_Storage** no default This key specifies 
-the storage amount below which the reservoir will stop releasing water. Has units [L\ :sup:`3`].
+the storage amount below which the reservoir will stop releasing water. A timestep never releases water
+that would take storage below this amount. Has units [L\ :sup:`3`].
 
 *double* **Reservoirs.\ *reservoir_name*.Max_Storage** no default This key specifies a reservoirs 
-maximum storage. If storage rises above this value, a reservoir will release extra water if necessary
-to get back down to this amount by the next timestep. Has units [L\ :sup:`3`]
+maximum storage. If storage rises above this value, the excess is released over the next timestep in
+addition to the normal release rate, bringing storage back down to this amount. The amount released does
+not depend on the timestep size. Has units [L\ :sup:`3`]
 
 *double* **Reservoirs.\ *reservoir_name*.Storage** no default This key specifies the amount of water 
 stored in the reservoir as a volume. Has same length units as the problem domain i.e. if domain is 
