@@ -1,0 +1,6 @@
+# Placement corrections for ResOpsUS dams, keyed by ResOpsUS DAM_ID (the GRanD ID).
+# Coordinates are WGS84 latitude/longitude in decimal degrees, so a correction
+# applies on any grid. Leave a lat/lon pair blank to keep the default placement:
+# intake at the dam (snapped to the channel), release in the cell downstream.
+# Extra columns (e.g. a note on where the correction came from) are allowed.
+dam_id,intake_lat,intake_lon,release_lat,release_lon,note

@@ -38,6 +38,7 @@ if(${PARFLOW_HAVE_HYPRE})
         tilted_v_with_reservoir_overland_kinematic
         reservoir_release_accounting
         reservoir_release_timeseries
+        reservoir_database_resopsus
         pfmg
         pfmg_galerkin
         smg
