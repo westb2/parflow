@@ -46,6 +46,12 @@ typedef struct {
   double release_x_lower, release_y_lower, release_z_lower;
   double release_x_upper, release_y_upper, release_z_upper;
   double max_storage, min_release_storage, storage, release_rate;
+  /* Time-varying release schedule (used when release_type == RESERVOIR_RELEASE_TIMESERIES) */
+  int release_type;
+  int release_interpolation;
+  int num_release_times;
+  double        *release_times;
+  double        *release_rates;
   double intake_amount_since_last_print, release_amount_since_last_print, release_amount_in_solver;
   Subgrid       *intake_subgrid;
   Subgrid       *secondary_intake_subgrid;
@@ -168,6 +174,21 @@ typedef struct {
 #define ReservoirDataPhysicalReleaseRate(reservoir_data_physical) \
         ((reservoir_data_physical)->release_rate)
 
+#define ReservoirDataPhysicalReleaseType(reservoir_data_physical) \
+        ((reservoir_data_physical)->release_type)
+
+#define ReservoirDataPhysicalReleaseInterpolation(reservoir_data_physical) \
+        ((reservoir_data_physical)->release_interpolation)
+
+#define ReservoirDataPhysicalNumReleaseTimes(reservoir_data_physical) \
+        ((reservoir_data_physical)->num_release_times)
+
+#define ReservoirDataPhysicalReleaseTimes(reservoir_data_physical) \
+        ((reservoir_data_physical)->release_times)
+
+#define ReservoirDataPhysicalReleaseRates(reservoir_data_physical) \
+        ((reservoir_data_physical)->release_rates)
+
 
 
 /*--------------------------------------------------------------------------
@@ -211,6 +232,19 @@ typedef struct {
 
 #define OVERLAND_FLOW 0
 #define OVERLAND_KINEMATIC 1
+
+/*     Release Types      */
+/* These should match the order of the Reservoirs.<name>.Release_Type name array */
+#define RESERVOIR_RELEASE_CONSTANT   0
+#define RESERVOIR_RELEASE_TIMESERIES 1
+
+/*     Release Interpolation      */
+/* These should match the order of the Reservoirs.<name>.Release_Interpolation name array */
+#define RESERVOIR_RELEASE_INTERP_STEP   0
+#define RESERVOIR_RELEASE_INTERP_LINEAR 1
+
+/* Relative tolerance used when matching solver time to release-file breakpoints */
+#define RESERVOIR_RELEASE_TIME_TOLERANCE 1.0e-9
 
 /*     Write Options      */
 #define RESERVOIRDATA_WRITEHEADER     1

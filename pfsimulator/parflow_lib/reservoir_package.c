@@ -55,6 +55,11 @@ typedef struct {
   double secondary_intake_x_location, secondary_intake_y_location;
   double release_x_location, release_y_location;
   double max_storage, min_release_storage, storage, release_rate;
+  int release_type;
+  int release_interpolation;
+  int num_release_times;
+  double   *release_times;
+  double   *release_rates;
 } Type0;                      /* basic vertical reservoir */
 
 /*--------------------------------------------------------------------------
@@ -376,6 +381,18 @@ void         ReservoirPackage(
       ReservoirDataPhysicalReleaseAmountSinceLastPrint(reservoir_data_physical) = (0);
       ReservoirDataPhysicalReleaseAmountInSolver(reservoir_data_physical) = (0);
       ReservoirDataPhysicalReleaseRate(reservoir_data_physical) = (dummy0->release_rate);
+      ReservoirDataPhysicalReleaseType(reservoir_data_physical) = (dummy0->release_type);
+      ReservoirDataPhysicalReleaseInterpolation(reservoir_data_physical) = (dummy0->release_interpolation);
+      ReservoirDataPhysicalNumReleaseTimes(reservoir_data_physical) = (dummy0->num_release_times);
+      if (dummy0->num_release_times > 0)
+      {
+        // Copy so that ReservoirData owns its own schedule independent of the PublicXtra
+        int n = dummy0->num_release_times;
+        ReservoirDataPhysicalReleaseTimes(reservoir_data_physical) = ctalloc(double, n);
+        ReservoirDataPhysicalReleaseRates(reservoir_data_physical) = ctalloc(double, n);
+        memcpy(ReservoirDataPhysicalReleaseTimes(reservoir_data_physical), dummy0->release_times, n * sizeof(double));
+        memcpy(ReservoirDataPhysicalReleaseRates(reservoir_data_physical), dummy0->release_rates, n * sizeof(double));
+      }
       ReservoirDataPhysicalStorage(reservoir_data_physical) = (dummy0->storage);
       ReservoirDataPhysicalIntakeSubgrid(reservoir_data_physical) = new_intake_subgrid;
       ReservoirDataPhysicalSecondaryIntakeSubgrid(reservoir_data_physical) = new_secondary_intake_subgrid;
@@ -534,8 +551,41 @@ PFModule  *ReservoirPackageNewPublicXtra()
       sprintf(key, "Reservoirs.%s.Min_Release_Storage", reservoir_name);
       dummy0->min_release_storage = GetDouble(key);
 
-      sprintf(key, "Reservoirs.%s.Release_Rate", reservoir_name);
-      dummy0->release_rate = GetDouble(key);
+      NameArray release_type_na = NA_NewNameArray("Constant TimeSeries");
+      sprintf(key, "Reservoirs.%s.Release_Type", reservoir_name);
+      switch_name = GetStringDefault(key, "Constant");
+      dummy0->release_type = NA_NameToIndexExitOnError(release_type_na, switch_name, key);
+      NA_FreeNameArray(release_type_na);
+
+      dummy0->release_interpolation = RESERVOIR_RELEASE_INTERP_STEP;
+      dummy0->num_release_times = 0;
+      dummy0->release_times = NULL;
+      dummy0->release_rates = NULL;
+
+      if (dummy0->release_type == RESERVOIR_RELEASE_TIMESERIES)
+      {
+        NameArray release_interp_na = NA_NewNameArray("Step Linear");
+        sprintf(key, "Reservoirs.%s.Release_Interpolation", reservoir_name);
+        switch_name = GetStringDefault(key, "Step");
+        dummy0->release_interpolation = NA_NameToIndexExitOnError(release_interp_na, switch_name, key);
+        NA_FreeNameArray(release_interp_na);
+
+        sprintf(key, "Reservoirs.%s.Release_File", reservoir_name);
+        char *release_filename = GetString(key);
+        ReadReservoirReleaseFile(release_filename, reservoir_name,
+                                 &(dummy0->num_release_times),
+                                 &(dummy0->release_times),
+                                 &(dummy0->release_rates));
+
+        // Release_Rate is not used for a time series; it is overwritten each
+        // step with the scheduled rate so it shows up in the reservoir output
+        dummy0->release_rate = dummy0->release_rates[0];
+      }
+      else
+      {
+        sprintf(key, "Reservoirs.%s.Release_Rate", reservoir_name);
+        dummy0->release_rate = GetDouble(key);
+      }
 
       sprintf(key, "Reservoirs.%s.Max_Storage", reservoir_name);
       dummy0->max_storage = GetDouble(key);
@@ -583,6 +633,14 @@ void  ReservoirPackageFreePublicXtra()
         if ((dummy0->name))
         {
           tfree((dummy0->name));
+        }
+        if ((dummy0->release_times))
+        {
+          tfree((dummy0->release_times));
+        }
+        if ((dummy0->release_rates))
+        {
+          tfree((dummy0->release_rates));
         }
         tfree(dummy0);
       }

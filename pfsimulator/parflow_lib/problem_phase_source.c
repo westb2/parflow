@@ -419,7 +419,7 @@ void         PhaseSource(
       // Reset so that storage is not drawn down when no water is released this step
       // (e.g. once storage falls below Min_Release_Storage)
       ReservoirDataPhysicalReleaseAmountInSolver(reservoir_data_physical) = 0.0;
-      reservoir_value = ReservoirDataPhysicalComputeStepRelease(reservoir_data_physical,
+      reservoir_value = ReservoirDataPhysicalComputeStepRelease(reservoir_data_physical, time,
                                                                 ReservoirDataTimestep(reservoir_data));
       volume = ReservoirDataPhysicalSize(reservoir_data_physical);
       flux = reservoir_value / (volume);
