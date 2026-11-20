@@ -11,6 +11,7 @@
 #     and nothing is released while storage is below it
 #   * storage above Max_Storage is spilled in one step, on top
 #     of Release_Rate, independent of the timestep size
+#   * a release cell outside the active domain is an input error
 # ---------------------------------------------------------
 
 from parflow import Run
@@ -465,6 +466,32 @@ for dt in [DT, 2 * DT]:
     )
     check_mass_balance(output, case_name)
 sloping_slab.TimeStep.Value = DT
+
+# -----------------------------------------------------------------------------
+# Case 5: a release cell outside the active domain stops the run with a clear
+# error. Shrinking the box to x < 30 makes the release cell (x = 35) inactive;
+# previously ParFlow divided by its zero volume and storage became NaN.
+# -----------------------------------------------------------------------------
+sloping_slab.Geom.domain.Upper.X = 30.0
+sloping_slab.Reservoirs.reservoir.Storage = 5500000.0
+run_dir = get_absolute_path(
+    f"test_output/{run_name}_inactive_release_{args.p}_{args.q}_{args.r}"
+)
+mkdir(run_dir)
+try:
+    sloping_slab.run(working_directory=run_dir)
+    stopped = False
+except SystemExit:
+    stopped = True
+log_file = os.path.join(run_dir, f"{run_name}.out.txt")
+log = open(log_file).read() if os.path.exists(log_file) else ""
+check(
+    stopped
+    and "release cell of reservoir <reservoir>" in log
+    and "not an active cell" in log,
+    "inactive_release: run did not stop with the inactive release cell error",
+)
+sloping_slab.Geom.domain.Upper.X = 50.0
 
 if passed:
     print(f"{run_name} : PASSED")

@@ -210,6 +210,7 @@ void         ReservoirPackage(
   int rx, ry, rz;
   int current_mpi_rank;
   int intake_cell_rank, secondary_intake_cell_rank, release_cell_rank;
+  int release_cell_inactive;
   int split_color;
   int grid_nz;
 
@@ -285,15 +286,20 @@ void         ReservoirPackage(
         secondary_intake_cell_rank = current_mpi_rank;
       }
       release_subgrid_volume = 1;
+      release_cell_inactive = 0;
       if (SubgridIntersectsCurrentRank(new_release_subgrid, grid))
       {
         release_cell_rank = current_mpi_rank;
         release_subgrid_volume = CalculateLocalSubgridVolume(new_release_subgrid, problem_data);
+        // The volume only counts active cells; releasing into an inactive
+        // cell would divide by zero in PhaseSource
+        release_cell_inactive = (release_subgrid_volume <= 0.0);
       }
       // If we are multiprocessor we need to do some reductions to determine the correct ranks
       // for the reservoirs
 #ifdef PARFLOW_HAVE_MPI
-      amps_Invoice reservoir_cells_invoice = amps_NewInvoice("%i%i%i", &intake_cell_rank, &secondary_intake_cell_rank, &release_cell_rank);
+      amps_Invoice reservoir_cells_invoice = amps_NewInvoice("%i%i%i%i", &intake_cell_rank, &secondary_intake_cell_rank,
+                                                             &release_cell_rank, &release_cell_inactive);
       amps_AllReduce(amps_CommWorld, reservoir_cells_invoice, amps_Max);
       amps_FreeInvoice(reservoir_cells_invoice);
 
@@ -306,6 +312,27 @@ void         ReservoirPackage(
       split_color = part_of_reservoir_lives_on_this_rank ? 1 : MPI_UNDEFINED;
       MPI_Comm_split(amps_CommWorld, split_color, current_mpi_rank, &new_reservoir_communicator);
 #endif
+      // Every rank has the reduced values, so all ranks stop together
+      if (intake_cell_rank < 0)
+      {
+        InputError("Error: the intake cell of reservoir <%s> (Intake_X, Intake_Y) is outside the computational grid%s\n",
+                   dummy0->name, "");
+      }
+      if (dummy0->has_secondary_intake_cell && secondary_intake_cell_rank < 0)
+      {
+        InputError("Error: the secondary intake cell of reservoir <%s> (Secondary_Intake_X, Secondary_Intake_Y) is outside the computational grid%s\n",
+                   dummy0->name, "");
+      }
+      if (release_cell_rank < 0)
+      {
+        InputError("Error: the release cell of reservoir <%s> (Release_X, Release_Y) is outside the computational grid%s\n",
+                   dummy0->name, "");
+      }
+      if (release_cell_inactive)
+      {
+        InputError("Error: the release cell of reservoir <%s> (Release_X, Release_Y) is not an active cell of the domain%s\n",
+                   dummy0->name, "");
+      }
       // edit the slopes to prevent stuff running through the reservoir
       if (public_xtra->overland_flow_solver == OVERLAND_FLOW)
       {
