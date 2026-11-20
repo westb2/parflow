@@ -610,8 +610,37 @@ stored in the reservoir as a volume. Has same length units as the problem domain
 sized in meters this will be in m\ :sup:`3`.
 
 *double* **Reservoirs.\ *reservoir_name*.Release_Rate** no default [Type: double] This key specifies 
-the rate in volume/time [L\ :sup:`3` \ :sup:`-1`] that the reservoir release water. The amount of time over which 
-this amount is released is independent of solver timestep size.
+the rate in volume/time [L\ :sup:`3` \ :sup:`-1`] that the reservoir release water. The amount of time over which
+this amount is released is independent of solver timestep size. Required when **Release_Type** is **Constant**;
+ignored when it is **TimeSeries**.
+
+*string* **Reservoirs.\ *reservoir_name*.Release_Type** Constant This key specifies how the
+reservoir's release rate is set. **Constant** releases at **Release_Rate** for the whole simulation.
+**TimeSeries** reads the release rate as a function of time from **Release_File**, which lets reservoirs
+follow observed releases in historical simulations. With either option, water stops being released once
+storage falls to **Min_Release_Storage**, and any storage above **Max_Storage** is spilled in addition
+to the scheduled rate.
+
+*string* **Reservoirs.\ *reservoir_name*.Release_File** no default This key specifies the CSV file
+holding the release time series when **Release_Type** is **TimeSeries**. The file has two columns,
+time and release rate [L\ :sup:`3` T\ :sup:`-1`], with times in the same units as the
+:ref:`Timing Information` keys and strictly increasing. Rates must not be negative. An optional header line and lines starting with
+``#`` are ignored. Before the first time the first rate is used, and after the last time the last rate
+is held.
+
+.. container:: list
+
+   ::
+
+      time,release_rate
+      0.0,5.0
+      24.0,7.5
+      48.0,6.0
+
+*string* **Reservoirs.\ *reservoir_name*.Release_Interpolation** Step This key specifies how
+release rates are interpolated between rows of **Release_File**. **Step** holds each row's rate until
+the time in the next row (the rate in row *k* applies on the interval (t\ :sub:`k`, t\ :sub:`k+1`]).
+**Linear** interpolates linearly between rows.
 
 Overland_Flow_Solver
 

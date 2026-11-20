@@ -114,9 +114,45 @@ Reservoirs:
     Release_Rate:
       help: >
         [Type: double] This key specifies the rate in volume/time [L^3 T^-1] that the reservoir release water.
-        The amount of time over which this amount is released is independent of solver timestep size
+        The amount of time over which this amount is released is independent of solver timestep size.
+        Required when Release_Type is Constant; ignored when Release_Type is TimeSeries.
       domains:
         DoubleValue:
+
+    Release_Type:
+      help: >
+        [Type: string] This key specifies how the reservoir's release rate is set. Constant releases at
+        Release_Rate for the whole simulation. TimeSeries reads release rates as a function of time from
+        Release_File. With either option, water stops being released when storage falls to Min_Release_Storage,
+        and any storage above Max_Storage is spilled in addition to the scheduled rate.
+      default: Constant
+      domains:
+        EnumDomain:
+          enum_list:
+            - Constant
+            - TimeSeries
+
+    Release_File:
+      help: >
+        [Type: string] This key specifies the CSV file holding the release time series when Release_Type is
+        TimeSeries. The file has two columns, time and release rate [L^3 T^-1], one row per line, with times in
+        the same units as TimingInfo and strictly increasing. Rates must not be negative. An optional header line and lines starting with
+        '#' are ignored. Before the first time the first rate is used, and after the last time the last rate is held.
+      domains:
+        AnyString:
+        ValidFile:
+
+    Release_Interpolation:
+      help: >
+        [Type: string] This key specifies how release rates are interpolated between rows of Release_File.
+        Step holds the rate in a row until the time in the next row (the rate for row k applies on the interval
+        (t_k, t_k+1]). Linear interpolates linearly between rows.
+      default: Step
+      domains:
+        EnumDomain:
+          enum_list:
+            - Step
+            - Linear
 
   Overland_Flow_Solver:
     help: >

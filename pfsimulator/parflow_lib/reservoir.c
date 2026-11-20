@@ -105,6 +105,14 @@ void FreeReservoirData(
         {
           FreeSubgrid(ReservoirDataPhysicalSecondaryIntakeSubgrid(reservoir_data_physical));
         }
+        if (ReservoirDataPhysicalReleaseTimes(reservoir_data_physical))
+        {
+          tfree(ReservoirDataPhysicalReleaseTimes(reservoir_data_physical));
+        }
+        if (ReservoirDataPhysicalReleaseRates(reservoir_data_physical))
+        {
+          tfree(ReservoirDataPhysicalReleaseRates(reservoir_data_physical));
+        }
         tfree(reservoir_data_physical);
       }
       if (ReservoirDataReservoirPhysicals(reservoir_data))
@@ -232,38 +240,138 @@ void WriteReservoirs(
 
 
 /*--------------------------------------------------------------------------
+ * ReservoirDataPhysicalComputeReleaseRate
+ *
+ * Returns the scheduled release rate [L^3 T^-1] for a reservoir at the
+ * given time.  For a constant release this is simply the Release_Rate key.
+ * For a time series the rate is looked up in the release table:
+ *
+ *   Step:   the rate in row k applies on the interval (t_k, t_{k+1}].
+ *           Intervals are closed on the right because the solver evaluates
+ *           sources at the end of each timestep, so a step that ends exactly
+ *           on t_{k+1} still uses the rate for the interval it covered.
+ *   Linear: the rate is linearly interpolated between rows.
+ *
+ * Before the first row the first rate is used; after the last row the last
+ * rate is held.
+ *--------------------------------------------------------------------------*/
+
+double ReservoirDataPhysicalComputeReleaseRate(
+                                               ReservoirDataPhysical *reservoir_data_physical,
+                                               double                 time)
+{
+  int n;
+  int lo, hi, mid;
+  double *times;
+  double *rates;
+  double weight;
+
+  if (ReservoirDataPhysicalReleaseType(reservoir_data_physical) != RESERVOIR_RELEASE_TIMESERIES)
+  {
+    return ReservoirDataPhysicalReleaseRate(reservoir_data_physical);
+  }
+
+  n = ReservoirDataPhysicalNumReleaseTimes(reservoir_data_physical);
+  times = ReservoirDataPhysicalReleaseTimes(reservoir_data_physical);
+  rates = ReservoirDataPhysicalReleaseRates(reservoir_data_physical);
+
+  if (ReservoirDataPhysicalReleaseInterpolation(reservoir_data_physical) == RESERVOIR_RELEASE_INTERP_LINEAR)
+  {
+    if (time <= times[0])
+    {
+      return rates[0];
+    }
+    if (time >= times[n - 1])
+    {
+      return rates[n - 1];
+    }
+  }
+  else
+  {
+    /* Step: shift time back by a small tolerance so that a step ending on a
+     * breakpoint (allowing for roundoff in the accumulated solver time)
+     * uses the rate for the interval that ends there.  After the shift the
+     * search below is for the last row with times[lo] <= time. */
+    time -= RESERVOIR_RELEASE_TIME_TOLERANCE * pfmax(1.0, fabs(time));
+    if (time < times[0])
+    {
+      return rates[0];
+    }
+    if (time >= times[n - 1])
+    {
+      return rates[n - 1];
+    }
+  }
+
+  /* Binary search for lo such that times[lo] <= time < times[lo + 1] */
+  lo = 0;
+  hi = n - 1;
+  while (hi - lo > 1)
+  {
+    mid = (lo + hi) / 2;
+    if (times[mid] <= time)
+    {
+      lo = mid;
+    }
+    else
+    {
+      hi = mid;
+    }
+  }
+
+  if (ReservoirDataPhysicalReleaseInterpolation(reservoir_data_physical) == RESERVOIR_RELEASE_INTERP_LINEAR)
+  {
+    weight = (time - times[lo]) / (times[hi] - times[lo]);
+    return rates[lo] + weight * (rates[hi] - rates[lo]);
+  }
+
+  return rates[lo];
+}
+
+
+/*--------------------------------------------------------------------------
  * ReservoirDataPhysicalComputeStepRelease
  *
- * Returns the release rate [L^3 T^-1] to apply over a timestep of length dt,
- * based on the storage at the start of the step:
+ * Returns the release rate [L^3 T^-1] to apply over a timestep of length dt
+ * ending at the given time, based on the storage at the start of the step:
  *
  *   - Nothing is released once storage is at or below Min_Release_Storage.
- *   - Otherwise Release_Rate is released.
+ *   - The scheduled rate (ReservoirDataPhysicalComputeReleaseRate) is released.
  *   - If storage is above Max_Storage, the excess is spilled over this step,
- *     i.e. an extra (storage - max_storage) / dt is released on top of
- *     Release_Rate, so the amount spilled does not depend on dt.
+ *     i.e. an extra (storage - max_storage) / dt is released on top of the
+ *     scheduled rate, so the amount spilled does not depend on dt.
  *   - The total is capped at (storage - min_release_storage) / dt so a single
  *     step never releases storage below Min_Release_Storage.
  *
  * Inflow during the step is not counted, so the cap is conservative.  If dt
- * is not known (dt <= 0) only Release_Rate is returned.
+ * is not known (dt <= 0) only the scheduled rate is returned.
+ *
+ * For time series reservoirs the scheduled rate is also stored in
+ * ReleaseRate so it is reported in the reservoir output.
  *--------------------------------------------------------------------------*/
 
 double ReservoirDataPhysicalComputeStepRelease(
                                                ReservoirDataPhysical *reservoir_data_physical,
+                                               double                 time,
                                                double                 dt)
 {
   double storage = ReservoirDataPhysicalStorage(reservoir_data_physical);
   double min_storage = ReservoirDataPhysicalMinReleaseStorage(reservoir_data_physical);
   double max_storage = ReservoirDataPhysicalMaxStorage(reservoir_data_physical);
+  double scheduled_rate = ReservoirDataPhysicalComputeReleaseRate(reservoir_data_physical, time);
   double rate;
+
+  if (ReservoirDataPhysicalReleaseType(reservoir_data_physical) == RESERVOIR_RELEASE_TIMESERIES)
+  {
+    ReservoirDataPhysicalReleaseRate(reservoir_data_physical) = scheduled_rate;
+  }
 
   if (storage <= min_storage)
   {
     return 0.0;
   }
 
-  rate = ReservoirDataPhysicalReleaseRate(reservoir_data_physical);
+  rate = scheduled_rate;
 
   if (dt > 0.0)
   {
@@ -275,4 +383,193 @@ double ReservoirDataPhysicalComputeStepRelease(
   }
 
   return pfmax(rate, 0.0);
+}
+
+
+/*--------------------------------------------------------------------------
+ * ParseReservoirReleaseLine
+ *
+ * Parses "time,rate" (comma and/or whitespace separated) from a line.
+ * Returns 1 on success, 0 if the line does not hold two numbers.
+ *--------------------------------------------------------------------------*/
+
+static int ParseReservoirReleaseLine(char *line, double *time, double *rate)
+{
+  char *cursor = line;
+  char *end;
+
+  *time = strtod(cursor, &end);
+  if (end == cursor)
+  {
+    return 0;
+  }
+  cursor = end;
+  while (*cursor == ' ' || *cursor == '\t' || *cursor == ',')
+  {
+    cursor++;
+  }
+  *rate = strtod(cursor, &end);
+  if (end == cursor)
+  {
+    return 0;
+  }
+  cursor = end;
+  while (*cursor == ' ' || *cursor == '\t' || *cursor == ',' || *cursor == '\r' || *cursor == '\n')
+  {
+    cursor++;
+  }
+  /* Anything else left on the line (a third column, stray text) is an error */
+  return(*cursor == '\0');
+}
+
+
+/*--------------------------------------------------------------------------
+ * ReadReservoirReleaseFile
+ *
+ * Reads a reservoir release time series from a CSV file with two columns:
+ * time and release rate [L^3 T^-1].  Blank lines and lines starting with
+ * '#' are ignored, and a single non-numeric header line is allowed before
+ * the first row.  Times must be strictly increasing.
+ *
+ * The file is read on rank 0 and broadcast to all ranks, so this must be
+ * called collectively.  On return *times and *rates are allocated with
+ * ctalloc and owned by the caller.
+ *--------------------------------------------------------------------------*/
+
+void ReadReservoirReleaseFile(
+                              char *   filename,
+                              char *   reservoir_name,
+                              int *    num_times,
+                              double **times,
+                              double **rates)
+{
+  int n = 0;
+  int status = 0;     /* 0 ok, 1 can't open, 2 bad line, 3 not increasing, 4 empty, 5 negative rate */
+  int bad_line = 0;
+  double *read_times = NULL;
+  double *read_rates = NULL;
+  amps_Invoice invoice;
+
+  if (amps_Rank(amps_CommWorld) == 0)
+  {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL)
+    {
+      status = 1;
+    }
+    else
+    {
+      char line[1024];
+      int capacity = 0;
+      int line_number = 0;
+      int seen_header = 0;
+      double t, r;
+
+      while (status == 0 && fgets(line, sizeof(line), file))
+      {
+        char *start = line;
+        line_number++;
+        while (*start == ' ' || *start == '\t')
+        {
+          start++;
+        }
+        if (*start == '\0' || *start == '\n' || *start == '\r' || *start == '#')
+        {
+          continue;
+        }
+        if (!ParseReservoirReleaseLine(start, &t, &r))
+        {
+          if (n == 0 && !seen_header)
+          {
+            seen_header = 1;
+            continue;
+          }
+          status = 2;
+          bad_line = line_number;
+          break;
+        }
+        if (r < 0.0)
+        {
+          status = 5;
+          bad_line = line_number;
+          break;
+        }
+        if (n > 0 && t <= read_times[n - 1])
+        {
+          status = 3;
+          bad_line = line_number;
+          break;
+        }
+        if (n == capacity)
+        {
+          capacity = (capacity == 0) ? 256 : 2 * capacity;
+          read_times = (double*)realloc(read_times, capacity * sizeof(double));
+          read_rates = (double*)realloc(read_rates, capacity * sizeof(double));
+        }
+        read_times[n] = t;
+        read_rates[n] = r;
+        n++;
+      }
+      fclose(file);
+      if (status == 0 && n == 0)
+      {
+        status = 4;
+      }
+    }
+  }
+
+  invoice = amps_NewInvoice("%i%i%i", &status, &bad_line, &n);
+  amps_BCast(amps_CommWorld, 0, invoice);
+  amps_FreeInvoice(invoice);
+
+  if (status != 0)
+  {
+    free(read_times);
+    free(read_rates);
+    if (!amps_Rank(amps_CommWorld))
+    {
+      switch (status)
+      {
+        case 1:
+          amps_Printf("Error: can't open release file <%s> for reservoir <%s>\n", filename, reservoir_name);
+          break;
+
+        case 2:
+          amps_Printf("Error: line %d of release file <%s> for reservoir <%s> is not of the form \"time,rate\"\n",
+                      bad_line, filename, reservoir_name);
+          break;
+
+        case 3:
+          amps_Printf("Error: times in release file <%s> for reservoir <%s> must be strictly increasing (line %d)\n",
+                      filename, reservoir_name, bad_line);
+          break;
+
+        case 5:
+          amps_Printf("Error: release rate on line %d of release file <%s> for reservoir <%s> is negative\n",
+                      bad_line, filename, reservoir_name);
+          break;
+
+        default:
+          amps_Printf("Error: release file <%s> for reservoir <%s> has no data rows\n", filename, reservoir_name);
+          break;
+      }
+    }
+    exit(1);
+  }
+
+  *num_times = n;
+  *times = ctalloc(double, n);
+  *rates = ctalloc(double, n);
+
+  if (amps_Rank(amps_CommWorld) == 0)
+  {
+    memcpy(*times, read_times, n * sizeof(double));
+    memcpy(*rates, read_rates, n * sizeof(double));
+    free(read_times);
+    free(read_rates);
+  }
+
+  invoice = amps_NewInvoice("%*d%*d", n, *times, n, *rates);
+  amps_BCast(amps_CommWorld, 0, invoice);
+  amps_FreeInvoice(invoice);
 }
