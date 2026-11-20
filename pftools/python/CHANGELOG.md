@@ -2,6 +2,9 @@
 
 ## v1.3.6 (Unreleased):
 
+- Add `parflow.tools.reservoirs` to build reservoir inputs from existing
+  datasets (starting with ResOpsUS): placement on projected or latitude/longitude
+  grids, placement corrections, unit and time conversion, gap handling and caching
 - Metadata keys and processing of CLM files
 - Fix a bug on xarray indexing which require squeezing out multiple dimensions
 - Add the ability to give keys to the pf.read_pfb function for subsetting

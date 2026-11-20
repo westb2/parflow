@@ -17,3 +17,4 @@ The following sections include tutorials for using various functionalities conta
    domain_builder
    data_accessor
    hydrology
+   reservoir_databases
