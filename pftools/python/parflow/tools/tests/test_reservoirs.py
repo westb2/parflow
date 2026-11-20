@@ -363,6 +363,61 @@ class TestReservoirs(unittest.TestCase):
         )
         self.assertFalse(self.add(gap_policy="skip")["from_cache"])
 
+    def test_active_mask(self):
+        write_resopsus(
+            self.data,
+            [
+                (1, "Intake inactive", *cell_center(1, 1)),
+                (2, "Release inactive", *cell_center(5, 5)),
+                (3, "Fine", *cell_center(2, 8)),
+            ],
+            {d: make_record("2000-01-01", 10) for d in (1, 2, 3)},
+        )
+        mask = np.ones((NY, NX))
+        mask[1, 1] = 0  # intake of dam 1
+        mask[5, 6] = 0  # release of dam 2 (slopes drain east)
+        summary = self.add(active_mask=mask)
+        self.assertEqual([r["dam_id"] for r in summary["placed"]], ["3"])
+        self.assertEqual(summary["skipped"]["1"], "intake cell is not an active cell")
+        self.assertEqual(summary["skipped"]["2"], "release cell is not an active cell")
+
+    def test_snapping_skips_inactive_cells(self):
+        write_resopsus(
+            self.data,
+            [(1, "A", *cell_center(4, 4))],
+            {1: make_record("2000-01-01", 10)},
+        )
+        accumulation = np.ones((NY, NX))
+        accumulation[5, 5] = 100.0  # biggest, but inactive
+        accumulation[4, 6] = 50.0
+        mask = np.ones((NY, NX))
+        mask[5, 5] = 0
+        summary = self.add(flow_accumulation=accumulation, active_mask=mask)
+        self.assertEqual(summary["placed"][0]["intake_cell"], [6, 4])
+
+    def test_negative_outflow_reported_and_clipped(self):
+        record = make_record("2000-01-01", 10, outflow=10.0)
+        record["outflow"][1] = -5.0  # 2 January, the first day of the run
+        write_resopsus(self.data, [(1, "Pumped", *cell_center(3, 3))], {1: record})
+        summary = self.add()
+        placed = summary["placed"][0]
+        self.assertEqual(placed["negative_outflow_days"], 1)
+        release = read_release(self.run_dir, placed)
+        self.assertEqual(release["release_rate"].iloc[0], 0.0)
+        self.assertEqual(release["release_rate"].iloc[1], 36000.0)
+
+    def test_daily_record_has_unique_dates(self):
+        record = make_record("2000-01-01", 5)
+        write_resopsus(self.data, [(1, "A", *cell_center(3, 3))], {1: record})
+        path = os.path.join(self.data, "time_series_all", "ResOpsUS_1.csv")
+        with open(path, "a") as f:
+            f.write("date,NA,NA,NA,NA,NA\n2000-01-02,7.0,NA,99.0,NA,NA\n")
+        daily = ResOpsUS(self.data).daily_record("1")
+        self.assertTrue(daily.index.is_unique)
+        self.assertEqual(len(daily), 5)
+        # The first value for a repeated date is kept
+        self.assertEqual(daily.loc["2000-01-02", "outflow"], 10.0)
+
     def test_shared_cell_is_skipped(self):
         lat, lon = cell_center(3, 3)
         write_resopsus(

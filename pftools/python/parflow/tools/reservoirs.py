@@ -64,7 +64,7 @@ GAP_POLICIES = ("interpolate", "skip", "fail")
 
 RELEASE_DIRECTORY = "reservoir_releases"
 MANIFEST_FILE = "manifest.json"
-MANIFEST_VERSION = 1
+MANIFEST_VERSION = 2
 
 # -----------------------------------------------------------------------------
 # Grids: mapping latitude/longitude to grid cells
@@ -301,8 +301,9 @@ class ReservoirDataset:
         raise NotImplementedError
 
     def daily_record(self, dam_id):
-        """Return a DataFrame indexed by date (midnight timestamps) with
-        columns ``outflow`` [m^3/s] and ``storage`` [m^3]; missing values NaN.
+        """Return a DataFrame indexed by unique, sorted dates (midnight
+        timestamps) with columns ``outflow`` [m^3/s] and ``storage`` [m^3];
+        missing values NaN.
         """
         raise NotImplementedError
 
@@ -385,7 +386,9 @@ class ResOpsUS(ReservoirDataset):
             },
             index=index,
         )
-        return record[record.index.notna()].sort_index()
+        record = record[record.index.notna()].sort_index()
+        # A few files repeat dates; keep the first value for each day
+        return record[~record.index.duplicated(keep="first")]
 
     def identity(self):
         return {"dataset": self.name, "path": str(self.path.resolve())}
@@ -511,6 +514,7 @@ def add_reservoirs_to_run(
     slope_y=None,
     flow_accumulation=None,
     snap_radius=2,
+    active_mask=None,
     corrections_file=None,
     use_default_corrections=True,
     dam_ids=None,
@@ -525,7 +529,8 @@ def add_reservoirs_to_run(
 
     Writes one release time series per reservoir under
     ``<run_dir>/reservoir_releases`` and sets the ``Reservoirs.*`` keys.
-    Reservoirs whose dam lies outside the model domain are left out. If a
+    Reservoirs whose dam lies outside the model domain, or whose intake or
+    release cell is inactive (see ``active_mask``), are left out. If a
     previous call with the same inputs already wrote the files, they are
     reused and only the keys are set.
 
@@ -554,6 +559,12 @@ def add_reservoirs_to_run(
             of the model domain. If given, intakes are moved to the cell with
             the most accumulation within ``snap_radius`` cells of the dam.
         snap_radius (int): search radius in cells for snapping.
+        active_mask (ndarray): optional 2D (ny, nx) array of the model's
+            active cells at the surface (nonzero = active), e.g. from the
+            domain mask. Reservoirs whose intake or release cell is inactive
+            are left out, since ParFlow stops on them, and snapping only
+            moves intakes to active cells. Without it, every cell in the
+            grid is treated as active.
         corrections_file (str): optional CSV of placement corrections (see
             ``load_corrections``); overrides the corrections shipped with
             pftools for the dataset.
@@ -613,6 +624,7 @@ def add_reservoirs_to_run(
         ("slope_x", slope_x),
         ("slope_y", slope_y),
         ("flow_accumulation", flow_accumulation),
+        ("active_mask", active_mask),
     ):
         if array is not None:
             array = np.squeeze(np.asarray(array))
@@ -624,6 +636,8 @@ def add_reservoirs_to_run(
     slope_y = None if slope_y is None else np.squeeze(np.asarray(slope_y, float))
     if flow_accumulation is not None:
         flow_accumulation = np.squeeze(np.asarray(flow_accumulation, float))
+    if active_mask is not None:
+        active_mask = np.squeeze(np.asarray(active_mask)) != 0
     if (slope_x is None) != (slope_y is None):
         raise ValueError("Give both slope_x and slope_y, or neither")
 
@@ -650,6 +664,7 @@ def add_reservoirs_to_run(
         "overland_flow_solver": overland_flow_solver,
         "slopes": [_array_hash(slope_x), _array_hash(slope_y)],
         "flow_accumulation": _array_hash(flow_accumulation),
+        "active_mask": _array_hash(active_mask),
         "snap_radius": snap_radius,
         "corrections": [_file_hash(p) for p in correction_files],
         "dam_ids": None if dam_ids is None else sorted(str(d) for d in dam_ids),
@@ -696,6 +711,7 @@ def add_reservoirs_to_run(
             slope_y=slope_y,
             flow_accumulation=flow_accumulation,
             snap_radius=snap_radius,
+            active_mask=active_mask,
             corrections=load_corrections(*correction_files),
             dam_ids=dam_ids,
             capacities=capacities,
@@ -733,6 +749,7 @@ def _build(
     slope_y,
     flow_accumulation,
     snap_radius,
+    active_mask,
     corrections,
     dam_ids,
     capacities,
@@ -764,6 +781,14 @@ def _build(
     def inside(i, j):
         return 0 <= i < nx and 0 <= j < ny
 
+    def active(i, j):
+        return active_mask is None or bool(active_mask[j, i])
+
+    # Snapping only considers active cells
+    snap_field = flow_accumulation
+    if flow_accumulation is not None and active_mask is not None:
+        snap_field = np.where(active_mask, flow_accumulation, -np.inf)
+
     table = dataset.reservoirs()
     if dam_ids is not None:
         wanted = {str(d) for d in dam_ids}
@@ -787,11 +812,14 @@ def _build(
         else:
             i, j = to_model_cell(row.lat, row.lon)
             intake_source = "dam location"
-            if inside(i, j) and flow_accumulation is not None and snap_radius > 0:
-                i, j = _snap_to_channel(i, j, flow_accumulation, snap_radius)
+            if inside(i, j) and snap_field is not None and snap_radius > 0:
+                i, j = _snap_to_channel(i, j, snap_field, snap_radius)
                 intake_source = "snapped to channel"
         if not inside(i, j):
             skipped[dam_id] = "outside the model domain"
+            continue
+        if not active(i, j):
+            skipped[dam_id] = "intake cell is not an active cell"
             continue
 
         # Release: corrected location, or the cell the intake drains to
@@ -808,6 +836,9 @@ def _build(
             continue
         if not inside(ri, rj):
             skipped[dam_id] = "release cell outside the model domain"
+            continue
+        if not active(ri, rj):
+            skipped[dam_id] = "release cell is not an active cell"
             continue
         if (ri, rj) == (i, j):
             skipped[dam_id] = "release cell is the intake cell"
@@ -879,6 +910,12 @@ def _build(
             capacity = float(storage_series.max())
             capacity_source = "record maximum"
 
+        # ParFlow takes no negative releases (e.g. pumped storage pumping
+        # water back up); write those days as 0 and report them
+        outflow_values = outflow.to_numpy(dtype=float)
+        negative_days = int((outflow_values < 0).sum())
+        outflow_values = np.maximum(outflow_values, 0.0)
+
         name = f"{dataset.name}_{dam_id}"
         release_file = Path(RELEASE_DIRECTORY) / f"{name}.csv"
         with open(run_dir / release_file, "w") as f:
@@ -887,10 +924,8 @@ def _build(
                 f"from {start_date.isoformat()}\n"
             )
             f.write("time,release_rate\n")
-            for day, value in zip(days, outflow.to_numpy()):
-                f.write(
-                    f"{model_time(day)!r},{max(float(value), 0.0) * rate_scale!r}\n"
-                )
+            for day, value in zip(days, outflow_values):
+                f.write(f"{model_time(day)!r},{float(value) * rate_scale!r}\n")
 
         occupied[(i, j)] = dam_id
         occupied[(ri, rj)] = dam_id
@@ -905,6 +940,7 @@ def _build(
                 "intake_source": intake_source,
                 "capacity_source": capacity_source,
                 "outflow_days_filled": outflow_filled,
+                "negative_outflow_days": negative_days,
                 "storage_filled": storage_filled,
                 "keys": {
                     "Intake_X": lower_x + (i + 0.5) * dx,
@@ -963,6 +999,12 @@ def _print_summary(dataset, summary):
             + (", and the initial storage," if r["storage_filled"] else "")
             + " by interpolation"
         )
+    for r in placed:
+        if r.get("negative_outflow_days"):
+            print(
+                f"  {r['name']}: {r['negative_outflow_days']} days of negative "
+                "outflow written as 0 (ParFlow takes no negative releases)"
+            )
     # Group reasons that differ only in their numbers (e.g. days missing)
     reasons = {}
     for reason in skipped.values():

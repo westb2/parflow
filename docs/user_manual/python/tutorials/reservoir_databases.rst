@@ -93,6 +93,13 @@ of the chosen overland flow solver.
 Dams outside the domain, and reservoirs whose release would fall outside the
 domain or in a cell already used by another reservoir, are left out.
 
+For a domain that is not a full rectangle (a land mask or a watershed), pass
+``active_mask``, a 2D array of the surface cells that are active (nonzero),
+for example from the domain's mask file. Reservoirs whose intake or release
+cell is inactive are then left out, and snapping only moves intakes to active
+cells. ParFlow itself stops with an error if a reservoir's release cell is
+inactive, so without the mask such a dam would stop the run.
+
 Placement corrections
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -122,6 +129,10 @@ Units, times and gaps
   ``time_unit`` (seconds, minutes, hours or days) and ``length_unit``
   (``m`` by default). Each day's rate applies from the start of that day,
   using ``Release_Interpolation = Step``.
+- ParFlow takes no negative releases, so days with negative outflow (for
+  example pumped storage pumping water back into the reservoir) are written
+  as 0 and counted per reservoir in the summary
+  (``negative_outflow_days``).
 - ``start_date`` is the date and time of model time ``TimingInfo.StartTime``.
   Only the days covered by ``StartTime`` to ``StopTime`` are written.
 - ``Storage`` is the observed storage on the start date. ResOpsUS has no
