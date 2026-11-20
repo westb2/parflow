@@ -1425,6 +1425,7 @@ ReservoirData *NewReservoirData(void);
 void FreeReservoirData(ReservoirData *reservoir_data);
 void PrintReservoirData(ReservoirData *reservoir_data, unsigned int print_mask);
 void WriteReservoirs(char *file_prefix, Problem *problem, ReservoirData *reservoir_data, double time, int write_header);
+double ReservoirDataPhysicalComputeStepRelease(ReservoirDataPhysical *reservoir_data_physical, double dt);
 
 typedef void (*ReservoirPackageInvoke) (ProblemData *problem_data);
 typedef PFModule *(*ReservoirPackageNewPublicXtraInvoke) (int num_phases, int num_contaminants);

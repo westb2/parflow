@@ -3377,6 +3377,10 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
       /*          Solve the nonlinear system for this time step          */
       /*******************************************************************/
 
+      // Reservoir releases are sized to the step being solved (spill over
+      // Max_Storage and the Min_Release_Storage cap both depend on dt)
+      ReservoirDataTimestep(ProblemDataReservoirData(problem_data)) = dt;
+
       retval = PFModuleInvokeType(NonlinSolverInvoke, nonlin_solver,
                                   (instance_xtra->pressure,
                                    instance_xtra->density,
@@ -3537,15 +3541,11 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
       {
         double flux_in = 0;
         reservoir_data_physical = ReservoirDataReservoirPhysical(reservoir_data, reservoir);
-        int release_cell_rank;
-        release_cell_rank = ReservoirDataPhysicalReleaseCellMpiRank(reservoir_data_physical);
-        if (release_cell_rank == amps_Rank(amps_CommWorld))
-        {
-          ReservoirDataPhysicalReleaseAmountSinceLastPrint(reservoir_data_physical) +=
-            ReservoirDataPhysicalReleaseAmountInSolver(reservoir_data_physical) * dt;
-          ReservoirDataPhysicalStorage(reservoir_data_physical) -=
-            ReservoirDataPhysicalReleaseAmountInSolver(reservoir_data_physical) * dt;
-        }
+        // Volume released this step. Only the rank owning the release cell sets
+        // ReleaseAmountInSolver (in PhaseSource); it is summed together with the
+        // intake below so every rank in the reservoir communicator ends the step
+        // with the same storage.
+        double flux_out = ReservoirDataPhysicalReleaseAmountInSolver(reservoir_data_physical) * dt;
         GrGeomSolid *gr_domain = ProblemDataGrDomain(problem_data);
 
         int i, j, k, r, is;
@@ -3644,15 +3644,22 @@ AdvanceRichards(PFModule * this_module, double start_time,      /* Starting time
         #ifdef PARFLOW_HAVE_MPI
         if (ReservoirDataPhysicalMpiCommunicator(reservoir_data_physical) != MPI_COMM_NULL)
         {
-          amps_Invoice invoice = amps_NewInvoice("%d", &flux_in);
+          // Intake and release share one reduction, so this costs no more
+          // communication than reducing the intake alone
+          double reservoir_fluxes[2] = { flux_in, flux_out };
+          amps_Invoice invoice = amps_NewInvoice("%*d", 2, reservoir_fluxes);
           amps_AllReduce(ReservoirDataPhysicalMpiCommunicator(reservoir_data_physical), invoice, amps_Add);
           amps_FreeInvoice(invoice);
-          ReservoirDataPhysicalStorage(reservoir_data_physical) += flux_in;
+          flux_in = reservoir_fluxes[0];
+          flux_out = reservoir_fluxes[1];
+          ReservoirDataPhysicalStorage(reservoir_data_physical) += flux_in - flux_out;
           ReservoirDataPhysicalIntakeAmountSinceLastPrint(reservoir_data_physical) += flux_in;
+          ReservoirDataPhysicalReleaseAmountSinceLastPrint(reservoir_data_physical) += flux_out;
         }
         #else
-        ReservoirDataPhysicalStorage(reservoir_data_physical) += flux_in;
+        ReservoirDataPhysicalStorage(reservoir_data_physical) += flux_in - flux_out;
         ReservoirDataPhysicalIntakeAmountSinceLastPrint(reservoir_data_physical) += flux_in;
+        ReservoirDataPhysicalReleaseAmountSinceLastPrint(reservoir_data_physical) += flux_out;
         #endif
         /* update pressure,  not sure if we need to do this but we might if pressures are reset along processor edges RMM */
       }
